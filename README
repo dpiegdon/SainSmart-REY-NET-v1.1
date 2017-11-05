@@ -1,0 +1,52 @@
+connector J2 is a SWD connector.
+pinout:
+	CON	SIGNAL		LQFP48 pin
+	1	NC ?
+	2	SWD		31
+	3	SCL		30
+	4	RST		4
+	5	GND
+
+Microprocessor is a LQFP48 package containing a
+Nuvoton M0516LDN, ARM Cortex M0
+With 64K ROM and 4K RAM
+
+	0000.0000	0000.ffff	FLASH
+	2000.0000	2000.0fff	RAM
+	6000.0000	6001.ffff	EBI: external memory space (access to Wiznet W5100)
+	5001.0000	5001.03ff	EBI: control registers
+
+Datasheet can be loaded from:
+http://www.nuvoton.com/resource-files/DS_M051%28DN_DE%29_Series_EN_Rev1.03.pdf
+
+standard SWDIO tools like the BlackMagicProbe work.
+firmware is not protected and can be dumped via gdb:
+
+	(gdb) dump binary memory nuvoton.raw 0 0xffff
+
+
+important addresses:
+0x0000: loaded into SP at reset (0x20000b30, in RAM)
+0x0004: loaded into PC at reset (0x00000179, in FLASH)
+
+
+The flash dump can be disassembled using:
+
+	arm-none-eabi-objdump -D -z -b binary -marm -Mforce-thumb flash.bin
+
+An annotated output is in flash.asm
+
+
+The Wiznet W5100 ethernet controller is probably connected
+to the "EBI" external memory interface of the Cortex M0.
+It probably uses a 15-bit address and 8-bit data interface
+with some additional control lines. (probably 4-6, to be verified)
+the EBI is mapped at 6000.0000 in the Cortex M0.
+
+NOTE: Its also possible that SPI is used...
+
+The Wiznet can be used to listen on a specified TCP port,
+which seems to be done here. So all lowlevel ethernet/IP/TCP
+protocol is done in the Wiznet, which explains that the
+firmware of the ARM is so small.
+
