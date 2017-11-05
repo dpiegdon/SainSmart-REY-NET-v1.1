@@ -7,97 +7,52 @@ Disassembly of section .data:
 00000000 <.data>:
        0:	20000b30      	;	RESET value for SP
        4:	00000179      	;	NVIC: ResetHandler (thumb mode)
-       8:	00000199      	;	NVIC
-       c:	019b      	;	...
-       e:	0000      	
-      10:	0000      	
-      12:	0000      	
-      14:	0000      	
-      16:	0000      	
-      18:	0000      	
-      1a:	0000      	
-      1c:	0000      	
-      1e:	0000      	
-      20:	0000      	
-      22:	0000      	
-      24:	0000      	
-      26:	0000      	
-      28:	0000      	
-      2a:	0000      	
-      2c:	019d      	
-      2e:	0000      	
-      30:	0000      	
-      32:	0000      	
-      34:	0000      	
-      36:	0000      	
-      38:	019f      	
-      3a:	0000      	
-      3c:	01a1      	
-      3e:	0000      	
-      40:	01a3      	
-      42:	0000      	
-      44:	01a3      	
-      46:	0000      	
-      48:	07e1      	
-      4a:	0000      	
-      4c:	0811      	
-      4e:	0000      	
-      50:	01a3      	
-      52:	0000      	
-      54:	01a3      	
-      56:	0000      	
-      58:	01a3      	
-      5a:	0000      	
-      5c:	01a3      	
-      5e:	0000      	
-      60:	235d      	
-      62:	0000      	
-      64:	2421      	
-      66:	0000      	
-      68:	24dd      	
-      6a:	0000      	
-      6c:	25cd      	
-      6e:	0000      	
-      70:	01a3      	
-      72:	0000      	
-      74:	2735      	
-      76:	0000      	
-      78:	01a3      	
-      7a:	0000      	
-      7c:	01a3      	
-      7e:	0000      	
-      80:	01a3      	
-      82:	0000      	
-      84:	01a3      	
-      86:	0000      	
-      88:	01a3      	
-      8a:	0000      	
-      8c:	01a3      	
-      8e:	0000      	
-      90:	01a3      	
-      92:	0000      	
-      94:	01a3      	
-      96:	0000      	
-      98:	01a3      	
-      9a:	0000      	
-      9c:	01a3      	
-      9e:	0000      	
-      a0:	01a3      	
-      a2:	0000      	
-      a4:	01a3      	
-      a6:	0000      	
-      a8:	01a3      	
-      aa:	0000      	
-      ac:	01a3      	
-      ae:	0000      	
-      b0:	01a3      	
-      b2:	0000      	
-      b4:	01a3      	
-      b6:	0000      	
-      b8:	01a3      	
-      ba:	0000      	
-      bc:	01a3      	;	...
-      be:	0000      	;	NVIC
+       8:	00000199      	;	NVIC: TerminalFault1
+       c:	0000019b      	;	NVIC: TerminalFault2
+      10:	00000000      	
+      14:	00000000      	
+      18:	00000000      	
+      1c:	00000000      	
+      20:	00000000      	
+      24:	00000000      	
+      28:	00000000      	
+      2c:	0000019d      	;	NVIC: TerminalFault3
+      30:	00000000      	
+      34:	00000000      	
+      38:	0000019f      	;	NVIC: TerminalFault4
+      3c:	000001a1      	;	NVIC: TerminalFault5
+      40:	000001a3      	;	NVIC: TerminalFault6
+      44:	000001a3      	;	NVIC: TerminalFault6
+      48:	000007e1      	
+      4c:	00000811      	
+      50:	000001a3      	;	NVIC: TerminalFault6
+      54:	000001a3      	;	NVIC: TerminalFault6
+      58:	000001a3      	;	NVIC: TerminalFault6
+      5c:	000001a3      	;	NVIC: TerminalFault6
+      60:	0000235d      	
+      64:	00002421      	
+      68:	000024dd      	
+      6c:	000025cd      	
+      70:	000001a3      	;	NVIC: TerminalFault6
+      74:	00002735      	
+      78:	000001a3      	;	NVIC: TerminalFault6
+      7c:	000001a3      	;	NVIC: TerminalFault6
+      80:	000001a3      	;	NVIC: TerminalFault6
+      84:	000001a3      	;	NVIC: TerminalFault6
+      88:	000001a3      	;	NVIC: TerminalFault6
+      8c:	000001a3      	;	NVIC: TerminalFault6
+      90:	000001a3      	;	NVIC: TerminalFault6
+      94:	000001a3      	;	NVIC: TerminalFault6
+      98:	000001a3      	;	NVIC: TerminalFault6
+      9c:	000001a3      	;	NVIC: TerminalFault6
+      a0:	000001a3      	;	NVIC: TerminalFault6
+      a4:	000001a3      	;	NVIC: TerminalFault6
+      a8:	000001a3      	;	NVIC: TerminalFault6
+      ac:	000001a3      	;	NVIC: TerminalFault6
+      b0:	000001a3      	;	NVIC: TerminalFault6
+      b4:	000001a3      	;	NVIC: TerminalFault6
+      b8:	000001a3      	;	NVIC: TerminalFault6
+      bc:	000001a3      	;	NVIC: TerminalFault6
 
       c0:	f000 f802 	bl	0xc8
       c4:	f000 f848 	bl	0x158
@@ -199,18 +154,26 @@ ResetHandler:
      192:	6001      	str	r1, [r0, #0]
      194:	480b      	ldr	r0, [pc, #44]	; (0x1c4)
      196:	4700      	bx	r0
+
+TerminalFault1:
      198:	e7fe      	b.n	0x198
+TerminalFault2:
      19a:	e7fe      	b.n	0x19a
+TerminalFault3:
      19c:	e7fe      	b.n	0x19c
+TerminalFault4:
      19e:	e7fe      	b.n	0x19e
+TerminalFault5:
      1a0:	e7fe      	b.n	0x1a0
+TerminalFault6:
      1a2:	e7fe      	b.n	0x1a2
+
      1a4:	4808      	ldr	r0, [pc, #32]	; (0x1c8)
      1a6:	4909      	ldr	r1, [pc, #36]	; (0x1cc)
      1a8:	4a07      	ldr	r2, [pc, #28]	; (0x1c8)
      1aa:	4b09      	ldr	r3, [pc, #36]	; (0x1d0)
      1ac:	4770      	bx	lr
-     1ae:	0000      	movs	r0, r0
+     1ae:	0000      	;	padding
      1b0:	50000100      	;	System Global Control Registers
      1b4:	00000059      	;
      1b8:	00000016      	;
@@ -231,9 +194,10 @@ ResetHandler:
      1e4:	bc08      	pop	{r3}
      1e6:	b004      	add	sp, #16
      1e8:	4718      	bx	r3
-     1ea:	0000      	movs	r0, r0
-     1ec:	0000      	movs	r0, r0
-     1ee:	2000      	movs	r0, #0
+
+     1ea:	0000      	;	padding
+     1ec:	20000000      	;
+
      1f0:	b570      	push	{r4, r5, r6, lr}
      1f2:	4604      	mov	r4, r0
      1f4:	460d      	mov	r5, r1
@@ -667,10 +631,12 @@ ResetHandler:
      576:	2001      	movs	r0, #1
      578:	e7d6      	b.n	0x528
      57a:	0000      	movs	r0, r0
-     57c:	0401      	lsls	r1, r0, #16
-     57e:	0000      	movs	r0, r0
-     580:	706f      	strb	r7, [r5, #1]
-     582:	6e65      	ldr	r5, [r4, #100]	; 0x64
+
+     57c:	0401      	;
+     57e:	0000      	;
+     580:	706f      	;
+     582:	6e65      	;
+
      584:	735f      	strb	r7, [r3, #13]
      586:	6f63      	ldr	r3, [r4, #116]	; 0x74
      588:	656b      	str	r3, [r5, #84]	; 0x54
@@ -691,6 +657,9 @@ ResetHandler:
      5a6:	7961      	ldrb	r1, [r4, #5]
      5a8:	0a0d      	lsrs	r5, r1, #8
      5aa:	0000      	movs	r0, r0
+
+
+SomeGPIOConfiguration???:
      5ac:	b530      	push	{r4, r5, lr}
      5ae:	0003      	movs	r3, r0
      5b0:	f002 fd08 	bl	0x2fc4
@@ -705,13 +674,13 @@ ResetHandler:
      5c4:	2a02      	cmp	r2, #2
      5c6:	d11d      	bne.n	0x604
      5c8:	4b83      	ldr	r3, [pc, #524]	; (0x7d8)
-     5ca:	681b      	ldr	r3, [r3, #0]
+     5ca:	681b      	ldr	r3, [r3, #0]	; P0 IO Mode Control Reg
      5cc:	004d      	lsls	r5, r1, #1
      5ce:	2403      	movs	r4, #3
      5d0:	40ac      	lsls	r4, r5
      5d2:	43a3      	bics	r3, r4
      5d4:	4c80      	ldr	r4, [pc, #512]	; (0x7d8)
-     5d6:	6023      	str	r3, [r4, #0]
+     5d6:	6023      	str	r3, [r4, #0]	; P0 IO Mode Control Reg
      5d8:	2a01      	cmp	r2, #1
      5da:	d108      	bne.n	0x5ee
      5dc:	4623      	mov	r3, r4
@@ -721,29 +690,29 @@ ResetHandler:
      5e4:	40ac      	lsls	r4, r5
      5e6:	4323      	orrs	r3, r4
      5e8:	4c7b      	ldr	r4, [pc, #492]	; (0x7d8)
-     5ea:	6023      	str	r3, [r4, #0]
+     5ea:	6023      	str	r3, [r4, #0]	; P0 IO Mode Control Reg
      5ec:	e016      	b.n	0x61c
      5ee:	2a02      	cmp	r2, #2
      5f0:	d114      	bne.n	0x61c
      5f2:	4b79      	ldr	r3, [pc, #484]	; (0x7d8)
-     5f4:	681b      	ldr	r3, [r3, #0]
+     5f4:	681b      	ldr	r3, [r3, #0]	; P0 IO Mode Control Reg
      5f6:	004d      	lsls	r5, r1, #1
      5f8:	2402      	movs	r4, #2
      5fa:	40ac      	lsls	r4, r5
      5fc:	4323      	orrs	r3, r4
      5fe:	4c76      	ldr	r4, [pc, #472]	; (0x7d8)
-     600:	6023      	str	r3, [r4, #0]
+     600:	6023      	str	r3, [r4, #0]	; P0 IO Mode Control Reg
      602:	e00b      	b.n	0x61c
      604:	2a03      	cmp	r2, #3
      606:	d108      	bne.n	0x61a
      608:	4b73      	ldr	r3, [pc, #460]	; (0x7d8)
-     60a:	681b      	ldr	r3, [r3, #0]
+     60a:	681b      	ldr	r3, [r3, #0]	; P0 IO Mode Control Reg
      60c:	004d      	lsls	r5, r1, #1
      60e:	2403      	movs	r4, #3
      610:	40ac      	lsls	r4, r5
      612:	4323      	orrs	r3, r4
      614:	4c70      	ldr	r4, [pc, #448]	; (0x7d8)
-     616:	6023      	str	r3, [r4, #0]
+     616:	6023      	str	r3, [r4, #0]	; P0 IO Mode Control Reg
      618:	e000      	b.n	0x61c
      61a:	bd30      	pop	{r4, r5, pc}
      61c:	e0d8      	b.n	0x7d0
@@ -755,14 +724,14 @@ ResetHandler:
      628:	d122      	bne.n	0x670
      62a:	4b6b      	ldr	r3, [pc, #428]	; (0x7d8)
      62c:	3340      	adds	r3, #64	; 0x40
-     62e:	681b      	ldr	r3, [r3, #0]
+     62e:	681b      	ldr	r3, [r3, #0]	; P1 IO Mode Control Reg
      630:	004d      	lsls	r5, r1, #1
      632:	2403      	movs	r4, #3
      634:	40ac      	lsls	r4, r5
      636:	43a3      	bics	r3, r4
      638:	4c67      	ldr	r4, [pc, #412]	; (0x7d8)
      63a:	3440      	adds	r4, #64	; 0x40
-     63c:	6023      	str	r3, [r4, #0]
+     63c:	6023      	str	r3, [r4, #0]	; P1 IO Mode Control Reg
      63e:	2a01      	cmp	r2, #1
      640:	d109      	bne.n	0x656
      642:	4623      	mov	r3, r4
@@ -773,33 +742,33 @@ ResetHandler:
      64c:	4323      	orrs	r3, r4
      64e:	4c62      	ldr	r4, [pc, #392]	; (0x7d8)
      650:	3440      	adds	r4, #64	; 0x40
-     652:	6023      	str	r3, [r4, #0]
+     652:	6023      	str	r3, [r4, #0]	; P1 IO Mode Control Reg
      654:	e01a      	b.n	0x68c
      656:	2a02      	cmp	r2, #2
      658:	d118      	bne.n	0x68c
      65a:	4b5f      	ldr	r3, [pc, #380]	; (0x7d8)
      65c:	3340      	adds	r3, #64	; 0x40
-     65e:	681b      	ldr	r3, [r3, #0]
+     65e:	681b      	ldr	r3, [r3, #0]	; P1 IO Mode Control Reg
      660:	004d      	lsls	r5, r1, #1
      662:	2402      	movs	r4, #2
      664:	40ac      	lsls	r4, r5
      666:	4323      	orrs	r3, r4
      668:	4c5b      	ldr	r4, [pc, #364]	; (0x7d8)
      66a:	3440      	adds	r4, #64	; 0x40
-     66c:	6023      	str	r3, [r4, #0]
+     66c:	6023      	str	r3, [r4, #0]	; P1 IO Mode Control Reg
      66e:	e00d      	b.n	0x68c
      670:	2a03      	cmp	r2, #3
      672:	d10a      	bne.n	0x68a
      674:	4b58      	ldr	r3, [pc, #352]	; (0x7d8)
      676:	3340      	adds	r3, #64	; 0x40
-     678:	681b      	ldr	r3, [r3, #0]
+     678:	681b      	ldr	r3, [r3, #0]	; P1 IO Mode Control Reg
      67a:	004d      	lsls	r5, r1, #1
      67c:	2403      	movs	r4, #3
      67e:	40ac      	lsls	r4, r5
      680:	4323      	orrs	r3, r4
      682:	4c55      	ldr	r4, [pc, #340]	; (0x7d8)
      684:	3440      	adds	r4, #64	; 0x40
-     686:	6023      	str	r3, [r4, #0]
+     686:	6023      	str	r3, [r4, #0]	; P1 IO Mode Control Reg
      688:	e000      	b.n	0x68c
      68a:	e7c6      	b.n	0x61a
      68c:	e0a0      	b.n	0x7d0
@@ -811,14 +780,14 @@ ResetHandler:
      698:	d122      	bne.n	0x6e0
      69a:	4b4f      	ldr	r3, [pc, #316]	; (0x7d8)
      69c:	3380      	adds	r3, #128	; 0x80
-     69e:	681b      	ldr	r3, [r3, #0]
+     69e:	681b      	ldr	r3, [r3, #0]	; P2 IO Mode Control Reg
      6a0:	004d      	lsls	r5, r1, #1
      6a2:	2403      	movs	r4, #3
      6a4:	40ac      	lsls	r4, r5
      6a6:	43a3      	bics	r3, r4
      6a8:	4c4b      	ldr	r4, [pc, #300]	; (0x7d8)
      6aa:	3480      	adds	r4, #128	; 0x80
-     6ac:	6023      	str	r3, [r4, #0]
+     6ac:	6023      	str	r3, [r4, #0]	; P2 IO Mode Control Reg
      6ae:	2a01      	cmp	r2, #1
      6b0:	d109      	bne.n	0x6c6
      6b2:	4623      	mov	r3, r4
@@ -829,33 +798,33 @@ ResetHandler:
      6bc:	4323      	orrs	r3, r4
      6be:	4c46      	ldr	r4, [pc, #280]	; (0x7d8)
      6c0:	3480      	adds	r4, #128	; 0x80
-     6c2:	6023      	str	r3, [r4, #0]
+     6c2:	6023      	str	r3, [r4, #0]	; P2 IO Mode Control Reg
      6c4:	e01a      	b.n	0x6fc
      6c6:	2a02      	cmp	r2, #2
      6c8:	d118      	bne.n	0x6fc
      6ca:	4b43      	ldr	r3, [pc, #268]	; (0x7d8)
      6cc:	3380      	adds	r3, #128	; 0x80
-     6ce:	681b      	ldr	r3, [r3, #0]
+     6ce:	681b      	ldr	r3, [r3, #0]	; P2 IO Mode Control Reg
      6d0:	004d      	lsls	r5, r1, #1
      6d2:	2402      	movs	r4, #2
      6d4:	40ac      	lsls	r4, r5
      6d6:	4323      	orrs	r3, r4
      6d8:	4c3f      	ldr	r4, [pc, #252]	; (0x7d8)
      6da:	3480      	adds	r4, #128	; 0x80
-     6dc:	6023      	str	r3, [r4, #0]
+     6dc:	6023      	str	r3, [r4, #0]	; P2 IO Mode Control Reg
      6de:	e00d      	b.n	0x6fc
      6e0:	2a03      	cmp	r2, #3
      6e2:	d10a      	bne.n	0x6fa
      6e4:	4b3c      	ldr	r3, [pc, #240]	; (0x7d8)
      6e6:	3380      	adds	r3, #128	; 0x80
-     6e8:	681b      	ldr	r3, [r3, #0]
+     6e8:	681b      	ldr	r3, [r3, #0]	; P2 IO Mode Control Reg
      6ea:	004d      	lsls	r5, r1, #1
      6ec:	2403      	movs	r4, #3
      6ee:	40ac      	lsls	r4, r5
      6f0:	4323      	orrs	r3, r4
      6f2:	4c39      	ldr	r4, [pc, #228]	; (0x7d8)
      6f4:	3480      	adds	r4, #128	; 0x80
-     6f6:	6023      	str	r3, [r4, #0]
+     6f6:	6023      	str	r3, [r4, #0]	; P2 IO Mode Control Reg
      6f8:	e000      	b.n	0x6fc
      6fa:	e78e      	b.n	0x61a
      6fc:	e068      	b.n	0x7d0
@@ -867,14 +836,14 @@ ResetHandler:
      708:	d121      	bne.n	0x74e
      70a:	4b33      	ldr	r3, [pc, #204]	; (0x7d8)
      70c:	33c0      	adds	r3, #192	; 0xc0
-     70e:	681c      	ldr	r4, [r3, #0]
+     70e:	681c      	ldr	r4, [r3, #0]	; P3 IO Mode Control Reg
      710:	004d      	lsls	r5, r1, #1
      712:	2303      	movs	r3, #3
      714:	40ab      	lsls	r3, r5
      716:	439c      	bics	r4, r3
      718:	4b2f      	ldr	r3, [pc, #188]	; (0x7d8)
      71a:	33c0      	adds	r3, #192	; 0xc0
-     71c:	601c      	str	r4, [r3, #0]
+     71c:	601c      	str	r4, [r3, #0]	; P3 IO Mode Control Reg
      71e:	2a01      	cmp	r2, #1
      720:	d108      	bne.n	0x734
      722:	681b      	ldr	r3, [r3, #0]
@@ -884,33 +853,33 @@ ResetHandler:
      72a:	4323      	orrs	r3, r4
      72c:	4c2a      	ldr	r4, [pc, #168]	; (0x7d8)
      72e:	34c0      	adds	r4, #192	; 0xc0
-     730:	6023      	str	r3, [r4, #0]
+     730:	6023      	str	r3, [r4, #0]	; P3 IO Mode Control Reg
      732:	e01a      	b.n	0x76a
      734:	2a02      	cmp	r2, #2
      736:	d118      	bne.n	0x76a
      738:	4b27      	ldr	r3, [pc, #156]	; (0x7d8)
      73a:	33c0      	adds	r3, #192	; 0xc0
-     73c:	681b      	ldr	r3, [r3, #0]
+     73c:	681b      	ldr	r3, [r3, #0]	; P3 IO Mode Control Reg
      73e:	004d      	lsls	r5, r1, #1
      740:	2402      	movs	r4, #2
      742:	40ac      	lsls	r4, r5
      744:	4323      	orrs	r3, r4
      746:	4c24      	ldr	r4, [pc, #144]	; (0x7d8)
      748:	34c0      	adds	r4, #192	; 0xc0
-     74a:	6023      	str	r3, [r4, #0]
+     74a:	6023      	str	r3, [r4, #0]	; P3 IO Mode Control Reg
      74c:	e00d      	b.n	0x76a
      74e:	2a03      	cmp	r2, #3
      750:	d10a      	bne.n	0x768
      752:	4b21      	ldr	r3, [pc, #132]	; (0x7d8)
      754:	33c0      	adds	r3, #192	; 0xc0
-     756:	681b      	ldr	r3, [r3, #0]
+     756:	681b      	ldr	r3, [r3, #0]	; P3 IO Mode Control Reg
      758:	004d      	lsls	r5, r1, #1
      75a:	2403      	movs	r4, #3
      75c:	40ac      	lsls	r4, r5
      75e:	4323      	orrs	r3, r4
      760:	4c1d      	ldr	r4, [pc, #116]	; (0x7d8)
      762:	34c0      	adds	r4, #192	; 0xc0
-     764:	6023      	str	r3, [r4, #0]
+     764:	6023      	str	r3, [r4, #0]	; P3 IO Mode Control Reg
      766:	e000      	b.n	0x76a
      768:	e757      	b.n	0x61a
      76a:	e031      	b.n	0x7d0
@@ -921,13 +890,13 @@ ResetHandler:
      774:	2a02      	cmp	r2, #2
      776:	d11d      	bne.n	0x7b4
      778:	4b18      	ldr	r3, [pc, #96]	; (0x7dc)
-     77a:	681c      	ldr	r4, [r3, #0]
+     77a:	681c      	ldr	r4, [r3, #0]	; P4 IO Mode Control Reg
      77c:	004d      	lsls	r5, r1, #1
      77e:	2303      	movs	r3, #3
      780:	40ab      	lsls	r3, r5
      782:	439c      	bics	r4, r3
      784:	4b15      	ldr	r3, [pc, #84]	; (0x7dc)
-     786:	601c      	str	r4, [r3, #0]
+     786:	601c      	str	r4, [r3, #0]	; P4 IO Mode Control Reg
      788:	2a01      	cmp	r2, #1
      78a:	d108      	bne.n	0x79e
      78c:	681b      	ldr	r3, [r3, #0]
@@ -936,30 +905,30 @@ ResetHandler:
      792:	40ac      	lsls	r4, r5
      794:	4323      	orrs	r3, r4
      796:	4c11      	ldr	r4, [pc, #68]	; (0x7dc)
-     798:	6023      	str	r3, [r4, #0]
+     798:	6023      	str	r3, [r4, #0]	; P4 IO Mode Control Reg
      79a:	e017      	b.n	0x7cc
      79c:	e017      	b.n	0x7ce
      79e:	2a02      	cmp	r2, #2
      7a0:	d114      	bne.n	0x7cc
      7a2:	4b0e      	ldr	r3, [pc, #56]	; (0x7dc)
-     7a4:	681b      	ldr	r3, [r3, #0]
+     7a4:	681b      	ldr	r3, [r3, #0]	; P4 IO Mode Control Reg
      7a6:	004d      	lsls	r5, r1, #1
      7a8:	2402      	movs	r4, #2
      7aa:	40ac      	lsls	r4, r5
      7ac:	4323      	orrs	r3, r4
      7ae:	4c0b      	ldr	r4, [pc, #44]	; (0x7dc)
-     7b0:	6023      	str	r3, [r4, #0]
+     7b0:	6023      	str	r3, [r4, #0]	; P4 IO Mode Control Reg
      7b2:	e00b      	b.n	0x7cc
      7b4:	2a03      	cmp	r2, #3
      7b6:	d108      	bne.n	0x7ca
      7b8:	4b08      	ldr	r3, [pc, #32]	; (0x7dc)
-     7ba:	681b      	ldr	r3, [r3, #0]
+     7ba:	681b      	ldr	r3, [r3, #0]	; P4 IO Mode Control Reg
      7bc:	004d      	lsls	r5, r1, #1
      7be:	2403      	movs	r4, #3
      7c0:	40ac      	lsls	r4, r5
      7c2:	4323      	orrs	r3, r4
      7c4:	4c05      	ldr	r4, [pc, #20]	; (0x7dc)
-     7c6:	6023      	str	r3, [r4, #0]
+     7c6:	6023      	str	r3, [r4, #0]	; P4 IO Mode Control Reg
      7c8:	e000      	b.n	0x7cc
      7ca:	e726      	b.n	0x61a
      7cc:	e000      	b.n	0x7d0
@@ -972,6 +941,7 @@ ResetHandler:
      7d8:	50004000      	;	GPIO registers
      7dc:	50004100      	;	GPIO registers
 
+ISR???:
      7e0:	b510      	push	{r4, lr}
      7e2:	2004      	movs	r0, #4
      7e4:	4906      	ldr	r1, [pc, #24]	; (0x800)
@@ -986,14 +956,16 @@ ResetHandler:
      7fa:	3980      	subs	r1, #128	; 0x80
      7fc:	6008      	str	r0, [r1, #0]
      7fe:	bd10      	pop	{r4, pc}
-     800:	40c0      	lsrs	r0, r0
-     802:	5000      	str	r0, [r0, r0]
-     804:	e180      	b.n	0xb08
-     806:	e000      	b.n	0x80a
+
+     800:	500040c0      	;	GPIO registers
+     804:	e000e180      	;	NVIC / external interrupt control registers
+
      808:	4e45      	ldr	r6, [pc, #276]	; (0x920)
      80a:	3054      	adds	r0, #84	; 0x54
      80c:	0a0d      	lsrs	r5, r1, #8
      80e:	0000      	movs	r0, r0
+
+ISR???:
      810:	b510      	push	{r4, lr}
      812:	2008      	movs	r0, #8
      814:	4903      	ldr	r1, [pc, #12]	; (0x824)
@@ -1003,10 +975,10 @@ ResetHandler:
      81c:	a003      	add	r0, pc, #12	; (adr r0, 0x82c)
      81e:	f7ff fcd9 	bl	0x1d4
      822:	bd10      	pop	{r4, pc}
-     824:	40c0      	lsrs	r0, r0
-     826:	5000      	str	r0, [r0, r0]
-     828:	e180      	b.n	0xb2c
-     82a:	e000      	b.n	0x82e
+
+     824:	500040c0      	;	GPIO registers
+     828:	e000e180      	;	NVIC / external interrupt control registers
+
      82c:	690a      	ldr	r2, [r1, #16]
      82e:	706e      	strb	r6, [r5, #1]
      830:	7475      	strb	r5, [r6, #17]
@@ -1136,8 +1108,9 @@ ResetHandler:
      95a:	6108      	str	r0, [r1, #16]
      95c:	6048      	str	r0, [r1, #4]
      95e:	bd10      	pop	{r4, pc}
-     960:	4280      	cmp	r0, r0
-     962:	5000      	str	r0, [r0, r0]
+
+     960:	50004280      	;	GPIO registers
+
      964:	b510      	push	{r4, lr}
      966:	f002 f89b 	bl	0x2aa0
      96a:	4804      	ldr	r0, [pc, #16]	; (0x97c)
@@ -1148,8 +1121,9 @@ ResetHandler:
      974:	6008      	str	r0, [r1, #0]
      976:	f000 f9c7 	bl	0xd08
      97a:	bd10      	pop	{r4, pc}
-     97c:	4000      	ands	r0, r0
-     97e:	4000      	ands	r0, r0
+
+     97c:	40004000      	;	WATCHDOG timer control register
+
      980:	b086      	sub	sp, #24
      982:	4605      	mov	r5, r0
      984:	2000      	movs	r0, #0
@@ -4204,6 +4178,8 @@ ResetHandler:
     2356:	0000      	movs	r0, r0
     2358:	0401      	lsls	r1, r0, #16
     235a:	0000      	movs	r0, r0
+
+ISR???:
     235c:	b510      	push	{r4, lr}
     235e:	4806      	ldr	r0, [pc, #24]	; (0x2378)
     2360:	6880      	ldr	r0, [r0, #8]
@@ -4301,6 +4277,8 @@ ResetHandler:
     241a:	0001      	movs	r1, r0
     241c:	e100      	b.n	0x2620
     241e:	e000      	b.n	0x2422
+
+ISR???:
     2420:	b510      	push	{r4, lr}
     2422:	4805      	ldr	r0, [pc, #20]	; (0x2438)
     2424:	6a80      	ldr	r0, [r0, #40]	; 0x28
@@ -4394,6 +4372,8 @@ ResetHandler:
     24d6:	005b      	lsls	r3, r3, #1
     24d8:	e100      	b.n	0x26dc
     24da:	e000      	b.n	0x24de
+
+ISR???:
     24dc:	b510      	push	{r4, lr}
     24de:	480e      	ldr	r0, [pc, #56]	; (0x2518)
     24e0:	6880      	ldr	r0, [r0, #8]
@@ -4513,6 +4493,8 @@ ResetHandler:
     25c6:	0024      	movs	r4, r4
     25c8:	e100      	b.n	0x27cc
     25ca:	e000      	b.n	0x25ce
+
+ISR???:
     25cc:	4803      	ldr	r0, [pc, #12]	; (0x25dc)
     25ce:	6a80      	ldr	r0, [r0, #40]	; 0x28
     25d0:	2101      	movs	r1, #1
@@ -4690,6 +4672,7 @@ ResetHandler:
 
     2730:	40020000      	;	I2C 0 registers
 
+ISR???:
     2734:	b508      	push	{r3, lr}
     2736:	4830      	ldr	r0, [pc, #192]	; (0x27f8)
     2738:	69c0      	ldr	r0, [r0, #28]
