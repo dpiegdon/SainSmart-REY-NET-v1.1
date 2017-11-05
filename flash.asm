@@ -948,13 +948,13 @@ EINT0_WiznetHandler:
      7e4:	4906      	ldr	r1, [pc, #24]	; (0x800)
      7e6:	6208      	str	r0, [r1, #32]
      7e8:	4906      	ldr	r1, [pc, #24]	; (0x804)
-     7ea:	6008      	str	r0, [r1, #0]
+     7ea:	6008      	str	r0, [r1, #0]	; P3 IO Mode Control Reg
      7ec:	f002 f9da 	bl	0x2ba4
      7f0:	a005      	add	r0, pc, #20	; (adr r0, 0x808)
      7f2:	f7ff fcef 	bl	0x1d4
      7f6:	2004      	movs	r0, #4
      7f8:	4902      	ldr	r1, [pc, #8]	; (0x804)
-     7fa:	3980      	subs	r1, #128	; 0x80
+     7fa:	3980      	subs	r1, #128	; 0x80 => P0 IO Mode Control Reg
      7fc:	6008      	str	r0, [r1, #0]
      7fe:	bd10      	pop	{r4, pc}
 
@@ -1123,7 +1123,7 @@ EINT1Handler:
      976:	f000 f9c7 	bl	0xd08
      97a:	bd10      	pop	{r4, pc}
 
-     97c:	40004000      	;	WATCHDOG timer control register
+     97c:	40004000      	;	WDT timer control register
 
      980:	b086      	sub	sp, #24
      982:	4605      	mov	r5, r0
@@ -5218,6 +5218,8 @@ UART1Handler:
     2b9c:	f7ff fa9a 	bl	0x20d4
     2ba0:	bd10      	pop	{r4, pc}
     2ba2:	0000      	movs	r0, r0
+
+
     2ba4:	b570      	push	{r4, r5, r6, lr}
     2ba6:	2000      	movs	r0, #0
     2ba8:	494b      	ldr	r1, [pc, #300]	; (0x2cd8)
@@ -5379,10 +5381,10 @@ UART1Handler:
     2cfa:	0d65      	lsrs	r5, r4, #21
     2cfc:	000a      	movs	r2, r1
     2cfe:	0000      	movs	r0, r0
-    2d00:	0402      	lsls	r2, r0, #16
-    2d02:	0000      	movs	r0, r0
-    2d04:	0084      	lsls	r4, r0, #2
-    2d06:	2000      	movs	r0, #0
+
+    2d00:	00000402      	;
+    2d04:	20000084      	;
+
     2d08:	6f73      	ldr	r3, [r6, #116]	; 0x74
     2d0a:	6b63      	ldr	r3, [r4, #52]	; 0x34
     2d0c:	7465      	strb	r5, [r4, #17]
@@ -5397,14 +5399,12 @@ UART1Handler:
     2d1e:	7463      	strb	r3, [r4, #17]
     2d20:	0000      	movs	r0, r0
     2d22:	0000      	movs	r0, r0
-    2d24:	008c      	lsls	r4, r1, #2
-    2d26:	2000      	movs	r0, #0
-    2d28:	0502      	lsls	r2, r0, #20
-    2d2a:	0000      	movs	r0, r0
-    2d2c:	0085      	lsls	r5, r0, #2
-    2d2e:	2000      	movs	r0, #0
-    2d30:	008d      	lsls	r5, r1, #2
-    2d32:	2000      	movs	r0, #0
+
+    2d24:	2000008c      	;
+    2d28:	00000502      	;
+    2d2c:	20000085      	;
+    2d30:	2000008d      	;
+
     2d34:	b510      	push	{r4, lr}
     2d36:	4818      	ldr	r0, [pc, #96]	; (0x2d98)
     2d38:	7800      	ldrb	r0, [r0, #0]
@@ -5452,10 +5452,10 @@ UART1Handler:
     2d92:	7008      	strb	r0, [r1, #0]
     2d94:	bd10      	pop	{r4, pc}
     2d96:	0000      	movs	r0, r0
-    2d98:	0084      	lsls	r4, r0, #2
-    2d9a:	2000      	movs	r0, #0
-    2d9c:	0088      	lsls	r0, r1, #2
-    2d9e:	2000      	movs	r0, #0
+
+    2d98:	20000084      	;
+    2d9c:	20000088      	;
+
     2da0:	b510      	push	{r4, lr}
     2da2:	f7ff fe7d 	bl	0x2aa0
     2da6:	4812      	ldr	r0, [pc, #72]	; (0x2df0)
@@ -5494,10 +5494,10 @@ UART1Handler:
     2de8:	6008      	str	r0, [r1, #0]
     2dea:	f7fd ff8d 	bl	0xd08
     2dee:	bd10      	pop	{r4, pc}
-    2df0:	0200      	lsls	r0, r0, #8
-    2df2:	5000      	str	r0, [r0, r0]
-    2df4:	4000      	ands	r0, r0
-    2df6:	4000      	ands	r0, r0
+
+    2df0:	50000200      	;	CLOCK CONTROL register
+    2df4:	40004000      	;	WDT timer control register
+
     2df8:	b570      	push	{r4, r5, r6, lr}
     2dfa:	4605      	mov	r5, r0
     2dfc:	460c      	mov	r4, r1

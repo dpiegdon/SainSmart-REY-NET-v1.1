@@ -55,4 +55,5 @@ which seems to be done here. So all lowlevel ethernet/IP/TCP
 protocol is done in the Wiznet, which explains that the
 firmware of the ARM is so small.
 
+Also connected is an Ateml AT24C256C 32KByte EEPROM via i2c.
 
