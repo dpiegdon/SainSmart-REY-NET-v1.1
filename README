@@ -48,8 +48,11 @@ the EBI is mapped at 6000.0000 in the Cortex M0.
 
 NOTE: Its also possible that SPI is used...
 
+Wiznet /INT signal is connected to Pin 8 (P3.2, EINT0)
+
 The Wiznet can be used to listen on a specified TCP port,
 which seems to be done here. So all lowlevel ethernet/IP/TCP
 protocol is done in the Wiznet, which explains that the
 firmware of the ARM is so small.
+
 

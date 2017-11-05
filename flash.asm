@@ -6,53 +6,53 @@ Disassembly of section .data:
 
 00000000 <.data>:
        0:	20000b30      	;	RESET value for SP
-       4:	00000179      	;	NVIC: ResetHandler (thumb mode)
-       8:	00000199      	;	NVIC: TerminalFault1
-       c:	0000019b      	;	NVIC: TerminalFault2
-      10:	00000000      	
-      14:	00000000      	
-      18:	00000000      	
-      1c:	00000000      	
-      20:	00000000      	
-      24:	00000000      	
-      28:	00000000      	
-      2c:	0000019d      	;	NVIC: TerminalFault3
-      30:	00000000      	
-      34:	00000000      	
-      38:	0000019f      	;	NVIC: TerminalFault4
-      3c:	000001a1      	;	NVIC: TerminalFault5
-      40:	000001a3      	;	NVIC: TerminalFault6
-      44:	000001a3      	;	NVIC: TerminalFault6
-      48:	000007e1      	
-      4c:	00000811      	
-      50:	000001a3      	;	NVIC: TerminalFault6
-      54:	000001a3      	;	NVIC: TerminalFault6
-      58:	000001a3      	;	NVIC: TerminalFault6
-      5c:	000001a3      	;	NVIC: TerminalFault6
-      60:	0000235d      	
-      64:	00002421      	
-      68:	000024dd      	
-      6c:	000025cd      	
-      70:	000001a3      	;	NVIC: TerminalFault6
-      74:	00002735      	
-      78:	000001a3      	;	NVIC: TerminalFault6
-      7c:	000001a3      	;	NVIC: TerminalFault6
-      80:	000001a3      	;	NVIC: TerminalFault6
-      84:	000001a3      	;	NVIC: TerminalFault6
-      88:	000001a3      	;	NVIC: TerminalFault6
-      8c:	000001a3      	;	NVIC: TerminalFault6
-      90:	000001a3      	;	NVIC: TerminalFault6
-      94:	000001a3      	;	NVIC: TerminalFault6
-      98:	000001a3      	;	NVIC: TerminalFault6
-      9c:	000001a3      	;	NVIC: TerminalFault6
-      a0:	000001a3      	;	NVIC: TerminalFault6
-      a4:	000001a3      	;	NVIC: TerminalFault6
-      a8:	000001a3      	;	NVIC: TerminalFault6
-      ac:	000001a3      	;	NVIC: TerminalFault6
-      b0:	000001a3      	;	NVIC: TerminalFault6
-      b4:	000001a3      	;	NVIC: TerminalFault6
-      b8:	000001a3      	;	NVIC: TerminalFault6
-      bc:	000001a3      	;	NVIC: TerminalFault6
+       4:	00000179      	;	NVIC  1: ResetHandler
+       8:	00000199      	;	NVIC  2: BadNMIHandler       (terminal)
+       c:	0000019b      	;	NVIC  3: BadHardFaultHandler (terminal)
+      10:	00000000      	;	NVIC  4:                     (reserved)
+      14:	00000000      	;	NVIC  5:                     (reserved)
+      18:	00000000      	;	NVIC  6:                     (reserved)
+      1c:	00000000      	;	NVIC  7:                     (reserved)
+      20:	00000000      	;	NVIC  8:                     (reserved)
+      24:	00000000      	;	NVIC  9:                     (reserved)
+      28:	00000000      	;	NVIC 10:                     (reserved)
+      2c:	0000019d      	;	NVIC 11: BadSVCallHandler    (terminal)
+      30:	00000000      	;	NVIC 12:                     (reserved)
+      34:	00000000      	;	NVIC 13:                     (reserved)
+      38:	0000019f      	;	NVIC 14: BadPendSVHandler    (terminal)
+      3c:	000001a1      	;	NVIC 15: BadSysTickHandler   (terminal)
+      40:	000001a3      	;	NVIC 16: BadIRQHandler       (BOD_INT, BrownOut, terminal)
+      44:	000001a3      	;	NVIC 17: BadIRQHandler       (WDT_INT, Watchdog, terminal)
+      48:	000007e1      	;	NVIC 18: EINT0_WiznetHandler (EINT0, External signal interrupt from P3.2 pin) [pin 8 for LQFP48, connected to /INT or WIZNET]
+      4c:	00000811      	;	NVIC 19: EINT1Handler        (EINT1, External signal interrupt from P3.3 pin) [pin 9 for LQFP48]
+      50:	000001a3      	;	NVIC 20: BadIRQHandler       (GP01_INT, External signal interrupt from P0/P1, terminal)
+      54:	000001a3      	;	NVIC 21: BadIRQHandler       (GP234_INT, External signal interrupt from P2/P3/P4, terminal)
+      58:	000001a3      	;	NVIC 22: BadIRQHandler       (PWMA_INT, PWM interrupt, terminal)
+      5c:	000001a3      	;	NVIC 23: BadIRQHandler       (PWMB_INT, PWM interrupt, terminal)
+      60:	0000235d      	;	NVIC 24: TIM0Handler         (TIM0_INT, Timer 0 interrupt)
+      64:	00002421      	;	NVIC 25: TIM1Handler         (TIM1_INT, Timer 1 interrupt)
+      68:	000024dd      	;	NVIC 26: TIM2Handler         (TIM2_INT, Timer 2 interrupt)
+      6c:	000025cd      	;	NVIC 27: TIM3Handler         (TIM3_INT, Timer 3 interrupt)
+      70:	000001a3      	;	NVIC 28: BadIRQHandler       (UART0_INT, UART0 interrupt, terminal)
+      74:	00002735      	;	NVIC 29: UART1Handler        (UART1_INT, UART1 interrupt)
+      78:	000001a3      	;	NVIC 30: BadIRQHandler       (SPI0_INT terminal)
+      7c:	000001a3      	;	NVIC 31: BadIRQHandler       (SPI1_INT, terminal)
+      80:	000001a3      	;	NVIC 32: BadIRQHandler       (reserved, terminal)
+      84:	000001a3      	;	NVIC 33: BadIRQHandler       (reserved, terminal)
+      88:	000001a3      	;	NVIC 34: BadIRQHandler       (I2C0_INT, terminal)
+      8c:	000001a3      	;	NVIC 35: BadIRQHandler       (I2C1_INT, terminal)
+      90:	000001a3      	;	NVIC 36: BadIRQHandler       (reserved, terminal)
+      94:	000001a3      	;	NVIC 37: BadIRQHandler       (reserved, terminal)
+      98:	000001a3      	;	NVIC 38: BadIRQHandler       (reserved, terminal)
+      9c:	000001a3      	;	NVIC 39: BadIRQHandler       (reserved, terminal)
+      a0:	000001a3      	;	NVIC 40: BadIRQHandler       (reserved, terminal)
+      a4:	000001a3      	;	NVIC 41: BadIRQHandler       (ACMP01_INT, terminal)
+      a8:	000001a3      	;	NVIC 42: BadIRQHandler       (ACMP23_INT, terminal)
+      ac:	000001a3      	;	NVIC 43: BadIRQHandler       (reserved, terminal)
+      b0:	000001a3      	;	NVIC 44: BadIRQHandler       (PWRWU_INT, Clock controller interrupt for chip wakeup from PDown state, terminal)
+      b4:	000001a3      	;	NVIC 45: BadIRQHandler       (ADC_INT, terminal)
+      b8:	000001a3      	;	NVIC 46: BadIRQHandler       (reserved, terminal)
+      bc:	000001a3      	;	NVIC 47: BadIRQHandler       (reserved, terminal)
 
       c0:	f000 f802 	bl	0xc8
       c4:	f000 f848 	bl	0x158
@@ -155,17 +155,17 @@ ResetHandler:
      194:	480b      	ldr	r0, [pc, #44]	; (0x1c4)
      196:	4700      	bx	r0
 
-TerminalFault1:
+BadNMIHandler:
      198:	e7fe      	b.n	0x198
-TerminalFault2:
+BadHardFaultHandler:
      19a:	e7fe      	b.n	0x19a
-TerminalFault3:
+BadSVCallHandler:
      19c:	e7fe      	b.n	0x19c
-TerminalFault4:
+BadPendSVHandler:
      19e:	e7fe      	b.n	0x19e
-TerminalFault5:
+BadSysTickHandler:
      1a0:	e7fe      	b.n	0x1a0
-TerminalFault6:
+BadIRQHandler:
      1a2:	e7fe      	b.n	0x1a2
 
      1a4:	4808      	ldr	r0, [pc, #32]	; (0x1c8)
@@ -480,9 +480,10 @@ TerminalFault6:
      428:	bd70      	pop	{r4, r5, r6, pc}
      42a:	4620      	mov	r0, r4
      42c:	bd70      	pop	{r4, r5, r6, pc}
-     42e:	0000      	movs	r0, r0
-     430:	2cbf      	cmp	r4, #191	; 0xbf
-     432:	0000      	movs	r0, r0
+
+     42e:	0000      	;	padding
+     430:	00002cbf      	;
+
      434:	6901      	ldr	r1, [r0, #16]
      436:	1c4a      	adds	r2, r1, #1
      438:	6102      	str	r2, [r0, #16]
@@ -941,7 +942,7 @@ SomeGPIOConfiguration???:
      7d8:	50004000      	;	GPIO registers
      7dc:	50004100      	;	GPIO registers
 
-ISR???:
+EINT0_WiznetHandler:
      7e0:	b510      	push	{r4, lr}
      7e2:	2004      	movs	r0, #4
      7e4:	4906      	ldr	r1, [pc, #24]	; (0x800)
@@ -965,7 +966,7 @@ ISR???:
      80c:	0a0d      	lsrs	r5, r1, #8
      80e:	0000      	movs	r0, r0
 
-ISR???:
+EINT1Handler:
      810:	b510      	push	{r4, lr}
      812:	2008      	movs	r0, #8
      814:	4903      	ldr	r1, [pc, #12]	; (0x824)
@@ -4179,7 +4180,7 @@ ISR???:
     2358:	0401      	lsls	r1, r0, #16
     235a:	0000      	movs	r0, r0
 
-ISR???:
+TIM0Handler:
     235c:	b510      	push	{r4, lr}
     235e:	4806      	ldr	r0, [pc, #24]	; (0x2378)
     2360:	6880      	ldr	r0, [r0, #8]
@@ -4278,7 +4279,7 @@ ISR???:
     241c:	e100      	b.n	0x2620
     241e:	e000      	b.n	0x2422
 
-ISR???:
+TIM1Handler:
     2420:	b510      	push	{r4, lr}
     2422:	4805      	ldr	r0, [pc, #20]	; (0x2438)
     2424:	6a80      	ldr	r0, [r0, #40]	; 0x28
@@ -4373,7 +4374,7 @@ ISR???:
     24d8:	e100      	b.n	0x26dc
     24da:	e000      	b.n	0x24de
 
-ISR???:
+TIM2Handler:
     24dc:	b510      	push	{r4, lr}
     24de:	480e      	ldr	r0, [pc, #56]	; (0x2518)
     24e0:	6880      	ldr	r0, [r0, #8]
@@ -4494,7 +4495,7 @@ ISR???:
     25c8:	e100      	b.n	0x27cc
     25ca:	e000      	b.n	0x25ce
 
-ISR???:
+TIM3Handler:
     25cc:	4803      	ldr	r0, [pc, #12]	; (0x25dc)
     25ce:	6a80      	ldr	r0, [r0, #40]	; 0x28
     25d0:	2101      	movs	r1, #1
@@ -4672,7 +4673,7 @@ ISR???:
 
     2730:	40020000      	;	I2C 0 registers
 
-ISR???:
+UART1Handler:
     2734:	b508      	push	{r3, lr}
     2736:	4830      	ldr	r0, [pc, #192]	; (0x27f8)
     2738:	69c0      	ldr	r0, [r0, #28]
