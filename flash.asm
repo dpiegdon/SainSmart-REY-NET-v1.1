@@ -119,12 +119,15 @@ StartUpCode
      140:	d102      	bne.n	0x148
      142:	f000 f855 	bl	0x1f0
      146:	bd10      	pop	{r4, pc}
+
      148:	2000      	movs	r0, #0
      14a:	bd10      	pop	{r4, pc}
+
      14c:	b51f      	push	{r0, r1, r2, r3, r4, lr}
      14e:	46c0      	nop			; (mov r8, r8)
      150:	46c0      	nop			; (mov r8, r8)
      152:	bd1f      	pop	{r0, r1, r2, r3, r4, pc}
+
      154:	b510      	push	{r4, lr}
      156:	bd10      	pop	{r4, pc}
      158:	f000 f984 	bl	0x464
@@ -134,8 +137,10 @@ StartUpCode
      166:	f000 f99c 	bl	0x4a2
      16a:	b403      	push	{r0, r1}
      16c:	f7ff fff2 	bl	0x154
+FirmwareFallThrough:
      170:	bc03      	pop	{r0, r1}
-     172:	f000 f9a1 	bl	0x4b8
+     172:	f000 f9a1 	bl	0x4b8		;		; TrapIntoDebugMode
+
      176:	0000      	;	padding
 
 ResetHandler:
@@ -154,7 +159,7 @@ ResetHandler:
      190:	2100      	movs	r1, #0
      192:	6001      	str	r1, [r0, #0]
      194:	480b      	ldr	r0, [pc, #44]	; (0x1c4)
-     196:	4700      	bx	r0
+     196:	4700      	bx	r0				; Jump to StartUpCode
 
 BadNMIHandler:
      198:	e7fe      	b.n	0x198
@@ -505,8 +510,10 @@ BadIRQHandler:
      456:	f7ff fef7 	bl	0x248
      45a:	b00f      	add	sp, #60	; 0x3c
      45c:	bd00      	pop	{pc}
-     45e:	0000      	movs	r0, r0
-     460:	ffe5 ffff 			; <UNDEFINED> instruction: 0xffe5ffff
+
+     45e:	0000      	;	padding
+     460:	ffffffe5	;
+
      464:	4675      	mov	r5, lr
      466:	f000 f823 	bl	0x4b0
      46a:	46ae      	mov	lr, r5
@@ -536,6 +543,7 @@ BadIRQHandler:
      49c:	0049      	lsls	r1, r1, #1
      49e:	468d      	mov	sp, r1
      4a0:	4770      	bx	lr
+
      4a2:	4604      	mov	r4, r0
      4a4:	46c0      	nop			; (mov r8, r8)
      4a6:	46c0      	nop			; (mov r8, r8)
@@ -544,13 +552,16 @@ BadIRQHandler:
      4ae:	0000      	movs	r0, r0
      4b0:	4800      	ldr	r0, [pc, #0]	; (0x4b4)
      4b2:	4770      	bx	lr
-     4b4:	06d0      	lsls	r0, r2, #27
-     4b6:	2000      	movs	r0, #0
+
+     4b4:	200006d0      	;
+
+TrapIntoDebugMode:
      4b8:	4901      	ldr	r1, [pc, #4]	; (0x4c0)
      4ba:	2018      	movs	r0, #24
      4bc:	beab      	bkpt	0x00ab
-     4be:	e7fe      	b.n	0x4be
-     4c0:	0026      	movs	r6, r4
+     4be:	e7fe      	b.n	0x4be		; TERMINAL LOOP
+
+     4c0:	00020026      	movs	r6, r4
      4c2:	0002      	movs	r2, r0
      4c4:	4770      	bx	lr
      4c6:	0000      	movs	r0, r0
@@ -576,8 +587,10 @@ BadIRQHandler:
      4ee:	d1f4      	bne.n	0x4da
      4f0:	4770      	bx	lr
      4f2:	0000      	movs	r0, r0
+
      4f4:	0333      	lsls	r3, r6, #12
      4f6:	0000      	movs	r0, r0
+
      4f8:	b510      	push	{r4, lr}
      4fa:	2121      	movs	r1, #33	; 0x21
      4fc:	2001      	movs	r0, #1
@@ -5851,6 +5864,7 @@ WaitForWriteTxCompletion:
     30dc:	f7fe ffb4 	bl	0x2048
     30e0:	2000      	movs	r0, #0
     30e2:	bd10      	pop	{r4, pc}
+
     30e4:	b086      	sub	sp, #24
     30e6:	200a      	movs	r0, #10
     30e8:	f7fd f9f6 	bl	0x4d8
