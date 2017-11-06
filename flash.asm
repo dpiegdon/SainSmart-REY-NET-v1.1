@@ -190,19 +190,20 @@ BadIRQHandler:
      1cc:	20000b30      	;
      1d0:	20000730      	;
 
+printf(format, ...)
      1d4:	b40f      	push	{r0, r1, r2, r3}
-     1d6:	4905      	ldr	r1, [pc, #20]	; (0x1ec)
+     1d6:	4905      	ldr	r1, [pc, #20]	; (0x1ec)	; r1 := scratchpad
      1d8:	b510      	push	{r4, lr}
      1da:	aa03      	add	r2, sp, #12
      1dc:	9802      	ldr	r0, [sp, #8]
-     1de:	f000 f915 	bl	0x40c
+     1de:	f000 f915 	bl	0x40c				; vprintf(format, scratchpad, ap)
      1e2:	bc10      	pop	{r4}
      1e4:	bc08      	pop	{r3}
      1e6:	b004      	add	sp, #16
      1e8:	4718      	bx	r3
 
      1ea:	0000      	;	padding
-     1ec:	20000000      	;
+     1ec:	20000000      	;	char scratchpad[8];
 
      1f0:	b570      	push	{r4, r5, r6, lr}
      1f2:	4604      	mov	r4, r0
@@ -257,7 +258,7 @@ BadIRQHandler:
      254:	68e1      	ldr	r1, [r4, #12]
      256:	4788      	blx	r1
      258:	2800      	cmp	r0, #0
-     25a:	d07a      	beq.n	0x352				<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+     25a:	d07a      	beq.n	0x352
      25c:	2825      	cmp	r0, #37	; 0x25
      25e:	d002      	beq.n	0x266
      260:	6862      	ldr	r2, [r4, #4]
@@ -383,6 +384,8 @@ BadIRQHandler:
      356:	4770      	bx	lr
      358:	4770      	bx	lr
      35a:	4770      	bx	lr
+
+printf_??? ?
      35c:	b5ff      	push	{r0, r1, r2, r3, r4, r5, r6, r7, lr}
      35e:	4604      	mov	r4, r0
      360:	460d      	mov	r5, r1
@@ -471,15 +474,17 @@ BadIRQHandler:
      406:	bdf0      	pop	{r4, r5, r6, r7, pc}
      408:	2001      	movs	r0, #1
      40a:	e7fb      	b.n	0x404
+
+vprintf(format, scratchpad, ap):
      40c:	4b08      	ldr	r3, [pc, #32]	; (0x430)
      40e:	b570      	push	{r4, r5, r6, lr}
-     410:	460d      	mov	r5, r1
+     410:	460d      	mov	r5, r1				; r5 := ap
      412:	447b      	add	r3, pc
      414:	f000 f813 	bl	0x43e
-     418:	4604      	mov	r4, r0
+     418:	4604      	mov	r4, r0				; r4 := scratchpad
      41a:	4628      	mov	r0, r5
      41c:	f002 fe56 	bl	0x30cc
-     420:	2800      	cmp	r0, #0
+     420:	2800      	cmp	r0, #0				; ? ap empty?
      422:	d002      	beq.n	0x42a
      424:	2000      	movs	r0, #0
      426:	43c0      	mvns	r0, r0
@@ -495,6 +500,8 @@ BadIRQHandler:
      438:	6102      	str	r2, [r0, #16]
      43a:	7808      	ldrb	r0, [r1, #0]
      43c:	4770      	bx	lr
+
+vprintf_???:
      43e:	b500      	push	{lr}
      440:	b08f      	sub	sp, #60	; 0x3c
      442:	9102      	str	r1, [sp, #8]
@@ -561,8 +568,8 @@ TrapIntoDebugMode:
      4bc:	beab      	bkpt	0x00ab
      4be:	e7fe      	b.n	0x4be		; TERMINAL LOOP
 
-     4c0:	00020026      	movs	r6, r4
-     4c2:	0002      	movs	r2, r0
+     4c0:	00020026      	;
+
      4c4:	4770      	bx	lr
      4c6:	0000      	movs	r0, r0
      4c8:	2000      	movs	r0, #0
@@ -573,6 +580,8 @@ TrapIntoDebugMode:
      4d2:	4770      	bx	lr
      4d4:	000c      	movs	r4, r1
      4d6:	2000      	movs	r0, #0
+
+Delay(msecs):								; *probably* msecs
      4d8:	e008      	b.n	0x4ec
      4da:	2100      	movs	r1, #0
      4dc:	e002      	b.n	0x4e4
@@ -586,33 +595,37 @@ TrapIntoDebugMode:
      4ec:	2800      	cmp	r0, #0
      4ee:	d1f4      	bne.n	0x4da
      4f0:	4770      	bx	lr
-     4f2:	0000      	movs	r0, r0
 
-     4f4:	0333      	lsls	r3, r6, #12
-     4f6:	0000      	movs	r0, r0
+     4f2:	0000      	;	padding
+     4f4:	00000333      	;
 
+WiznetSocketSetup(void): -> int						; returns 0 in case of error, 1 if succeeded
      4f8:	b510      	push	{r4, lr}
      4fa:	2121      	movs	r1, #33	; 0x21
-     4fc:	2001      	movs	r0, #1
-     4fe:	0280      	lsls	r0, r0, #10
-     500:	f002 fd3e 	bl	0x2f80				; Wiznet_Write_Address
+     4fc:	2001      	movs	r0, #1				; Wiznet_Write_Address(0x400, 0x21)
+     4fe:	0280      	lsls	r0, r0, #10			; Socket 0 Mode Register: Disable Multicast, MAC Filter
+     500:	f002 fd3e 	bl	0x2f80				;   and Delayed ACK; use TCP as protocol
      504:	2101      	movs	r1, #1
-     506:	481d      	ldr	r0, [pc, #116]	; (0x57c)
-     508:	f002 fd3a 	bl	0x2f80				; Wiznet_Write_Address
+     506:	481d      	ldr	r0, [pc, #116]	; (0x57c)	; Wiznet_Write_Address(0x401, 0x1)
+     508:	f002 fd3a 	bl	0x2f80				; => Socket 0 Command register: Open Socket
      50c:	481b      	ldr	r0, [pc, #108]	; (0x57c)
-     50e:	1c80      	adds	r0, r0, #2
-     510:	f001 fb46 	bl	0x1ba0				; Wiznet_Read_Address
-     514:	2813      	cmp	r0, #19
-     516:	d008      	beq.n	0x52a
+     50e:	1c80      	adds	r0, r0, #2			; Wiznet_Read_Address(0x403)
+     510:	f001 fb46 	bl	0x1ba0				; <= Socket 0 Status register
+     514:	2813      	cmp	r0, #19				; 0x13 == SOCK_INIT
+     516:	d008      	beq.n	0x52a				; => WiznetSocketInitOk
+WiznetSocketSetup_Failed1:
      518:	2110      	movs	r1, #16
-     51a:	4818      	ldr	r0, [pc, #96]	; (0x57c)
-     51c:	f002 fd30 	bl	0x2f80				; Wiznet_Write_Address
+     51a:	4818      	ldr	r0, [pc, #96]	; (0x57c)	; Wiznet_Write_Address(0x401, 0x10)
+     51c:	f002 fd30 	bl	0x2f80				; => Close socket
      520:	a017      	add	r0, pc, #92	; (adr r0, 0x580)
-     522:	f7ff fe57 	bl	0x1d4
+     522:	f7ff fe57 	bl	0x1d4				; printf
      526:	2000      	movs	r0, #0
+WiznetSocketSetup_Done:
      528:	bd10      	pop	{r4, pc}
+WiznetSocketInitOk:
      52a:	2400      	movs	r4, #0
      52c:	e00a      	b.n	0x544
+WiznetSocket...?
      52e:	4a1a      	ldr	r2, [pc, #104]	; (0x598)
      530:	5d12      	ldrb	r2, [r2, r4]
      532:	1c52      	adds	r2, r2, #1
@@ -620,16 +633,17 @@ TrapIntoDebugMode:
      536:	4a11      	ldr	r2, [pc, #68]	; (0x57c)
      538:	320b      	adds	r2, #11
      53a:	18a0      	adds	r0, r4, r2
-     53c:	f002 fd20 	bl	0x2f80				; Wiznet_Write_Address
+     53c:	f002 fd20 	bl	0x2f80				; Wiznet_Write_Address(???, ???)
      540:	1c60      	adds	r0, r4, #1
      542:	b2c4      	uxtb	r4, r0
+WiznetSocket...?
      544:	2c04      	cmp	r4, #4
      546:	dbf2      	blt.n	0x52e
-     548:	2104      	movs	r1, #4
-     54a:	480c      	ldr	r0, [pc, #48]	; (0x57c)
-     54c:	f002 fd18 	bl	0x2f80				; Wiznet_Write_Address
+     548:	2104      	movs	r1, #4				; 0x04 == CONNECT
+     54a:	480c      	ldr	r0, [pc, #48]	; (0x57c)	; Wiznet_Write_Address(0x401, 0x4)
+     54c:	f002 fd18 	bl	0x2f80				; => try to connect to ???
      550:	2064      	movs	r0, #100	; 0x64
-     552:	f7ff ffc1 	bl	0x4d8
+     552:	f7ff ffc1 	bl	0x4d8				; Delay(#100)
      556:	4809      	ldr	r0, [pc, #36]	; (0x57c)
      558:	1d40      	adds	r0, r0, #5
      55a:	f001 fb21 	bl	0x1ba0				; Wiznet_Read_Address
@@ -640,38 +654,40 @@ TrapIntoDebugMode:
      568:	2cff      	cmp	r4, #255	; 0xff
      56a:	d104      	bne.n	0x576
      56c:	a00b      	add	r0, pc, #44	; (adr r0, 0x59c)
-     56e:	f7ff fe31 	bl	0x1d4
+     56e:	f7ff fe31 	bl	0x1d4				; printf
+WiznetSocketSetup_Failed2:
      572:	2000      	movs	r0, #0
-     574:	e7d8      	b.n	0x528
+     574:	e7d8      	b.n	0x528				; WiznetSocketSetup_Done
+WiznetSocketSetup_Success
      576:	2001      	movs	r0, #1
-     578:	e7d6      	b.n	0x528
-     57a:	0000      	movs	r0, r0
+     578:	e7d6      	b.n	0x528				; WiznetSocketSetup_Done
+     57a:	0000      	;	padding
 
-     57c:	0401      	;
-     57e:	0000      	;
-     580:	706f      	;
+     57c:	00000401      	;	Wiznet: Socket 0 Command register
+
+     580:	706f      	;	String 'open_scoket--eeror\r\n\0\0\0\0' (sic!)
      582:	6e65      	;
+     584:	735f      	;
+     586:	6f63      	;
+     588:	656b      	;
+     58a:	2d74      	;
+     58c:	652d      	;
+     58e:	7265      	;
+     590:	726f      	;
+     592:	0a0d      	;
+     594:	0000      	;
+     596:	0000      	;
 
-     584:	735f      	strb	r7, [r3, #13]
-     586:	6f63      	ldr	r3, [r4, #116]	; 0x74
-     588:	656b      	str	r3, [r5, #84]	; 0x54
-     58a:	2d74      	cmp	r5, #116	; 0x74
-     58c:	652d      	str	r5, [r5, #80]	; 0x50
-     58e:	7265      	strb	r5, [r4, #9]
-     590:	726f      	strb	r7, [r5, #9]
-     592:	0a0d      	lsrs	r5, r1, #8
-     594:	0000      	movs	r0, r0
-     596:	0000      	movs	r0, r0
-     598:	0060      	lsls	r0, r4, #1
-     59a:	2000      	movs	r0, #0
-     59c:	200a      	movs	r0, #10
-     59e:	6f4e      	ldr	r6, [r1, #116]	; 0x74
-     5a0:	675f      	str	r7, [r3, #116]	; 0x74
-     5a2:	7461      	strb	r1, [r4, #17]
-     5a4:	7765      	strb	r5, [r4, #29]
-     5a6:	7961      	ldrb	r1, [r4, #5]
-     5a8:	0a0d      	lsrs	r5, r1, #8
-     5aa:	0000      	movs	r0, r0
+     598:	20000060      	;
+
+     59c:	200a      	;	String ' \n No_gateway\r\n'
+     59e:	6f4e      	;
+     5a0:	675f      	;
+     5a2:	7461      	;
+     5a4:	7765      	;
+     5a6:	7961      	;
+     5a8:	0a0d      	;
+     5aa:	0000      	;
 
 
 SomeGPIOConfiguration???:
@@ -965,7 +981,7 @@ EINT0_WiznetHandler:
      7ea:	6008      	str	r0, [r1, #0]	; P3 IO Mode Control Reg
      7ec:	f002 f9da 	bl	0x2ba4
      7f0:	a005      	add	r0, pc, #20	; (adr r0, 0x808)
-     7f2:	f7ff fcef 	bl	0x1d4
+     7f2:	f7ff fcef 	bl	0x1d4				; printf
      7f6:	2004      	movs	r0, #4
      7f8:	4902      	ldr	r1, [pc, #8]	; (0x804)
      7fa:	3980      	subs	r1, #128	; 0x80 => P0 IO Mode Control Reg
@@ -975,10 +991,10 @@ EINT0_WiznetHandler:
      800:	500040c0      	;	GPIO registers for PORT3
      804:	e000e180      	;	NVIC / external interrupt control registers
 
-     808:	4e45      	ldr	r6, [pc, #276]	; (0x920)
-     80a:	3054      	adds	r0, #84	; 0x54
-     80c:	0a0d      	lsrs	r5, r1, #8
-     80e:	0000      	movs	r0, r0
+     808:	4e45      	;	String 'ENT0\r\n\0\0'
+     80a:	3054      	;
+     80c:	0a0d      	;
+     80e:	0000      	;
 
 EINT1Handler:
      810:	b510      	push	{r4, lr}
@@ -988,20 +1004,21 @@ EINT1Handler:
      818:	4903      	ldr	r1, [pc, #12]	; (0x828)
      81a:	6008      	str	r0, [r1, #0]
      81c:	a003      	add	r0, pc, #12	; (adr r0, 0x82c)
-     81e:	f7ff fcd9 	bl	0x1d4
+     81e:	f7ff fcd9 	bl	0x1d4				; printf
      822:	bd10      	pop	{r4, pc}
 
      824:	500040c0      	;	GPIO registers for PORT3
      828:	e000e180      	;	NVIC / external interrupt control registers
 
-     82c:	690a      	ldr	r2, [r1, #16]
-     82e:	706e      	strb	r6, [r5, #1]
-     830:	7475      	strb	r5, [r6, #17]
-     832:	6520      	str	r0, [r4, #80]	; 0x50
-     834:	6e69      	ldr	r1, [r5, #100]	; 0x64
-     836:	3174      	adds	r1, #116	; 0x74
-     838:	0000      	movs	r0, r0
-     83a:	0000      	movs	r0, r0
+     82c:	690a      	;	String '\ninput eint1\0\0\0\0'
+     82e:	706e      	;
+     830:	7475      	;
+     832:	6520      	;
+     834:	6e69      	;
+     836:	3174      	;
+     838:	0000      	;
+     83a:	0000      	;
+
      83c:	b510      	push	{r4, lr}
      83e:	2201      	movs	r2, #1
      840:	2106      	movs	r1, #6
@@ -1154,7 +1171,7 @@ EINT1Handler:
      99a:	60c8      	str	r0, [r1, #12]
      99c:	20ff      	movs	r0, #255	; 0xff
      99e:	302d      	adds	r0, #45	; 0x2d
-     9a0:	f7ff fd9a 	bl	0x4d8
+     9a0:	f7ff fd9a 	bl	0x4d8				; Delay(#45)
      9a4:	2300      	movs	r3, #0
      9a6:	462a      	mov	r2, r5
      9a8:	a901      	add	r1, sp, #4
@@ -1192,13 +1209,13 @@ EINT1Handler:
      9f6:	3940      	subs	r1, #64	; 0x40
      9f8:	6388      	str	r0, [r1, #56]	; 0x38
      9fa:	2064      	movs	r0, #100	; 0x64
-     9fc:	f7ff fd6c 	bl	0x4d8
+     9fc:	f7ff fd6c 	bl	0x4d8				; Delay(#100)
      a00:	2000      	movs	r0, #0
      a02:	4903      	ldr	r1, [pc, #12]	; (0xa10)
      a04:	3940      	subs	r1, #64	; 0x40
      a06:	6388      	str	r0, [r1, #56]	; 0x38
      a08:	2064      	movs	r0, #100	; 0x64
-     a0a:	f7ff fd65 	bl	0x4d8
+     a0a:	f7ff fd65 	bl	0x4d8				; Delay(#100)
      a0e:	e7f0      	b.n	0x9f2
      a10:	4280      	cmp	r0, r0
      a12:	5000      	str	r0, [r0, r0]
@@ -1311,7 +1328,7 @@ EINT1Handler:
      b00:	4625      	mov	r5, r4
      b02:	7829      	ldrb	r1, [r5, #0]
      b04:	a042      	add	r0, pc, #264	; (adr r0, 0xc10)
-     b06:	f7ff fb65 	bl	0x1d4
+     b06:	f7ff fb65 	bl	0x1d4				; printf
      b0a:	2300      	movs	r3, #0
      b0c:	2208      	movs	r2, #8
      b0e:	4945      	ldr	r1, [pc, #276]	; (0xc24)
@@ -1412,12 +1429,12 @@ EINT1Handler:
      be0:	4919      	ldr	r1, [pc, #100]	; (0xc48)
      be2:	6048      	str	r0, [r1, #4]
      be4:	2064      	movs	r0, #100	; 0x64
-     be6:	f7ff fc77 	bl	0x4d8
+     be6:	f7ff fc77 	bl	0x4d8				; Delay(#100)
      bea:	2001      	movs	r0, #1
      bec:	4916      	ldr	r1, [pc, #88]	; (0xc48)
      bee:	6048      	str	r0, [r1, #4]
      bf0:	2064      	movs	r0, #100	; 0x64
-     bf2:	f7ff fc71 	bl	0x4d8
+     bf2:	f7ff fc71 	bl	0x4d8				; Delay(#100)
      bf6:	f001 ffcb 	bl	0x2b90
      bfa:	f001 f8bd 	bl	0x1d78
      bfe:	4813      	ldr	r0, [pc, #76]	; (0xc4c)
@@ -1429,16 +1446,17 @@ EINT1Handler:
      c0a:	4910      	ldr	r1, [pc, #64]	; (0xc4c)
      c0c:	6008      	str	r0, [r1, #0]
      c0e:	bd70      	pop	{r4, r5, r6, pc}
-     c10:	6946      	ldr	r6, [r0, #20]
-     c12:	7372      	strb	r2, [r6, #13]
-     c14:	2074      	movs	r0, #116	; 0x74
-     c16:	6164      	str	r4, [r4, #20]
-     c18:	6174      	str	r4, [r6, #20]
-     c1a:	303d      	adds	r0, #61	; 0x3d
-     c1c:	2578      	movs	r5, #120	; 0x78
-     c1e:	0d78      	lsrs	r0, r7, #21
-     c20:	000a      	movs	r2, r1
-     c22:	0000      	movs	r0, r0
+
+     c10:	6946      	;	String 'First data=0x%x\r\n\0\0\0'
+     c12:	7372      	;
+     c14:	2074      	;
+     c16:	6164      	;
+     c18:	6174      	;
+     c1a:	303d      	;
+     c1c:	2578      	;
+     c1e:	0d78      	;
+     c20:	000a      	;
+     c22:	0000      	;
 
      c24:	20000110      	;
      c28:	20000052      	;
@@ -1515,12 +1533,12 @@ EINT1Handler:
      cc8:	490e      	ldr	r1, [pc, #56]	; (0xd04)
      cca:	6048      	str	r0, [r1, #4]
      ccc:	2064      	movs	r0, #100	; 0x64
-     cce:	f7ff fc03 	bl	0x4d8
+     cce:	f7ff fc03 	bl	0x4d8				; Delay(#100)
      cd2:	2001      	movs	r0, #1
      cd4:	490b      	ldr	r1, [pc, #44]	; (0xd04)
      cd6:	6048      	str	r0, [r1, #4]
      cd8:	2064      	movs	r0, #100	; 0x64
-     cda:	f7ff fbfd 	bl	0x4d8
+     cda:	f7ff fbfd 	bl	0x4d8				; Delay(#100)
      cde:	f001 ff57 	bl	0x2b90
      ce2:	bd10      	pop	{r4, pc}
 
@@ -1666,25 +1684,25 @@ EINT1Handler:
      e0e:	2c06      	cmp	r4, #6
      e10:	d3cb      	bcc.n	0xdaa
      e12:	a005      	add	r0, pc, #20	; (adr r0, 0xe28)
-     e14:	f7ff f9de 	bl	0x1d4
+     e14:	f7ff f9de 	bl	0x1d4				; printf
      e18:	20ff      	movs	r0, #255	; 0xff
      e1a:	e7f5      	b.n	0xe08
-     e1c:	0038      	movs	r0, r7
-     e1e:	2000      	movs	r0, #0
-     e20:	0238      	lsls	r0, r7, #8
-     e22:	2000      	movs	r0, #0
-     e24:	003c      	movs	r4, r7
-     e26:	2000      	movs	r0, #0
-     e28:	7265      	strb	r5, [r4, #9]
-     e2a:	6f72      	ldr	r2, [r6, #116]	; 0x74
-     e2c:	2072      	movs	r0, #114	; 0x72
-     e2e:	534d      	strh	r5, [r1, r5]
-     e30:	7453      	strb	r3, [r2, #17]
-     e32:	7261      	strb	r1, [r4, #9]
-     e34:	5474      	strb	r4, [r6, r1]
-     e36:	6d69      	ldr	r1, [r5, #84]	; 0x54
-     e38:	7265      	strb	r5, [r4, #9]
-     e3a:	000a      	movs	r2, r1
+
+     e1c:	20000038      	;
+     e20:	20000238      	;
+     e24:	2000003c      	;
+
+     e28:	7265      	;	String 'error MSStartTimer\n\0'
+     e2a:	6f72      	;
+     e2c:	2072      	;
+     e2e:	534d      	;
+     e30:	7453      	;
+     e32:	7261      	;
+     e34:	5474      	;
+     e36:	6d69      	;
+     e38:	7265      	;
+     e3a:	000a      	;
+
      e3c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
      e3e:	4605      	mov	r5, r0
      e40:	786f      	ldrb	r7, [r5, #1]
@@ -2413,7 +2431,7 @@ EINT1Handler:
     1478:	8008      	strh	r0, [r1, #0]
     147a:	4621      	mov	r1, r4
     147c:	a007      	add	r0, pc, #28	; (adr r0, 0x149c)
-    147e:	f7fe fea9 	bl	0x1d4
+    147e:	f7fe fea9 	bl	0x1d4				; printf
     1482:	4620      	mov	r0, r4
     1484:	f001 ff3a 	bl	0x32fc
     1488:	bd10      	pop	{r4, pc}
@@ -2426,12 +2444,14 @@ EINT1Handler:
     1496:	2000      	movs	r0, #0
     1498:	004c      	lsls	r4, r1, #1
     149a:	2000      	movs	r0, #0
-    149c:	200a      	movs	r0, #10
-    149e:	454e      	cmp	r6, r9
-    14a0:	3054      	adds	r0, #84	; 0x54
-    14a2:	252d      	movs	r5, #45	; 0x2d
-    14a4:	0058      	lsls	r0, r3, #1
-    14a6:	0000      	movs	r0, r0
+
+    149c:	200a      	;	String '\n NET0-%X\0\0\0'
+    149e:	454e      	;
+    14a0:	3054      	;
+    14a2:	252d      	;
+    14a4:	0058      	;
+    14a6:	0000      	;
+
     14a8:	b570      	push	{r4, r5, r6, lr}
     14aa:	4605      	mov	r5, r0
     14ac:	0428      	lsls	r0, r5, #16
@@ -3670,7 +3690,7 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     1ec6:	4668      	mov	r0, sp
     1ec8:	7901      	ldrb	r1, [r0, #4]
     1eca:	a01e      	add	r0, pc, #120	; (adr r0, 0x1f44)
-    1ecc:	f7fe f982 	bl	0x1d4
+    1ecc:	f7fe f982 	bl	0x1d4				; printf
     1ed0:	9802      	ldr	r0, [sp, #8]
     1ed2:	1c40      	adds	r0, r0, #1
     1ed4:	b280      	uxth	r0, r0
@@ -3716,22 +3736,20 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     1f2a:	4638      	mov	r0, r7
     1f2c:	b005      	add	sp, #20
     1f2e:	bdf0      	pop	{r4, r5, r6, r7, pc}
-    1f30:	0426      	lsls	r6, r4, #16
-    1f32:	0000      	movs	r0, r0
-    1f34:	004c      	lsls	r4, r1, #1
-    1f36:	2000      	movs	r0, #0
-    1f38:	04d0      	lsls	r0, r2, #19
-    1f3a:	2000      	movs	r0, #0
-    1f3c:	0050      	lsls	r0, r2, #1
-    1f3e:	2000      	movs	r0, #0
-    1f40:	004e      	lsls	r6, r1, #1
-    1f42:	2000      	movs	r0, #0
-    1f44:	7852      	ldrb	r2, [r2, #1]
-    1f46:	303d      	adds	r0, #61	; 0x3d
-    1f48:	2578      	movs	r5, #120	; 0x78
-    1f4a:	0d78      	lsrs	r0, r7, #21
-    1f4c:	000a      	movs	r2, r1
-    1f4e:	0000      	movs	r0, r0
+
+    1f30:	20000426      	;
+    1f34:	2000004c      	;
+    1f38:	200004d0      	;
+    1f3c:	20000050      	;
+    1f40:	2000004e      	;
+
+    1f44:	7852      	;	String 'Rx=0x%x\r\a\0\0\0'
+    1f46:	303d      	;
+    1f48:	2578      	;
+    1f4a:	0d78      	;
+    1f4c:	000a      	;
+    1f4e:	0000      	;
+
     1f50:	b5f3      	push	{r0, r1, r4, r5, r6, r7, lr}
     1f52:	b083      	sub	sp, #12
     1f54:	4606      	mov	r6, r0
@@ -3935,7 +3953,7 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     20f2:	f000 ff45 	bl	0x2f80				; Wiznet_Write_Address
     20f6:	4629      	mov	r1, r5
     20f8:	a053      	add	r0, pc, #332	; (adr r0, 0x2248)
-    20fa:	f7fe f86b 	bl	0x1d4
+    20fa:	f7fe f86b 	bl	0x1d4				; printf
     20fe:	2d00      	cmp	r5, #0
     2100:	d006      	beq.n	0x2110
     2102:	2d01      	cmp	r5, #1
@@ -4081,12 +4099,13 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     2242:	bd70      	pop	{r4, r5, r6, pc}
     2244:	0412      	lsls	r2, r2, #16
     2246:	0000      	movs	r0, r0
-    2248:	730a      	strb	r2, [r1, #12]
-    224a:	636f      	str	r7, [r5, #52]	; 0x34
-    224c:	656b      	str	r3, [r5, #84]	; 0x54
-    224e:	2074      	movs	r0, #116	; 0x74
-    2250:	7825      	ldrb	r5, [r4, #0]
-    2252:	0000      	movs	r0, r0
+
+    2248:	730a      	;	String '\nsocket %x\0\0'
+    224a:	636f      	;
+    224c:	656b      	;
+    224e:	2074      	;
+    2250:	7825      	;
+    2252:	0000      	;
 
     2254:	20000064      	;
     2258:	2000006a      	;
@@ -5127,7 +5146,7 @@ UART1Handler:
     2ab8:	2000      	movs	r0, #0
     2aba:	f000 fa61 	bl	0x2f80				; Wiznet_Write_Address
     2abe:	2064      	movs	r0, #100	; 0x64
-    2ac0:	f7fd fd0a 	bl	0x4d8
+    2ac0:	f7fd fd0a 	bl	0x4d8				; Delay(#100)
     2ac4:	2400      	movs	r4, #0
     2ac6:	e006      	b.n	0x2ad6
     2ac8:	4a23      	ldr	r2, [pc, #140]	; (0x2b58)
@@ -5177,7 +5196,7 @@ UART1Handler:
     2b2a:	201b      	movs	r0, #27
     2b2c:	f000 fa28 	bl	0x2f80				; Wiznet_Write_Address
     2b30:	a00d      	add	r0, pc, #52	; (adr r0, 0x2b68)
-    2b32:	f7fd fb4f 	bl	0x1d4
+    2b32:	f7fd fb4f 	bl	0x1d4				; printf
     2b36:	2107      	movs	r1, #7
     2b38:	2017      	movs	r0, #23
     2b3a:	f000 fa21 	bl	0x2f80				; Wiznet_Write_Address
@@ -5196,29 +5215,31 @@ UART1Handler:
     2b5c:	20000056      	;
     2b60:	2000005a      	;
     2b64:	20000060      	;
-    2b68:	30313557      	;
 
-    2b6c:	5f30      	ldrsh	r0, [r6, r4]
-    2b6e:	4d52      	ldr	r5, [pc, #328]	; (0x2cb8)
-    2b70:	5253      	strh	r3, [r2, r1]
-    2b72:	6120      	str	r0, [r4, #16]
-    2b74:	646e      	str	r6, [r5, #68]	; 0x44
-    2b76:	2020      	movs	r0, #32
-    2b78:	3557      	adds	r5, #87	; 0x57
-    2b7a:	3031      	adds	r0, #49	; 0x31
-    2b7c:	5f30      	ldrsh	r0, [r6, r4]
-    2b7e:	4d54      	ldr	r5, [pc, #336]	; (0x2cd0)
-    2b80:	5253      	strh	r3, [r2, r1]
-    2b82:	6120      	str	r0, [r4, #16]
-    2b84:	6c6c      	ldr	r4, [r5, #68]	; 0x44
-    2b86:	6920      	ldr	r0, [r4, #16]
-    2b88:	2073      	movs	r0, #115	; 0x73
-    2b8a:	6b32      	ldr	r2, [r6, #48]	; 0x30
-    2b8c:	0a0d      	lsrs	r5, r1, #8
-    2b8e:	0000      	movs	r0, r0
+    2b68:	3557      	;	String 'W5100_RMSR and  W5100_TMSR all is 2k\r\n\0\0'
+    2b6a:	3031		;
+    2b6c:	5f30      	;
+    2b6e:	4d52      	;
+    2b70:	5253      	;
+    2b72:	6120      	;
+    2b74:	646e      	;
+    2b76:	2020      	;
+    2b78:	3557      	;
+    2b7a:	3031      	;
+    2b7c:	5f30      	;
+    2b7e:	4d54      	;
+    2b80:	5253      	;
+    2b82:	6120      	;
+    2b84:	6c6c      	;
+    2b86:	6920      	;
+    2b88:	2073      	;
+    2b8a:	6b32      	;
+    2b8c:	0a0d      	;
+    2b8e:	0000      	;
+
     2b90:	b510      	push	{r4, lr}
     2b92:	f7ff ff8f 	bl	0x2ab4
-    2b96:	f7fd fcaf 	bl	0x4f8
+    2b96:	f7fd fcaf 	bl	0x4f8				; WiznetSocketSetup
     2b9a:	2000      	movs	r0, #0
     2b9c:	f7ff fa9a 	bl	0x20d4
     2ba0:	bd10      	pop	{r4, pc}
@@ -5242,13 +5263,13 @@ UART1Handler:
     2bc4:	2880      	cmp	r0, #128	; 0x80
     2bc6:	d102      	bne.n	0x2bce
     2bc8:	a044      	add	r0, pc, #272	; (adr r0, 0x2cdc)
-    2bca:	f7fd fb03 	bl	0x1d4
+    2bca:	f7fd fb03 	bl	0x1d4				; printf
     2bce:	2040      	movs	r0, #64	; 0x40
     2bd0:	4028      	ands	r0, r5
     2bd2:	2840      	cmp	r0, #64	; 0x40
     2bd4:	d102      	bne.n	0x2bdc
     2bd6:	a046      	add	r0, pc, #280	; (adr r0, 0x2cf0)
-    2bd8:	f7fd fafc 	bl	0x1d4
+    2bd8:	f7fd fafc 	bl	0x1d4				; printf
     2bdc:	07e8      	lsls	r0, r5, #31
     2bde:	0fc0      	lsrs	r0, r0, #31
     2be0:	d03b      	beq.n	0x2c5a
@@ -5268,7 +5289,7 @@ UART1Handler:
     2c00:	4940      	ldr	r1, [pc, #256]	; (0x2d04)
     2c02:	7008      	strb	r0, [r1, #0]
     2c04:	a040      	add	r0, pc, #256	; (adr r0, 0x2d08)
-    2c06:	f7fd fae5 	bl	0x1d4
+    2c06:	f7fd fae5 	bl	0x1d4				; printf
     2c0a:	2002      	movs	r0, #2
     2c0c:	4204      	tst	r4, r0
     2c0e:	d007      	beq.n	0x2c20
@@ -5366,44 +5387,46 @@ UART1Handler:
     2cd2:	7008      	strb	r0, [r1, #0]
     2cd4:	bd70      	pop	{r4, r5, r6, pc}
     2cd6:	0000      	movs	r0, r0
-    2cd8:	0090      	lsls	r0, r2, #2
-    2cda:	2000      	movs	r0, #0
-    2cdc:	7069      	strb	r1, [r5, #1]
-    2cde:	6120      	str	r0, [r4, #16]
-    2ce0:	6464      	str	r4, [r4, #68]	; 0x44
-    2ce2:	6572      	str	r2, [r6, #84]	; 0x54
-    2ce4:	7373      	strb	r3, [r6, #13]
-    2ce6:	6320      	str	r0, [r4, #48]	; 0x30
-    2ce8:	6e6f      	ldr	r7, [r5, #100]	; 0x64
-    2cea:	7467      	strb	r7, [r4, #17]
-    2cec:	0d75      	lsrs	r5, r6, #21
-    2cee:	000a      	movs	r2, r1
-    2cf0:	6475      	str	r5, [r6, #68]	; 0x44
-    2cf2:	2070      	movs	r0, #112	; 0x70
-    2cf4:	6f6e      	ldr	r6, [r5, #116]	; 0x74
-    2cf6:	6320      	str	r0, [r4, #48]	; 0x30
-    2cf8:	6d6f      	ldr	r7, [r5, #84]	; 0x54
-    2cfa:	0d65      	lsrs	r5, r4, #21
-    2cfc:	000a      	movs	r2, r1
-    2cfe:	0000      	movs	r0, r0
+
+    2cd8:	20000090      	;
+
+    2cdc:	7069      	;	String 'ip address congtu\r\n\0'
+    2cde:	6120      	;
+    2ce0:	6464      	;
+    2ce2:	6572      	;
+    2ce4:	7373      	;
+    2ce6:	6320      	;
+    2ce8:	6e6f      	;
+    2cea:	7467      	;
+    2cec:	0d75      	;
+    2cee:	000a      	;
+
+    2cf0:	6475      	;	String 'udpno come\r\n\0\0\0'
+    2cf2:	2070      	;
+    2cf4:	6f6e      	;
+    2cf6:	6320      	;
+    2cf8:	6d6f      	;
+    2cfa:	0d65      	;
+    2cfc:	000a      	;
+    2cfe:	0000      	;
 
     2d00:	00000402      	;
     2d04:	20000084      	;
 
-    2d08:	6f73      	ldr	r3, [r6, #116]	; 0x74
-    2d0a:	6b63      	ldr	r3, [r4, #52]	; 0x34
-    2d0c:	7465      	strb	r5, [r4, #17]
-    2d0e:	7320      	strb	r0, [r4, #12]
-    2d10:	6375      	str	r5, [r6, #52]	; 0x34
-    2d12:	7365      	strb	r5, [r4, #13]
-    2d14:	6673      	str	r3, [r6, #100]	; 0x64
-    2d16:	6c75      	ldr	r5, [r6, #68]	; 0x44
-    2d18:	206c      	movs	r0, #108	; 0x6c
-    2d1a:	6f63      	ldr	r3, [r4, #116]	; 0x74
-    2d1c:	656e      	str	r6, [r5, #84]	; 0x54
-    2d1e:	7463      	strb	r3, [r4, #17]
-    2d20:	0000      	movs	r0, r0
-    2d22:	0000      	movs	r0, r0
+    2d08:	6f73      	;	String 'socket sucessfull conect\0\0\0\0'
+    2d0a:	6b63      	;
+    2d0c:	7465      	;
+    2d0e:	7320      	;
+    2d10:	6375      	;
+    2d12:	7365      	;
+    2d14:	6673      	;
+    2d16:	6c75      	;
+    2d18:	206c      	;
+    2d1a:	6f63      	;
+    2d1c:	656e      	;
+    2d1e:	7463      	;
+    2d20:	0000      	;
+    2d22:	0000      	;
 
     2d24:	2000008c      	;
     2d28:	00000502      	;
@@ -5780,59 +5803,59 @@ WaitForWriteTxCompletion:
     301c:	492a      	ldr	r1, [pc, #168]	; (0x30c8)
     301e:	6388      	str	r0, [r1, #56]	; 0x38
     3020:	20c8      	movs	r0, #200	; 0xc8
-    3022:	f7fd fa59 	bl	0x4d8
+    3022:	f7fd fa59 	bl	0x4d8				; Delay(#200)
     3026:	2000      	movs	r0, #0
     3028:	4927      	ldr	r1, [pc, #156]	; (0x30c8)
     302a:	6388      	str	r0, [r1, #56]	; 0x38
     302c:	20c8      	movs	r0, #200	; 0xc8
-    302e:	f7fd fa53 	bl	0x4d8
+    302e:	f7fd fa53 	bl	0x4d8				; Delay(#200)
     3032:	2001      	movs	r0, #1
     3034:	4924      	ldr	r1, [pc, #144]	; (0x30c8)
     3036:	6388      	str	r0, [r1, #56]	; 0x38
     3038:	20c8      	movs	r0, #200	; 0xc8
-    303a:	f7fd fa4d 	bl	0x4d8
+    303a:	f7fd fa4d 	bl	0x4d8				; Delay(#200)
     303e:	2000      	movs	r0, #0
     3040:	4921      	ldr	r1, [pc, #132]	; (0x30c8)
     3042:	6388      	str	r0, [r1, #56]	; 0x38
     3044:	2001      	movs	r0, #1
     3046:	6388      	str	r0, [r1, #56]	; 0x38
     3048:	20c8      	movs	r0, #200	; 0xc8
-    304a:	f7fd fa45 	bl	0x4d8
+    304a:	f7fd fa45 	bl	0x4d8				; Delay(#200)
     304e:	2000      	movs	r0, #0
     3050:	491d      	ldr	r1, [pc, #116]	; (0x30c8)
     3052:	6388      	str	r0, [r1, #56]	; 0x38
     3054:	20c8      	movs	r0, #200	; 0xc8
-    3056:	f7fd fa3f 	bl	0x4d8
+    3056:	f7fd fa3f 	bl	0x4d8				; Delay(#200)
     305a:	2001      	movs	r0, #1
     305c:	491a      	ldr	r1, [pc, #104]	; (0x30c8)
     305e:	6388      	str	r0, [r1, #56]	; 0x38
     3060:	20c8      	movs	r0, #200	; 0xc8
-    3062:	f7fd fa39 	bl	0x4d8
+    3062:	f7fd fa39 	bl	0x4d8				; Delay(#200)
     3066:	2000      	movs	r0, #0
     3068:	4917      	ldr	r1, [pc, #92]	; (0x30c8)
     306a:	6388      	str	r0, [r1, #56]	; 0x38
     306c:	20c8      	movs	r0, #200	; 0xc8
-    306e:	f7fd fa33 	bl	0x4d8
+    306e:	f7fd fa33 	bl	0x4d8				; Delay(#200)
     3072:	2001      	movs	r0, #1
     3074:	4914      	ldr	r1, [pc, #80]	; (0x30c8)
     3076:	6388      	str	r0, [r1, #56]	; 0x38
     3078:	20c8      	movs	r0, #200	; 0xc8
-    307a:	f7fd fa2d 	bl	0x4d8
+    307a:	f7fd fa2d 	bl	0x4d8				; Delay(#200)
     307e:	2000      	movs	r0, #0
     3080:	4911      	ldr	r1, [pc, #68]	; (0x30c8)
     3082:	6388      	str	r0, [r1, #56]	; 0x38
     3084:	20c8      	movs	r0, #200	; 0xc8
-    3086:	f7fd fa27 	bl	0x4d8
+    3086:	f7fd fa27 	bl	0x4d8				; Delay(#200)
     308a:	2001      	movs	r0, #1
     308c:	490e      	ldr	r1, [pc, #56]	; (0x30c8)
     308e:	6388      	str	r0, [r1, #56]	; 0x38
     3090:	20c8      	movs	r0, #200	; 0xc8
-    3092:	f7fd fa21 	bl	0x4d8
+    3092:	f7fd fa21 	bl	0x4d8				; Delay(#200)
     3096:	2000      	movs	r0, #0
     3098:	490b      	ldr	r1, [pc, #44]	; (0x30c8)
     309a:	6388      	str	r0, [r1, #56]	; 0x38
     309c:	20c8      	movs	r0, #200	; 0xc8
-    309e:	f7fd fa1b 	bl	0x4d8
+    309e:	f7fd fa1b 	bl	0x4d8				; Delay(#200)
     30a2:	2000      	movs	r0, #0
     30a4:	4908      	ldr	r1, [pc, #32]	; (0x30c8)
     30a6:	3140      	adds	r1, #64	; 0x40
@@ -5853,6 +5876,8 @@ WaitForWriteTxCompletion:
     30c6:	0000      	movs	r0, r0
     30c8:	4240      	negs	r0, r0
     30ca:	5000      	str	r0, [r0, r0]
+
+????
     30cc:	4601      	mov	r1, r0
     30ce:	2000      	movs	r0, #0
     30d0:	43c0      	mvns	r0, r0
@@ -5867,13 +5892,13 @@ WaitForWriteTxCompletion:
 
     30e4:	b086      	sub	sp, #24
     30e6:	200a      	movs	r0, #10
-    30e8:	f7fd f9f6 	bl	0x4d8
+    30e8:	f7fd f9f6 	bl	0x4d8				; Delay(#10)
     30ec:	f7fd fc94 	bl	0xa18
     30f0:	f7fd fdae 	bl	0xc50
     30f4:	200a      	movs	r0, #10
-    30f6:	f7fd f9ef 	bl	0x4d8
+    30f6:	f7fd f9ef 	bl	0x4d8				; Delay(#10)
     30fa:	a02d      	add	r0, pc, #180	; (adr r0, 0x31b0)
-    30fc:	f7fd f86a 	bl	0x1d4
+    30fc:	f7fd f86a 	bl	0x1d4				; printf
     3100:	2000      	movs	r0, #0
     3102:	4931      	ldr	r1, [pc, #196]	; (0x31c8)
     3104:	7008      	strb	r0, [r1, #0]
@@ -5945,24 +5970,24 @@ WaitForWriteTxCompletion:
     31aa:	bf00      	nop
     31ac:	bf00      	nop
     31ae:	e7c0      	b.n	0x3132
-    31b0:	200a      	movs	r0, #10
-    31b2:	6c61      	ldr	r1, [r4, #68]	; 0x44
-    31b4:	206c      	movs	r0, #108	; 0x6c
-    31b6:	7369      	strb	r1, [r5, #13]
-    31b8:	5320      	strh	r0, [r4, r4]
-    31ba:	6375      	str	r5, [r6, #52]	; 0x34
-    31bc:	6563      	str	r3, [r4, #84]	; 0x54
-    31be:	7373      	strb	r3, [r6, #13]
-    31c0:	7566      	strb	r6, [r4, #21]
-    31c2:	6c6c      	ldr	r4, [r5, #68]	; 0x44
-    31c4:	0a0d      	lsrs	r5, r1, #8
-    31c6:	0000      	movs	r0, r0
-    31c8:	0088      	lsls	r0, r1, #2
-    31ca:	2000      	movs	r0, #0
-    31cc:	008c      	lsls	r4, r1, #2
-    31ce:	2000      	movs	r0, #0
-    31d0:	0008      	movs	r0, r1
-    31d2:	2000      	movs	r0, #0
+
+    31b0:	200a      	;	String '\nall is Successfull\r\n\0\0'
+    31b2:	6c61      	;
+    31b4:	206c      	;
+    31b6:	7369      	;
+    31b8:	5320      	;
+    31ba:	6375      	;
+    31bc:	6563      	;
+    31be:	7373      	;
+    31c0:	7566      	;
+    31c2:	6c6c      	;
+    31c4:	0a0d      	;
+    31c6:	0000      	;
+
+    31c8:	20000088      	lsls	r0, r1, #2
+    31cc:	2000008c      	lsls	r4, r1, #2
+    31d0:	20000008      	movs	r0, r1
+
     31d4:	4905      	ldr	r1, [pc, #20]	; (0x31ec)
     31d6:	6b89      	ldr	r1, [r1, #56]	; 0x38
     31d8:	2900      	cmp	r1, #0
@@ -6020,7 +6045,7 @@ WaitForWriteTxCompletion:
     3240:	2814      	cmp	r0, #20
     3242:	d303      	bcc.n	0x324c
     3244:	a00e      	add	r0, pc, #56	; (adr r0, 0x3280)
-    3246:	f7fc ffc5 	bl	0x1d4
+    3246:	f7fc ffc5 	bl	0x1d4				; printf
     324a:	bd10      	pop	{r4, pc}
     324c:	4815      	ldr	r0, [pc, #84]	; (0x32a4)
     324e:	6800      	ldr	r0, [r0, #0]
@@ -6046,30 +6071,31 @@ WaitForWriteTxCompletion:
     3276:	bf00      	nop
     3278:	e7e7      	b.n	0x324a
     327a:	0000      	movs	r0, r0
-    327c:	0048      	lsls	r0, r1, #1
-    327e:	2000      	movs	r0, #0
-    3280:	736d      	strb	r5, [r5, #13]
-    3282:	5f67      	ldrsh	r7, [r4, r5]
-    3284:	7570      	strb	r0, [r6, #21]
-    3286:	5f74      	ldrsh	r4, [r6, r5]
-    3288:	6e69      	ldr	r1, [r5, #100]	; 0x64
-    328a:	203a      	movs	r0, #58	; 0x3a
-    328c:	736d      	strb	r5, [r5, #13]
-    328e:	2067      	movs	r0, #103	; 0x67
-    3290:	7571      	strb	r1, [r6, #21]
-    3292:	7565      	strb	r5, [r4, #21]
-    3294:	2065      	movs	r0, #101	; 0x65
-    3296:	6c61      	ldr	r1, [r4, #68]	; 0x44
-    3298:	6572      	str	r2, [r6, #84]	; 0x54
-    329a:	6461      	str	r1, [r4, #68]	; 0x44
-    329c:	2079      	movs	r0, #121	; 0x79
-    329e:	7566      	strb	r6, [r4, #21]
-    32a0:	6c6c      	ldr	r4, [r5, #68]	; 0x44
-    32a2:	000a      	movs	r2, r1
-    32a4:	0040      	lsls	r0, r0, #1
-    32a6:	2000      	movs	r0, #0
-    32a8:	0280      	lsls	r0, r0, #10
-    32aa:	2000      	movs	r0, #0
+
+    327c:	20000048      	;
+
+    3280:	736d      	;	String 'msg_put_in: msg queue already full\n\0'
+    3282:	5f67      	;
+    3284:	7570      	;
+    3286:	5f74      	;
+    3288:	6e69      	;
+    328a:	203a      	;
+    328c:	736d      	;
+    328e:	2067      	;
+    3290:	7571      	;
+    3292:	7565      	;
+    3294:	2065      	;
+    3296:	6c61      	;
+    3298:	6572      	;
+    329a:	6461      	;
+    329c:	2079      	;
+    329e:	7566      	;
+    32a0:	6c6c      	;
+    32a2:	000a      	;
+
+    32a4:	20000040      	;
+    32a8:	20000280      	;
+
     32ac:	4a10      	ldr	r2, [pc, #64]	; (0x32f0)
     32ae:	6812      	ldr	r2, [r2, #0]
     32b0:	2a14      	cmp	r2, #20
