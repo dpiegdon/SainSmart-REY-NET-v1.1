@@ -55,17 +55,12 @@ Connectors:
 
 
 standard SWDIO tools like the BlackMagicProbe work.
-firmware is not protected and can be dumped via gdb:
+FLASH and RAM are not protected and can be dumped via gdb:
 
 ```
-	(gdb) dump binary memory nuvoton.raw 0 0xffff
+	(gdb) dump binary memory flash.bin 0 0x10000
+	(gdb) dump binary memory ram.bin 0x20000000 0x20001000
 ```
-
-
-important addresses:
-0x0000: loaded into SP at reset (0x20000b30, in RAM)
-0x0004: loaded into PC at reset (0x00000179, in FLASH)
-
 
 The flash dump can be disassembled using:
 

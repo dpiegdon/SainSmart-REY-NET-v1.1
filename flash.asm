@@ -1323,6 +1323,7 @@ EINT1Handler:
      af4:	50000200 	;	Clock Control registers
      af8:	40020000      	;	I2C 0 registers
 
+ReadWiznetConfigFromEEPROM ???
      afc:	b570      	push	{r4, r5, r6, lr}
      afe:	4604      	mov	r4, r0
      b00:	4625      	mov	r5, r4
@@ -3520,9 +3521,8 @@ CheckFifthBit:
     1d6e:	5000      	str	r0, [r0, r0]
 
     1d70:	40030000      	;	SPI 0 registers
+    1d74:	2000000c      	;
 
-    1d74:	000c      	movs	r4, r1
-    1d76:	2000      	movs	r0, #0
     1d78:	480d      	ldr	r0, [pc, #52]	; (0x1db0)
     1d7a:	6840      	ldr	r0, [r0, #4]
     1d7c:	0c00      	lsrs	r0, r0, #16
