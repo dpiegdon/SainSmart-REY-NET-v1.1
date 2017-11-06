@@ -678,7 +678,7 @@ WiznetSocketSetup_Success
      594:	0000      	;
      596:	0000      	;
 
-     598:	20000060      	;
+     598:	20000060      	;	u8 SrcIPAddr[4]
 
      59c:	200a      	;	String ' \n No_gateway\r\n'
      59e:	6f4e      	;
@@ -1459,13 +1459,13 @@ EINT1Handler:
      c22:	0000      	;
 
      c24:	20000110      	;
-     c28:	20000052      	;
-     c2c:	20000056      	;
-     c30:	2000005a      	;
-     c34:	20000060      	;
-     c38:	20000064      	;
-     c3c:	20000066      	;
-     c40:	2000006a      	;
+     c28:	20000052      	;	u8 Gateway[4]
+     c2c:	20000056      	;	u8 Subnet[4]
+     c30:	2000005a      	;	u8 MAC[6]
+     c34:	20000060      	;	u8 SrcIPAddr[4]
+     c38:	20000064      	;	u8 TCPSrcPort[2]
+     c3c:	20000066      	;	u8 DstIPAddr[4]
+     c40:	2000006a      	;	u8 TCPDstPort[2]
      c44:	20000088      	;
      c48:	50004280      	;	GPIO registers for PORT4
      c4c:	20000008      	;
@@ -1542,13 +1542,13 @@ EINT1Handler:
      cde:	f001 ff57 	bl	0x2b90
      ce2:	bd10      	pop	{r4, pc}
 
-     ce4:	20000052      	;
-     ce8:	20000056      	;
-     cec:	2000005a      	;
-     cf0:	20000060      	;
-     cf4:	20000064      	;
-     cf8:	20000066      	;
-     cfc:	2000006a      	;
+     ce4:	20000052      	;	u8 Gateway[4]
+     ce8:	20000056      	;	u8 Subnet[4]
+     cec:	2000005a      	;	u8 MAC[6]
+     cf0:	20000060      	;	u8 SrcIPAddr[4]
+     cf4:	20000064      	;	u8 TCPSrcPort[2]
+     cf8:	20000066      	;	u8 DstIPAddr[4]
+     cfc:	2000006a      	;	u8 TCPDstPort[2]
      d00:	20000088      	;
      d04:	50004280      	;	GPIO registers for PORT4
 
@@ -3934,23 +3934,25 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     20c8:	f000 ff5a 	bl	0x2f80				; Wiznet_Write_Address
     20cc:	2001      	movs	r0, #1
     20ce:	e7f5      	b.n	0x20bc
-    20d0:	0401      	lsls	r1, r0, #16
-    20d2:	0000      	movs	r0, r0
+
+    20d0:	00000401      	;	Wiznet: Socket 0 Command register
+
+Wiznet???(?)
     20d4:	b570      	push	{r4, r5, r6, lr}
-    20d6:	4605      	mov	r5, r0
+    20d6:	4605      	mov	r5, r0				; r5 := parameter1
     20d8:	0229      	lsls	r1, r5, #8
     20da:	4a5a      	ldr	r2, [pc, #360]	; (0x2244)
     20dc:	1889      	adds	r1, r1, r2
     20de:	b288      	uxth	r0, r1
     20e0:	2105      	movs	r1, #5
-    20e2:	f000 ff4d 	bl	0x2f80				; Wiznet_Write_Address
+    20e2:	f000 ff4d 	bl	0x2f80				; Wiznet_Write_Address(?, 5)
     20e6:	0229      	lsls	r1, r5, #8
     20e8:	4a56      	ldr	r2, [pc, #344]	; (0x2244)
     20ea:	1889      	adds	r1, r1, r2
     20ec:	1c49      	adds	r1, r1, #1
     20ee:	b288      	uxth	r0, r1
     20f0:	21b4      	movs	r1, #180	; 0xb4
-    20f2:	f000 ff45 	bl	0x2f80				; Wiznet_Write_Address
+    20f2:	f000 ff45 	bl	0x2f80				; Wiznet_Write_Address(?, 0xb4)
     20f6:	4629      	mov	r1, r5
     20f8:	a053      	add	r0, pc, #332	; (adr r0, 0x2248)
     20fa:	f7fe f86b 	bl	0x1d4				; printf
@@ -3967,34 +3969,36 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     2112:	7801      	ldrb	r1, [r0, #0]
     2114:	484b      	ldr	r0, [pc, #300]	; (0x2244)
     2116:	380e      	subs	r0, #14
-    2118:	f000 ff32 	bl	0x2f80				; Wiznet_Write_Address
+    2118:	f000 ff32 	bl	0x2f80				; Wiznet_Write_Address(0x404, TCPSrcPort[0])
     211c:	484d      	ldr	r0, [pc, #308]	; (0x2254)
     211e:	7841      	ldrb	r1, [r0, #1]
     2120:	4848      	ldr	r0, [pc, #288]	; (0x2244)
     2122:	380d      	subs	r0, #13
-    2124:	f000 ff2c 	bl	0x2f80				; Wiznet_Write_Address
+    2124:	f000 ff2c 	bl	0x2f80				; Wiznet_Write_Address(0x405, TCPSrcPort[1])
     2128:	484b      	ldr	r0, [pc, #300]	; (0x2258)
     212a:	7801      	ldrb	r1, [r0, #0]
     212c:	2041      	movs	r0, #65	; 0x41
     212e:	0100      	lsls	r0, r0, #4
-    2130:	f000 ff26 	bl	0x2f80				; Wiznet_Write_Address
+    2130:	f000 ff26 	bl	0x2f80				; Wiznet_Write_Address(0x410, TCPDstPort[0])
     2134:	4848      	ldr	r0, [pc, #288]	; (0x2258)
     2136:	7841      	ldrb	r1, [r0, #1]
     2138:	4842      	ldr	r0, [pc, #264]	; (0x2244)
     213a:	1e40      	subs	r0, r0, #1
-    213c:	f000 ff20 	bl	0x2f80				; Wiznet_Write_Address
+    213c:	f000 ff20 	bl	0x2f80				; Wiznet_Write_Address(0x411, TCPDstPort[1])
     2140:	2400      	movs	r4, #0
-    2142:	e008      	b.n	0x2156
+    2142:	e008      	b.n	0x2156				; WhileCopyDstIPBody
+WhileCopyDstIPBody:
     2144:	4a45      	ldr	r2, [pc, #276]	; (0x225c)
     2146:	5d11      	ldrb	r1, [r2, r4]
     2148:	4a3e      	ldr	r2, [pc, #248]	; (0x2244)
-    214a:	1f92      	subs	r2, r2, #6
+    214a:	1f92      	subs	r2, r2, #6			0x412-6
     214c:	18a2      	adds	r2, r4, r2
     214e:	b290      	uxth	r0, r2
-    2150:	f000 ff16 	bl	0x2f80				; Wiznet_Write_Address
+    2150:	f000 ff16 	bl	0x2f80				; Wiznet_Write_Address(0x412, DstIPAddr[0])
     2154:	1c64      	adds	r4, r4, #1
+WhileCopyDstIPCheck:
     2156:	2c04      	cmp	r4, #4
-    2158:	d3f4      	bcc.n	0x2144
+    2158:	d3f4      	bcc.n	0x2144				; WhileCopyDstIPBody
     215a:	e071      	b.n	0x2240
     215c:	4840      	ldr	r0, [pc, #256]	; (0x2260)
     215e:	7801      	ldrb	r1, [r0, #0]
@@ -4097,8 +4101,8 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     223e:	bf00      	nop
     2240:	bf00      	nop
     2242:	bd70      	pop	{r4, r5, r6, pc}
-    2244:	0412      	lsls	r2, r2, #16
-    2246:	0000      	movs	r0, r0
+
+    2244:	00000412      	;	Wiznet: Socket 0 MSSR0 register
 
     2248:	730a      	;	String '\nsocket %x\0\0'
     224a:	636f      	;
@@ -4107,9 +4111,9 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     2250:	7825      	;
     2252:	0000      	;
 
-    2254:	20000064      	;
-    2258:	2000006a      	;
-    225c:	20000066      	;
+    2254:	20000064      	;	u8 TCPSrcPort[2]
+    2258:	2000006a      	;	u8 TCPDstPort[2]
+    225c:	20000066      	;	u8 DstIPAddr[4]
     2260:	2000006c      	;
     2264:	20000072      	;
     2268:	2000006e      	;
@@ -5141,80 +5145,89 @@ UART1Handler:
 
     2ab0:	50000100      	;	System Global Control Registers
 
+WiznetConfigureIPStack:
     2ab4:	b510      	push	{r4, lr}
     2ab6:	2180      	movs	r1, #128	; 0x80
-    2ab8:	2000      	movs	r0, #0
-    2aba:	f000 fa61 	bl	0x2f80				; Wiznet_Write_Address
+    2ab8:	2000      	movs	r0, #0				; Wiznet_Write_Address(0, 0x80)
+    2aba:	f000 fa61 	bl	0x2f80				; => RESET Wiznet chip
     2abe:	2064      	movs	r0, #100	; 0x64
     2ac0:	f7fd fd0a 	bl	0x4d8				; Delay(#100)
     2ac4:	2400      	movs	r4, #0
-    2ac6:	e006      	b.n	0x2ad6
+    2ac6:	e006      	b.n	0x2ad6				; WhileCopyGatewayCheck
+WhileCopyGatewayBody:
     2ac8:	4a23      	ldr	r2, [pc, #140]	; (0x2b58)
     2aca:	5d11      	ldrb	r1, [r2, r4]
     2acc:	1c60      	adds	r0, r4, #1
-    2ace:	f000 fa57 	bl	0x2f80				; Wiznet_Write_Address
+    2ace:	f000 fa57 	bl	0x2f80				; Wiznet_Write_Address(1..4, Gateway[0..3])
     2ad2:	1c60      	adds	r0, r4, #1
     2ad4:	b2c4      	uxtb	r4, r0
+WhileCopyGatewayCheck:
     2ad6:	2c04      	cmp	r4, #4
-    2ad8:	dbf6      	blt.n	0x2ac8
+    2ad8:	dbf6      	blt.n	0x2ac8				; WhileCopyGatewayBody
     2ada:	2400      	movs	r4, #0
-    2adc:	e006      	b.n	0x2aec
+    2adc:	e006      	b.n	0x2aec				; WhileCopySubnetCheck
+WhileCopySubnetBody:
     2ade:	4a1f      	ldr	r2, [pc, #124]	; (0x2b5c)
     2ae0:	5d11      	ldrb	r1, [r2, r4]
     2ae2:	1d60      	adds	r0, r4, #5
-    2ae4:	f000 fa4c 	bl	0x2f80				; Wiznet_Write_Address
+    2ae4:	f000 fa4c 	bl	0x2f80				; Wiznet_Write_Address(5..8, Subnet[0..3])
     2ae8:	1c60      	adds	r0, r4, #1
     2aea:	b2c4      	uxtb	r4, r0
+WhileCopySubnetCheck:
     2aec:	2c04      	cmp	r4, #4
-    2aee:	dbf6      	blt.n	0x2ade
+    2aee:	dbf6      	blt.n	0x2ade				; WhileCopySubnetBody
     2af0:	2400      	movs	r4, #0
-    2af2:	e007      	b.n	0x2b04
+    2af2:	e007      	b.n	0x2b04				; WhileCopyMACCheck
+WhileCopyMACBody:
     2af4:	4a1a      	ldr	r2, [pc, #104]	; (0x2b60)
     2af6:	5d11      	ldrb	r1, [r2, r4]
     2af8:	4620      	mov	r0, r4
     2afa:	3009      	adds	r0, #9
-    2afc:	f000 fa40 	bl	0x2f80				; Wiznet_Write_Address
+    2afc:	f000 fa40 	bl	0x2f80				; Wiznet_Write_Address(9..14, MAC[0..6])
     2b00:	1c60      	adds	r0, r4, #1
     2b02:	b2c4      	uxtb	r4, r0
+WhileCopyMACCheck:
     2b04:	2c06      	cmp	r4, #6
-    2b06:	dbf5      	blt.n	0x2af4
+    2b06:	dbf5      	blt.n	0x2af4				; WhileCopyMACBody
     2b08:	2400      	movs	r4, #0
-    2b0a:	e007      	b.n	0x2b1c
+    2b0a:	e007      	b.n	0x2b1c				; WhileCopySrcIPCheck
+WhileCopySrcIPBody:
     2b0c:	4a15      	ldr	r2, [pc, #84]	; (0x2b64)
     2b0e:	5d11      	ldrb	r1, [r2, r4]
     2b10:	4620      	mov	r0, r4
     2b12:	300f      	adds	r0, #15
-    2b14:	f000 fa34 	bl	0x2f80				; Wiznet_Write_Address
+    2b14:	f000 fa34 	bl	0x2f80				; Wiznet_Write_Address(15..18, SrcIPAddr[0..4])
     2b18:	1c60      	adds	r0, r4, #1
     2b1a:	b2c4      	uxtb	r4, r0
+WhileCopySrcIPCheck:
     2b1c:	2c04      	cmp	r4, #4
-    2b1e:	dbf5      	blt.n	0x2b0c
+    2b1e:	dbf5      	blt.n	0x2b0c				; WhileCopySrcIPBody
     2b20:	2155      	movs	r1, #85	; 0x55
-    2b22:	201a      	movs	r0, #26
-    2b24:	f000 fa2c 	bl	0x2f80				; Wiznet_Write_Address
+    2b22:	201a      	movs	r0, #26				; Wiznet_Write_Address(0x1a, 0x55)
+    2b24:	f000 fa2c 	bl	0x2f80				; => Set RX Memory Size to 0x55 bytes
     2b28:	2155      	movs	r1, #85	; 0x55
-    2b2a:	201b      	movs	r0, #27
-    2b2c:	f000 fa28 	bl	0x2f80				; Wiznet_Write_Address
+    2b2a:	201b      	movs	r0, #27				; Wiznet_Write_Address(0x1b, 0x55)
+    2b2c:	f000 fa28 	bl	0x2f80				; => Set TX Memory Size to 0x55 bytes
     2b30:	a00d      	add	r0, pc, #52	; (adr r0, 0x2b68)
     2b32:	f7fd fb4f 	bl	0x1d4				; printf
     2b36:	2107      	movs	r1, #7
     2b38:	2017      	movs	r0, #23
-    2b3a:	f000 fa21 	bl	0x2f80				; Wiznet_Write_Address
+    2b3a:	f000 fa21 	bl	0x2f80				; Wiznet_Write_Address(0x17, 0x7)
     2b3e:	21d0      	movs	r1, #208	; 0xd0
-    2b40:	2018      	movs	r0, #24
-    2b42:	f000 fa1d 	bl	0x2f80				; Wiznet_Write_Address
+    2b40:	2018      	movs	r0, #24				; Wiznet_Write_Address(0x18, 0xd0)
+    2b42:	f000 fa1d 	bl	0x2f80				; => Set Retry time value to 0x7d0 (=2000)
     2b46:	2108      	movs	r1, #8
-    2b48:	2019      	movs	r0, #25
-    2b4a:	f000 fa19 	bl	0x2f80				; Wiznet_Write_Address
+    2b48:	2019      	movs	r0, #25				; Wiznet_Write_Address(0x19, 8)
+    2b4a:	f000 fa19 	bl	0x2f80				; => Set Retry Count to 8
     2b4e:	21cf      	movs	r1, #207	; 0xcf
-    2b50:	2016      	movs	r0, #22
-    2b52:	f000 fa15 	bl	0x2f80				; Wiznet_Write_Address
+    2b50:	2016      	movs	r0, #22				; Wiznet_Write_Address(0x16, 0xcf)
+    2b52:	f000 fa15 	bl	0x2f80				; => Enable Interrupts: all but PPPoE interrupts
     2b56:	bd10      	pop	{r4, pc}
 
-    2b58:	20000052      	;
-    2b5c:	20000056      	;
-    2b60:	2000005a      	;
-    2b64:	20000060      	;
+    2b58:	20000052      	;	u8 Gateway[4]
+    2b5c:	20000056      	;	u8 Subnet[4]
+    2b60:	2000005a      	;	u8 MAC[6]
+    2b64:	20000060      	;	u8 SrcIPAddr[4]
 
     2b68:	3557      	;	String 'W5100_RMSR and  W5100_TMSR all is 2k\r\n\0\0'
     2b6a:	3031		;
@@ -5238,7 +5251,7 @@ UART1Handler:
     2b8e:	0000      	;
 
     2b90:	b510      	push	{r4, lr}
-    2b92:	f7ff ff8f 	bl	0x2ab4
+    2b92:	f7ff ff8f 	bl	0x2ab4				; WiznetConfigureIPStack
     2b96:	f7fd fcaf 	bl	0x4f8				; WiznetSocketSetup
     2b9a:	2000      	movs	r0, #0
     2b9c:	f7ff fa9a 	bl	0x20d4
