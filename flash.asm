@@ -582,18 +582,18 @@ BadIRQHandler:
      4fa:	2121      	movs	r1, #33	; 0x21
      4fc:	2001      	movs	r0, #1
      4fe:	0280      	lsls	r0, r0, #10
-     500:	f002 fd3e 	bl	0x2f80
+     500:	f002 fd3e 	bl	0x2f80				; Wiznet_Write_Address
      504:	2101      	movs	r1, #1
      506:	481d      	ldr	r0, [pc, #116]	; (0x57c)
-     508:	f002 fd3a 	bl	0x2f80
+     508:	f002 fd3a 	bl	0x2f80				; Wiznet_Write_Address
      50c:	481b      	ldr	r0, [pc, #108]	; (0x57c)
      50e:	1c80      	adds	r0, r0, #2
-     510:	f001 fb46 	bl	0x1ba0
+     510:	f001 fb46 	bl	0x1ba0				; Wiznet_Read_Address
      514:	2813      	cmp	r0, #19
      516:	d008      	beq.n	0x52a
      518:	2110      	movs	r1, #16
      51a:	4818      	ldr	r0, [pc, #96]	; (0x57c)
-     51c:	f002 fd30 	bl	0x2f80
+     51c:	f002 fd30 	bl	0x2f80				; Wiznet_Write_Address
      520:	a017      	add	r0, pc, #92	; (adr r0, 0x580)
      522:	f7ff fe57 	bl	0x1d4
      526:	2000      	movs	r0, #0
@@ -607,23 +607,23 @@ BadIRQHandler:
      536:	4a11      	ldr	r2, [pc, #68]	; (0x57c)
      538:	320b      	adds	r2, #11
      53a:	18a0      	adds	r0, r4, r2
-     53c:	f002 fd20 	bl	0x2f80
+     53c:	f002 fd20 	bl	0x2f80				; Wiznet_Write_Address
      540:	1c60      	adds	r0, r4, #1
      542:	b2c4      	uxtb	r4, r0
      544:	2c04      	cmp	r4, #4
      546:	dbf2      	blt.n	0x52e
      548:	2104      	movs	r1, #4
      54a:	480c      	ldr	r0, [pc, #48]	; (0x57c)
-     54c:	f002 fd18 	bl	0x2f80
+     54c:	f002 fd18 	bl	0x2f80				; Wiznet_Write_Address
      550:	2064      	movs	r0, #100	; 0x64
      552:	f7ff ffc1 	bl	0x4d8
      556:	4809      	ldr	r0, [pc, #36]	; (0x57c)
      558:	1d40      	adds	r0, r0, #5
-     55a:	f001 fb21 	bl	0x1ba0
+     55a:	f001 fb21 	bl	0x1ba0				; Wiznet_Read_Address
      55e:	4604      	mov	r4, r0
      560:	2110      	movs	r1, #16
      562:	4806      	ldr	r0, [pc, #24]	; (0x57c)
-     564:	f002 fd0c 	bl	0x2f80
+     564:	f002 fd0c 	bl	0x2f80				; Wiznet_Write_Address
      568:	2cff      	cmp	r4, #255	; 0xff
      56a:	d104      	bne.n	0x576
      56c:	a00b      	add	r0, pc, #44	; (adr r0, 0x59c)
@@ -940,8 +940,8 @@ SomeGPIOConfiguration???:
      7d4:	e721      	b.n	0x61a
      7d6:	0000      	movs	r0, r0
 
-     7d8:	50004000      	;	GPIO registers
-     7dc:	50004100      	;	GPIO registers
+     7d8:	50004000      	;	GPIO registers for PORT0
+     7dc:	50004100      	;	GPIO registers for PORT4
 
 EINT0_WiznetHandler:
      7e0:	b510      	push	{r4, lr}
@@ -959,7 +959,7 @@ EINT0_WiznetHandler:
      7fc:	6008      	str	r0, [r1, #0]
      7fe:	bd10      	pop	{r4, pc}
 
-     800:	500040c0      	;	GPIO registers
+     800:	500040c0      	;	GPIO registers for PORT3
      804:	e000e180      	;	NVIC / external interrupt control registers
 
      808:	4e45      	ldr	r6, [pc, #276]	; (0x920)
@@ -978,7 +978,7 @@ EINT1Handler:
      81e:	f7ff fcd9 	bl	0x1d4
      822:	bd10      	pop	{r4, pc}
 
-     824:	500040c0      	;	GPIO registers
+     824:	500040c0      	;	GPIO registers for PORT3
      828:	e000e180      	;	NVIC / external interrupt control registers
 
      82c:	690a      	ldr	r2, [r1, #16]
@@ -1111,7 +1111,7 @@ EINT1Handler:
      95c:	6048      	str	r0, [r1, #4]
      95e:	bd10      	pop	{r4, pc}
 
-     960:	50004280      	;	GPIO Control registers
+     960:	50004280      	;	GPIO registers for PORT4
 
      964:	b510      	push	{r4, lr}
      966:	f002 f89b 	bl	0x2aa0
@@ -1288,7 +1288,7 @@ EINT1Handler:
      ae8:	6008      	str	r0, [r1, #0]
      aea:	4770      	bx	lr
 
-     aec:	500040c0      	;	GPIO registers
+     aec:	500040c0      	;	GPIO registers for PORT3
      af0:	ffffcfcf      	;
      af4:	50000200 	;	Clock Control registers
      af8:	40020000      	;	I2C 0 registers
@@ -1436,7 +1436,7 @@ EINT1Handler:
      c3c:	20000066      	;
      c40:	2000006a      	;
      c44:	20000088      	;
-     c48:	50004280      	;	GPIO Control registers
+     c48:	50004280      	;	GPIO registers for PORT4
      c4c:	20000008      	;
 
      c50:	b510      	push	{r4, lr}
@@ -1519,7 +1519,7 @@ EINT1Handler:
      cf8:	20000066      	;
      cfc:	2000006a      	;
      d00:	20000088      	;
-     d04:	50004280      	;	GPIO Control registers
+     d04:	50004280      	;	GPIO registers for PORT4
 
      d08:	2000      	movs	r0, #0
      d0a:	4901      	ldr	r1, [pc, #4]	; (0xd10)
@@ -3246,61 +3246,64 @@ EINT1Handler:
     1b9a:	0000      	;	padding
     1b9c:	40020000      	;	I2C 0 registers
 
+Wiznet_Read_Address(address):
     1ba0:	b570      	push	{r4, r5, r6, lr}
-    1ba2:	4605      	mov	r5, r0
+    1ba2:	4605      	mov	r5, r0				; r5 = parameter1	ADDRESS
     1ba4:	2600      	movs	r6, #0
     1ba6:	2400      	movs	r4, #0
     1ba8:	2000      	movs	r0, #0
-    1baa:	490d      	ldr	r1, [pc, #52]	; (0x1be0)
+    1baa:	490d      	ldr	r1, [pc, #52]	; (0x1be0)	; ???
     1bac:	6308      	str	r0, [r1, #48]	; 0x30
-    1bae:	240f      	movs	r4, #15
+    1bae:	240f      	movs	r4, #15				; or-in MARKER for READ operation (0x0f)
     1bb0:	0424      	lsls	r4, r4, #16
     1bb2:	4620      	mov	r0, r4
-    1bb4:	4328      	orrs	r0, r5
+    1bb4:	4328      	orrs	r0, r5				; or-in address
     1bb6:	4604      	mov	r4, r0
-    1bb8:	0224      	lsls	r4, r4, #8
+    1bb8:	0224      	lsls	r4, r4, #8			; no DATA payload when reading register
     1bba:	bf00      	nop
     1bbc:	2120      	movs	r1, #32
     1bbe:	4620      	mov	r0, r4
-    1bc0:	f000 f8f8 	bl	0x1db4
-
-SPI0_Wiznet?
+    1bc0:	f000 f8f8 	bl	0x1db4				; SPI0_Wiznet_StartTX(..., #32)
     1bc4:	bf00      	nop
-    1bc6:	4807      	ldr	r0, [pc, #28]	; (0x1be4)
+WaitForReadTxCompletion:
+    1bc6:	4807      	ldr	r0, [pc, #28]	; (0x1be4)	; ???
     1bc8:	6800      	ldr	r0, [r0, #0]
     1bca:	07c0      	lsls	r0, r0, #31
     1bcc:	0fc0      	lsrs	r0, r0, #31
-    1bce:	d1fa      	bne.n	0x1bc6
-    1bd0:	4804      	ldr	r0, [pc, #16]	; (0x1be4)
+    1bce:	d1fa      	bne.n	0x1bc6				; WaitForReadTxCompletion
+    1bd0:	4804      	ldr	r0, [pc, #16]	; (0x1be4)	; Read received data from SPI transfer
     1bd2:	6900      	ldr	r0, [r0, #16]
-    1bd4:	b2c6      	uxtb	r6, r0
+    1bd4:	b2c6      	uxtb	r6, r0				; we only care for lowest 8 bit, but extend to 32 bit.
     1bd6:	2001      	movs	r0, #1
-    1bd8:	4901      	ldr	r1, [pc, #4]	; (0x1be0)
+    1bd8:	4901      	ldr	r1, [pc, #4]	; (0x1be0)	; ???
     1bda:	6308      	str	r0, [r1, #48]	; 0x30
     1bdc:	4630      	mov	r0, r6
     1bde:	bd70      	pop	{r4, r5, r6, pc}
 
-    1be0:	50004200      	;	GPIO Control registers
+    1be0:	50004200      	;	GPIO registers for PORT0
     1be4:	40030000      	;	SPI 0 registers
 
-    1be8:	2820      	cmp	r0, #32
+SPI0_Wiznet_SetTransferLength(TransferLength):
+CheckFirstBit:
+    1be8:	2820      	cmp	r0, #32				; compare 32 to r0 (parameter1 ALWAYS #32)
     1bea:	dc4f      	bgt.n	0x1c8c
     1bec:	07c1      	lsls	r1, r0, #31
-    1bee:	0fc9      	lsrs	r1, r1, #31
+    1bee:	0fc9      	lsrs	r1, r1, #31			; r1 := param1 & 0x01
     1bf0:	d106      	bne.n	0x1c00
     1bf2:	4927      	ldr	r1, [pc, #156]	; (0x1c90)
-    1bf4:	6809      	ldr	r1, [r1, #0]
+    1bf4:	6809      	ldr	r1, [r1, #0]			; r1 := SPI0 CNTRL register
     1bf6:	2208      	movs	r2, #8
     1bf8:	4391      	bics	r1, r2
     1bfa:	4a25      	ldr	r2, [pc, #148]	; (0x1c90)
-    1bfc:	6011      	str	r1, [r2, #0]
+    1bfc:	6011      	str	r1, [r2, #0]			; SPI0 CNTRL register := ???
     1bfe:	e005      	b.n	0x1c0c
     1c00:	4923      	ldr	r1, [pc, #140]	; (0x1c90)
-    1c02:	6809      	ldr	r1, [r1, #0]
+    1c02:	6809      	ldr	r1, [r1, #0]			; r1 := SPI0 CNTRL register
     1c04:	2208      	movs	r2, #8
-    1c06:	4311      	orrs	r1, r2
+    1c06:	4311      	orrs	r1, r2				; set bit 4 (TX_BIT_LEN lowest bit)
     1c08:	4a21      	ldr	r2, [pc, #132]	; (0x1c90)
-    1c0a:	6011      	str	r1, [r2, #0]
+    1c0a:	6011      	str	r1, [r2, #0]			; SPI0 CNTRL register := ???
+CheckSecondBit:
     1c0c:	2102      	movs	r1, #2
     1c0e:	4208      	tst	r0, r1
     1c10:	d106      	bne.n	0x1c20
@@ -3317,6 +3320,7 @@ SPI0_Wiznet?
     1c26:	4311      	orrs	r1, r2
     1c28:	4a19      	ldr	r2, [pc, #100]	; (0x1c90)
     1c2a:	6011      	str	r1, [r2, #0]
+CheckThirdBit:
     1c2c:	2104      	movs	r1, #4
     1c2e:	4208      	tst	r0, r1
     1c30:	d106      	bne.n	0x1c40
@@ -3333,6 +3337,7 @@ SPI0_Wiznet?
     1c46:	4311      	orrs	r1, r2
     1c48:	4a11      	ldr	r2, [pc, #68]	; (0x1c90)
     1c4a:	6011      	str	r1, [r2, #0]
+CheckFourthBit:
     1c4c:	2108      	movs	r1, #8
     1c4e:	4208      	tst	r0, r1
     1c50:	d106      	bne.n	0x1c60
@@ -3349,6 +3354,7 @@ SPI0_Wiznet?
     1c66:	4311      	orrs	r1, r2
     1c68:	4a09      	ldr	r2, [pc, #36]	; (0x1c90)
     1c6a:	6011      	str	r1, [r2, #0]
+CheckFifthBit:
     1c6c:	2110      	movs	r1, #16
     1c6e:	4208      	tst	r0, r1
     1c70:	d106      	bne.n	0x1c80
@@ -3366,8 +3372,8 @@ SPI0_Wiznet?
     1c88:	4a01      	ldr	r2, [pc, #4]	; (0x1c90)
     1c8a:	6011      	str	r1, [r2, #0]
     1c8c:	4770      	bx	lr
-    1c8e:	0000      	movs	r0, r0
 
+    1c8e:	0000      	;	padding
     1c90:	40030000      	;	SPI 0 registers
 
     1c94:	2005      	movs	r0, #5
@@ -3515,28 +3521,29 @@ SPI0_Wiznet?
 
     1db0:	40030000      	;	SPI 0 registers
 
+SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     1db4:	b510      	push	{r4, lr}
-    1db6:	4603      	mov	r3, r0
-    1db8:	460c      	mov	r4, r1
-    1dba:	4809      	ldr	r0, [pc, #36]	; (0x1de0)
-    1dbc:	6800      	ldr	r0, [r0, #0]
+    1db6:	4603      	mov	r3, r0				; r3 := parameter 1
+    1db8:	460c      	mov	r4, r1				; r4 := parameter 2	(here always #32)
+    1dba:	4809      	ldr	r0, [pc, #36]	; (0x1de0)	; r0 := SPI0 base addr
+    1dbc:	6800      	ldr	r0, [r0, #0]			; r0 := SPI0 CNTRL register		# 05013004
     1dbe:	21ff      	movs	r1, #255	; 0xff
-    1dc0:	3101      	adds	r1, #1
-    1dc2:	4388      	bics	r0, r1
-    1dc4:	4906      	ldr	r1, [pc, #24]	; (0x1de0)
-    1dc6:	6008      	str	r0, [r1, #0]
+    1dc0:	3101      	adds	r1, #1				; clear lowest bit in TX_NUM field of CNTRL reg
+    1dc2:	4388      	bics	r0, r1				; (disable SPI burst mode, transfer 1 word only)
+    1dc4:	4906      	ldr	r1, [pc, #24]	; (0x1de0)	; r1 := SPI0 base addr
+    1dc6:	6008      	str	r0, [r1, #0]			; SPI0 CNTRL register := r0
     1dc8:	4620      	mov	r0, r4
-    1dca:	f7ff ff0d 	bl	0x1be8
-    1dce:	4804      	ldr	r0, [pc, #16]	; (0x1de0)
-    1dd0:	6203      	str	r3, [r0, #32]
-    1dd2:	6800      	ldr	r0, [r0, #0]
-    1dd4:	2101      	movs	r1, #1
-    1dd6:	4308      	orrs	r0, r1
-    1dd8:	4901      	ldr	r1, [pc, #4]	; (0x1de0)
-    1dda:	6008      	str	r0, [r1, #0]
-    1ddc:	bd10      	pop	{r4, pc}
-    1dde:	0000      	movs	r0, r0
+    1dca:	f7ff ff0d 	bl	0x1be8				; CALL SPI0_Wiznet_SetTransferLength(parameter2)
+    1dce:	4804      	ldr	r0, [pc, #16]	; (0x1de0)	; r0 := SPI0 base addr
+    1dd0:	6203      	str	r3, [r0, #32]			; SPI0 Data Transmit Register := r3 (parameter 1)
+    1dd2:	6800      	ldr	r0, [r0, #0]			; r0 := SPI0 CNTRL register
+    1dd4:	2101      	movs	r1, #1				; r1 := 1
+    1dd6:	4308      	orrs	r0, r1				; set GO_BUSY bit in CNTRL register
+    1dd8:	4901      	ldr	r1, [pc, #4]	; (0x1de0)	; r1 := SPI0 base addr
+    1dda:	6008      	str	r0, [r1, #0]			; SPI0 CNTRL register := r0 => START SPI transfer
+    1ddc:	bd10      	pop	{r4, pc}			; return
 
+    1dde:	0000      	;	padding
     1de0:	40030000      	;	SPI 0 registers
 
     1de4:	b5f0      	push	{r4, r5, r6, r7, lr}
@@ -3546,7 +3553,7 @@ SPI0_Wiznet?
     1dec:	4a50      	ldr	r2, [pc, #320]	; (0x1f30)
     1dee:	1889      	adds	r1, r1, r2
     1df0:	b288      	uxth	r0, r1
-    1df2:	f7ff fed5 	bl	0x1ba0
+    1df2:	f7ff fed5 	bl	0x1ba0				; Wiznet_Read_Address
     1df6:	4607      	mov	r7, r0
     1df8:	023f      	lsls	r7, r7, #8
     1dfa:	0221      	lsls	r1, r4, #8
@@ -3554,7 +3561,7 @@ SPI0_Wiznet?
     1dfe:	1889      	adds	r1, r1, r2
     1e00:	1c49      	adds	r1, r1, #1
     1e02:	b288      	uxth	r0, r1
-    1e04:	f7ff fecc 	bl	0x1ba0
+    1e04:	f7ff fecc 	bl	0x1ba0				; Wiznet_Read_Address
     1e08:	19c0      	adds	r0, r0, r7
     1e0a:	b287      	uxth	r7, r0
     1e0c:	0221      	lsls	r1, r4, #8
@@ -3562,7 +3569,7 @@ SPI0_Wiznet?
     1e10:	00d2      	lsls	r2, r2, #3
     1e12:	1889      	adds	r1, r1, r2
     1e14:	b288      	uxth	r0, r1
-    1e16:	f7ff fec3 	bl	0x1ba0
+    1e16:	f7ff fec3 	bl	0x1ba0				; Wiznet_Read_Address
     1e1a:	4605      	mov	r5, r0
     1e1c:	022d      	lsls	r5, r5, #8
     1e1e:	0221      	lsls	r1, r4, #8
@@ -3571,7 +3578,7 @@ SPI0_Wiznet?
     1e24:	1889      	adds	r1, r1, r2
     1e26:	1c49      	adds	r1, r1, #1
     1e28:	b288      	uxth	r0, r1
-    1e2a:	f7ff feb9 	bl	0x1ba0
+    1e2a:	f7ff feb9 	bl	0x1ba0				; Wiznet_Read_Address
     1e2e:	1940      	adds	r0, r0, r5
     1e30:	b285      	uxth	r5, r0
     1e32:	462e      	mov	r6, r5
@@ -3607,7 +3614,7 @@ SPI0_Wiznet?
     1e6e:	9002      	str	r0, [sp, #8]
     1e70:	2500      	movs	r5, #0
     1e72:	9802      	ldr	r0, [sp, #8]
-    1e74:	f7ff fe94 	bl	0x1ba0
+    1e74:	f7ff fe94 	bl	0x1ba0				; Wiznet_Read_Address
     1e78:	9001      	str	r0, [sp, #4]
     1e7a:	482e      	ldr	r0, [pc, #184]	; (0x1f34)
     1e7c:	8800      	ldrh	r0, [r0, #0]
@@ -3677,7 +3684,7 @@ SPI0_Wiznet?
     1efe:	18d2      	adds	r2, r2, r3
     1f00:	b290      	uxth	r0, r2
     1f02:	9600      	str	r6, [sp, #0]
-    1f04:	f001 f83c 	bl	0x2f80
+    1f04:	f001 f83c 	bl	0x2f80				; Wiznet_Write_Address
     1f08:	b2f1      	uxtb	r1, r6
     1f0a:	0222      	lsls	r2, r4, #8
     1f0c:	2385      	movs	r3, #133	; 0x85
@@ -3685,14 +3692,14 @@ SPI0_Wiznet?
     1f10:	18d2      	adds	r2, r2, r3
     1f12:	1c52      	adds	r2, r2, #1
     1f14:	b290      	uxth	r0, r2
-    1f16:	f001 f833 	bl	0x2f80
+    1f16:	f001 f833 	bl	0x2f80				; Wiznet_Write_Address
     1f1a:	0221      	lsls	r1, r4, #8
     1f1c:	4a04      	ldr	r2, [pc, #16]	; (0x1f30)
     1f1e:	3a25      	subs	r2, #37	; 0x25
     1f20:	1889      	adds	r1, r1, r2
     1f22:	b288      	uxth	r0, r1
     1f24:	2140      	movs	r1, #64	; 0x40
-    1f26:	f001 f82b 	bl	0x2f80
+    1f26:	f001 f82b 	bl	0x2f80				; Wiznet_Write_Address
     1f2a:	4638      	mov	r0, r7
     1f2c:	b005      	add	sp, #20
     1f2e:	bdf0      	pop	{r4, r5, r6, r7, pc}
@@ -3719,7 +3726,7 @@ SPI0_Wiznet?
     1f58:	4a2f      	ldr	r2, [pc, #188]	; (0x2018)
     1f5a:	1889      	adds	r1, r1, r2
     1f5c:	b288      	uxth	r0, r1
-    1f5e:	f7ff fe1f 	bl	0x1ba0
+    1f5e:	f7ff fe1f 	bl	0x1ba0				; Wiznet_Read_Address
     1f62:	4604      	mov	r4, r0
     1f64:	0224      	lsls	r4, r4, #8
     1f66:	0231      	lsls	r1, r6, #8
@@ -3727,7 +3734,7 @@ SPI0_Wiznet?
     1f6a:	1889      	adds	r1, r1, r2
     1f6c:	1c49      	adds	r1, r1, #1
     1f6e:	b288      	uxth	r0, r1
-    1f70:	f7ff fe16 	bl	0x1ba0
+    1f70:	f7ff fe16 	bl	0x1ba0				; Wiznet_Read_Address
     1f74:	1900      	adds	r0, r0, r4
     1f76:	b284      	uxth	r4, r0
     1f78:	4625      	mov	r5, r4
@@ -3762,7 +3769,7 @@ SPI0_Wiznet?
     1fb2:	481a      	ldr	r0, [pc, #104]	; (0x201c)
     1fb4:	5dc1      	ldrb	r1, [r0, r7]
     1fb6:	9802      	ldr	r0, [sp, #8]
-    1fb8:	f000 ffe2 	bl	0x2f80
+    1fb8:	f000 ffe2 	bl	0x2f80				; Wiznet_Write_Address
     1fbc:	9802      	ldr	r0, [sp, #8]
     1fbe:	1c40      	adds	r0, r0, #1
     1fc0:	b280      	uxth	r0, r0
@@ -3787,21 +3794,21 @@ SPI0_Wiznet?
     1fe6:	18d2      	adds	r2, r2, r3
     1fe8:	b290      	uxth	r0, r2
     1fea:	9501      	str	r5, [sp, #4]
-    1fec:	f000 ffc8 	bl	0x2f80
+    1fec:	f000 ffc8 	bl	0x2f80				; Wiznet_Write_Address
     1ff0:	b2e9      	uxtb	r1, r5
     1ff2:	0232      	lsls	r2, r6, #8
     1ff4:	4b08      	ldr	r3, [pc, #32]	; (0x2018)
     1ff6:	18d2      	adds	r2, r2, r3
     1ff8:	1c52      	adds	r2, r2, #1
     1ffa:	b290      	uxth	r0, r2
-    1ffc:	f000 ffc0 	bl	0x2f80
+    1ffc:	f000 ffc0 	bl	0x2f80				; Wiznet_Write_Address
     2000:	0231      	lsls	r1, r6, #8
     2002:	4a05      	ldr	r2, [pc, #20]	; (0x2018)
     2004:	3a23      	subs	r2, #35	; 0x23
     2006:	1889      	adds	r1, r1, r2
     2008:	b288      	uxth	r0, r1
     200a:	2120      	movs	r1, #32
-    200c:	f000 ffb8 	bl	0x2f80
+    200c:	f000 ffb8 	bl	0x2f80				; Wiznet_Write_Address
     2010:	2001      	movs	r0, #1
     2012:	b005      	add	sp, #20
     2014:	bdf0      	pop	{r4, r5, r6, r7, pc}
@@ -3865,19 +3872,19 @@ SPI0_Wiznet?
     2082:	1889      	adds	r1, r1, r2
     2084:	b288      	uxth	r0, r1
     2086:	2101      	movs	r1, #1
-    2088:	f000 ff7a 	bl	0x2f80
+    2088:	f000 ff7a 	bl	0x2f80				; Wiznet_Write_Address
     208c:	0221      	lsls	r1, r4, #8
     208e:	4a10      	ldr	r2, [pc, #64]	; (0x20d0)
     2090:	1889      	adds	r1, r1, r2
     2092:	b288      	uxth	r0, r1
     2094:	2101      	movs	r1, #1
-    2096:	f000 ff73 	bl	0x2f80
+    2096:	f000 ff73 	bl	0x2f80				; Wiznet_Write_Address
     209a:	0221      	lsls	r1, r4, #8
     209c:	4a0c      	ldr	r2, [pc, #48]	; (0x20d0)
     209e:	1c92      	adds	r2, r2, #2
     20a0:	1889      	adds	r1, r1, r2
     20a2:	b288      	uxth	r0, r1
-    20a4:	f7ff fd7c 	bl	0x1ba0
+    20a4:	f7ff fd7c 	bl	0x1ba0				; Wiznet_Read_Address
     20a8:	2813      	cmp	r0, #19
     20aa:	d008      	beq.n	0x20be
     20ac:	0221      	lsls	r1, r4, #8
@@ -3885,7 +3892,7 @@ SPI0_Wiznet?
     20b0:	1889      	adds	r1, r1, r2
     20b2:	b288      	uxth	r0, r1
     20b4:	2110      	movs	r1, #16
-    20b6:	f000 ff63 	bl	0x2f80
+    20b6:	f000 ff63 	bl	0x2f80				; Wiznet_Write_Address
     20ba:	2000      	movs	r0, #0
     20bc:	bd10      	pop	{r4, pc}
     20be:	0221      	lsls	r1, r4, #8
@@ -3893,7 +3900,7 @@ SPI0_Wiznet?
     20c2:	1889      	adds	r1, r1, r2
     20c4:	b288      	uxth	r0, r1
     20c6:	2104      	movs	r1, #4
-    20c8:	f000 ff5a 	bl	0x2f80
+    20c8:	f000 ff5a 	bl	0x2f80				; Wiznet_Write_Address
     20cc:	2001      	movs	r0, #1
     20ce:	e7f5      	b.n	0x20bc
     20d0:	0401      	lsls	r1, r0, #16
@@ -3905,14 +3912,14 @@ SPI0_Wiznet?
     20dc:	1889      	adds	r1, r1, r2
     20de:	b288      	uxth	r0, r1
     20e0:	2105      	movs	r1, #5
-    20e2:	f000 ff4d 	bl	0x2f80
+    20e2:	f000 ff4d 	bl	0x2f80				; Wiznet_Write_Address
     20e6:	0229      	lsls	r1, r5, #8
     20e8:	4a56      	ldr	r2, [pc, #344]	; (0x2244)
     20ea:	1889      	adds	r1, r1, r2
     20ec:	1c49      	adds	r1, r1, #1
     20ee:	b288      	uxth	r0, r1
     20f0:	21b4      	movs	r1, #180	; 0xb4
-    20f2:	f000 ff45 	bl	0x2f80
+    20f2:	f000 ff45 	bl	0x2f80				; Wiznet_Write_Address
     20f6:	4629      	mov	r1, r5
     20f8:	a053      	add	r0, pc, #332	; (adr r0, 0x2248)
     20fa:	f7fe f86b 	bl	0x1d4
@@ -3929,22 +3936,22 @@ SPI0_Wiznet?
     2112:	7801      	ldrb	r1, [r0, #0]
     2114:	484b      	ldr	r0, [pc, #300]	; (0x2244)
     2116:	380e      	subs	r0, #14
-    2118:	f000 ff32 	bl	0x2f80
+    2118:	f000 ff32 	bl	0x2f80				; Wiznet_Write_Address
     211c:	484d      	ldr	r0, [pc, #308]	; (0x2254)
     211e:	7841      	ldrb	r1, [r0, #1]
     2120:	4848      	ldr	r0, [pc, #288]	; (0x2244)
     2122:	380d      	subs	r0, #13
-    2124:	f000 ff2c 	bl	0x2f80
+    2124:	f000 ff2c 	bl	0x2f80				; Wiznet_Write_Address
     2128:	484b      	ldr	r0, [pc, #300]	; (0x2258)
     212a:	7801      	ldrb	r1, [r0, #0]
     212c:	2041      	movs	r0, #65	; 0x41
     212e:	0100      	lsls	r0, r0, #4
-    2130:	f000 ff26 	bl	0x2f80
+    2130:	f000 ff26 	bl	0x2f80				; Wiznet_Write_Address
     2134:	4848      	ldr	r0, [pc, #288]	; (0x2258)
     2136:	7841      	ldrb	r1, [r0, #1]
     2138:	4842      	ldr	r0, [pc, #264]	; (0x2244)
     213a:	1e40      	subs	r0, r0, #1
-    213c:	f000 ff20 	bl	0x2f80
+    213c:	f000 ff20 	bl	0x2f80				; Wiznet_Write_Address
     2140:	2400      	movs	r4, #0
     2142:	e008      	b.n	0x2156
     2144:	4a45      	ldr	r2, [pc, #276]	; (0x225c)
@@ -3953,7 +3960,7 @@ SPI0_Wiznet?
     214a:	1f92      	subs	r2, r2, #6
     214c:	18a2      	adds	r2, r4, r2
     214e:	b290      	uxth	r0, r2
-    2150:	f000 ff16 	bl	0x2f80
+    2150:	f000 ff16 	bl	0x2f80				; Wiznet_Write_Address
     2154:	1c64      	adds	r4, r4, #1
     2156:	2c04      	cmp	r4, #4
     2158:	d3f4      	bcc.n	0x2144
@@ -3962,22 +3969,22 @@ SPI0_Wiznet?
     215e:	7801      	ldrb	r1, [r0, #0]
     2160:	4838      	ldr	r0, [pc, #224]	; (0x2244)
     2162:	30f2      	adds	r0, #242	; 0xf2
-    2164:	f000 ff0c 	bl	0x2f80
+    2164:	f000 ff0c 	bl	0x2f80				; Wiznet_Write_Address
     2168:	483d      	ldr	r0, [pc, #244]	; (0x2260)
     216a:	7841      	ldrb	r1, [r0, #1]
     216c:	4835      	ldr	r0, [pc, #212]	; (0x2244)
     216e:	30f3      	adds	r0, #243	; 0xf3
-    2170:	f000 ff06 	bl	0x2f80
+    2170:	f000 ff06 	bl	0x2f80				; Wiznet_Write_Address
     2174:	483b      	ldr	r0, [pc, #236]	; (0x2264)
     2176:	7801      	ldrb	r1, [r0, #0]
     2178:	2051      	movs	r0, #81	; 0x51
     217a:	0100      	lsls	r0, r0, #4
-    217c:	f000 ff00 	bl	0x2f80
+    217c:	f000 ff00 	bl	0x2f80				; Wiznet_Write_Address
     2180:	4838      	ldr	r0, [pc, #224]	; (0x2264)
     2182:	7841      	ldrb	r1, [r0, #1]
     2184:	482f      	ldr	r0, [pc, #188]	; (0x2244)
     2186:	30ff      	adds	r0, #255	; 0xff
-    2188:	f000 fefa 	bl	0x2f80
+    2188:	f000 fefa 	bl	0x2f80				; Wiznet_Write_Address
     218c:	2400      	movs	r4, #0
     218e:	e008      	b.n	0x21a2
     2190:	4a35      	ldr	r2, [pc, #212]	; (0x2268)
@@ -3986,7 +3993,7 @@ SPI0_Wiznet?
     2196:	32fa      	adds	r2, #250	; 0xfa
     2198:	18a2      	adds	r2, r4, r2
     219a:	b290      	uxth	r0, r2
-    219c:	f000 fef0 	bl	0x2f80
+    219c:	f000 fef0 	bl	0x2f80				; Wiznet_Write_Address
     21a0:	1c64      	adds	r4, r4, #1
     21a2:	2c04      	cmp	r4, #4
     21a4:	d3f4      	bcc.n	0x2190
@@ -3994,22 +4001,22 @@ SPI0_Wiznet?
     21a8:	4830      	ldr	r0, [pc, #192]	; (0x226c)
     21aa:	7801      	ldrb	r1, [r0, #0]
     21ac:	4830      	ldr	r0, [pc, #192]	; (0x2270)
-    21ae:	f000 fee7 	bl	0x2f80
+    21ae:	f000 fee7 	bl	0x2f80				; Wiznet_Write_Address
     21b2:	482e      	ldr	r0, [pc, #184]	; (0x226c)
     21b4:	7841      	ldrb	r1, [r0, #1]
     21b6:	482e      	ldr	r0, [pc, #184]	; (0x2270)
     21b8:	1c40      	adds	r0, r0, #1
-    21ba:	f000 fee1 	bl	0x2f80
+    21ba:	f000 fee1 	bl	0x2f80				; Wiznet_Write_Address
     21be:	482d      	ldr	r0, [pc, #180]	; (0x2274)
     21c0:	7801      	ldrb	r1, [r0, #0]
     21c2:	2061      	movs	r0, #97	; 0x61
     21c4:	0100      	lsls	r0, r0, #4
-    21c6:	f000 fedb 	bl	0x2f80
+    21c6:	f000 fedb 	bl	0x2f80				; Wiznet_Write_Address
     21ca:	482a      	ldr	r0, [pc, #168]	; (0x2274)
     21cc:	7841      	ldrb	r1, [r0, #1]
     21ce:	4828      	ldr	r0, [pc, #160]	; (0x2270)
     21d0:	300d      	adds	r0, #13
-    21d2:	f000 fed5 	bl	0x2f80
+    21d2:	f000 fed5 	bl	0x2f80				; Wiznet_Write_Address
     21d6:	2400      	movs	r4, #0
     21d8:	e008      	b.n	0x21ec
     21da:	4a27      	ldr	r2, [pc, #156]	; (0x2278)
@@ -4018,7 +4025,7 @@ SPI0_Wiznet?
     21e0:	3208      	adds	r2, #8
     21e2:	18a2      	adds	r2, r4, r2
     21e4:	b290      	uxth	r0, r2
-    21e6:	f000 fecb 	bl	0x2f80
+    21e6:	f000 fecb 	bl	0x2f80				; Wiznet_Write_Address
     21ea:	1c64      	adds	r4, r4, #1
     21ec:	2c04      	cmp	r4, #4
     21ee:	d3f4      	bcc.n	0x21da
@@ -4027,22 +4034,22 @@ SPI0_Wiznet?
     21f4:	4821      	ldr	r0, [pc, #132]	; (0x227c)
     21f6:	7801      	ldrb	r1, [r0, #0]
     21f8:	4821      	ldr	r0, [pc, #132]	; (0x2280)
-    21fa:	f000 fec1 	bl	0x2f80
+    21fa:	f000 fec1 	bl	0x2f80				; Wiznet_Write_Address
     21fe:	481f      	ldr	r0, [pc, #124]	; (0x227c)
     2200:	7841      	ldrb	r1, [r0, #1]
     2202:	481f      	ldr	r0, [pc, #124]	; (0x2280)
     2204:	1c40      	adds	r0, r0, #1
-    2206:	f000 febb 	bl	0x2f80
+    2206:	f000 febb 	bl	0x2f80				; Wiznet_Write_Address
     220a:	481e      	ldr	r0, [pc, #120]	; (0x2284)
     220c:	7801      	ldrb	r1, [r0, #0]
     220e:	2071      	movs	r0, #113	; 0x71
     2210:	0100      	lsls	r0, r0, #4
-    2212:	f000 feb5 	bl	0x2f80
+    2212:	f000 feb5 	bl	0x2f80				; Wiznet_Write_Address
     2216:	481b      	ldr	r0, [pc, #108]	; (0x2284)
     2218:	7841      	ldrb	r1, [r0, #1]
     221a:	4819      	ldr	r0, [pc, #100]	; (0x2280)
     221c:	300d      	adds	r0, #13
-    221e:	f000 feaf 	bl	0x2f80
+    221e:	f000 feaf 	bl	0x2f80				; Wiznet_Write_Address
     2222:	2400      	movs	r4, #0
     2224:	e008      	b.n	0x2238
     2226:	4a18      	ldr	r2, [pc, #96]	; (0x2288)
@@ -4051,7 +4058,7 @@ SPI0_Wiznet?
     222c:	3208      	adds	r2, #8
     222e:	18a2      	adds	r2, r4, r2
     2230:	b290      	uxth	r0, r2
-    2232:	f000 fea5 	bl	0x2f80
+    2232:	f000 fea5 	bl	0x2f80				; Wiznet_Write_Address
     2236:	1c64      	adds	r4, r4, #1
     2238:	2c04      	cmp	r4, #4
     223a:	d3f4      	bcc.n	0x2226
@@ -4091,19 +4098,19 @@ SPI0_Wiznet?
     2296:	1889      	adds	r1, r1, r2
     2298:	b288      	uxth	r0, r1
     229a:	2101      	movs	r1, #1
-    229c:	f000 fe70 	bl	0x2f80
+    229c:	f000 fe70 	bl	0x2f80				; Wiznet_Write_Address
     22a0:	0221      	lsls	r1, r4, #8
     22a2:	4a19      	ldr	r2, [pc, #100]	; (0x2308)
     22a4:	1889      	adds	r1, r1, r2
     22a6:	b288      	uxth	r0, r1
     22a8:	2101      	movs	r1, #1
-    22aa:	f000 fe69 	bl	0x2f80
+    22aa:	f000 fe69 	bl	0x2f80				; Wiznet_Write_Address
     22ae:	0221      	lsls	r1, r4, #8
     22b0:	4a15      	ldr	r2, [pc, #84]	; (0x2308)
     22b2:	1c92      	adds	r2, r2, #2
     22b4:	1889      	adds	r1, r1, r2
     22b6:	b288      	uxth	r0, r1
-    22b8:	f7ff fc72 	bl	0x1ba0
+    22b8:	f7ff fc72 	bl	0x1ba0				; Wiznet_Read_Address
     22bc:	2813      	cmp	r0, #19
     22be:	d008      	beq.n	0x22d2
     22c0:	0221      	lsls	r1, r4, #8
@@ -4111,7 +4118,7 @@ SPI0_Wiznet?
     22c4:	1889      	adds	r1, r1, r2
     22c6:	b288      	uxth	r0, r1
     22c8:	2110      	movs	r1, #16
-    22ca:	f000 fe59 	bl	0x2f80
+    22ca:	f000 fe59 	bl	0x2f80				; Wiznet_Write_Address
     22ce:	2000      	movs	r0, #0
     22d0:	bd10      	pop	{r4, pc}
     22d2:	0221      	lsls	r1, r4, #8
@@ -4119,13 +4126,13 @@ SPI0_Wiznet?
     22d6:	1889      	adds	r1, r1, r2
     22d8:	b288      	uxth	r0, r1
     22da:	2102      	movs	r1, #2
-    22dc:	f000 fe50 	bl	0x2f80
+    22dc:	f000 fe50 	bl	0x2f80				; Wiznet_Write_Address
     22e0:	0221      	lsls	r1, r4, #8
     22e2:	4a09      	ldr	r2, [pc, #36]	; (0x2308)
     22e4:	1c92      	adds	r2, r2, #2
     22e6:	1889      	adds	r1, r1, r2
     22e8:	b288      	uxth	r0, r1
-    22ea:	f7ff fc59 	bl	0x1ba0
+    22ea:	f7ff fc59 	bl	0x1ba0				; Wiznet_Read_Address
     22ee:	2814      	cmp	r0, #20
     22f0:	d008      	beq.n	0x2304
     22f2:	0221      	lsls	r1, r4, #8
@@ -4133,7 +4140,7 @@ SPI0_Wiznet?
     22f6:	1889      	adds	r1, r1, r2
     22f8:	b288      	uxth	r0, r1
     22fa:	2110      	movs	r1, #16
-    22fc:	f000 fe40 	bl	0x2f80
+    22fc:	f000 fe40 	bl	0x2f80				; Wiznet_Write_Address
     2300:	2000      	movs	r0, #0
     2302:	e7e5      	b.n	0x22d0
     2304:	2001      	movs	r0, #1
@@ -4148,19 +4155,19 @@ SPI0_Wiznet?
     2316:	1889      	adds	r1, r1, r2
     2318:	b288      	uxth	r0, r1
     231a:	2102      	movs	r1, #2
-    231c:	f000 fe30 	bl	0x2f80
+    231c:	f000 fe30 	bl	0x2f80				; Wiznet_Write_Address
     2320:	0221      	lsls	r1, r4, #8
     2322:	4a0d      	ldr	r2, [pc, #52]	; (0x2358)
     2324:	1889      	adds	r1, r1, r2
     2326:	b288      	uxth	r0, r1
     2328:	2101      	movs	r1, #1
-    232a:	f000 fe29 	bl	0x2f80
+    232a:	f000 fe29 	bl	0x2f80				; Wiznet_Write_Address
     232e:	0221      	lsls	r1, r4, #8
     2330:	4a09      	ldr	r2, [pc, #36]	; (0x2358)
     2332:	1c92      	adds	r2, r2, #2
     2334:	1889      	adds	r1, r1, r2
     2336:	b288      	uxth	r0, r1
-    2338:	f7ff fc32 	bl	0x1ba0
+    2338:	f7ff fc32 	bl	0x1ba0				; Wiznet_Read_Address
     233c:	2822      	cmp	r0, #34	; 0x22
     233e:	d008      	beq.n	0x2352
     2340:	0221      	lsls	r1, r4, #8
@@ -4168,7 +4175,7 @@ SPI0_Wiznet?
     2344:	1889      	adds	r1, r1, r2
     2346:	b288      	uxth	r0, r1
     2348:	2110      	movs	r1, #16
-    234a:	f000 fe19 	bl	0x2f80
+    234a:	f000 fe19 	bl	0x2f80				; Wiznet_Write_Address
     234e:	2000      	movs	r0, #0
     2350:	bd10      	pop	{r4, pc}
     2352:	2001      	movs	r0, #1
@@ -5105,7 +5112,7 @@ UART1Handler:
     2ab4:	b510      	push	{r4, lr}
     2ab6:	2180      	movs	r1, #128	; 0x80
     2ab8:	2000      	movs	r0, #0
-    2aba:	f000 fa61 	bl	0x2f80
+    2aba:	f000 fa61 	bl	0x2f80				; Wiznet_Write_Address
     2abe:	2064      	movs	r0, #100	; 0x64
     2ac0:	f7fd fd0a 	bl	0x4d8
     2ac4:	2400      	movs	r4, #0
@@ -5113,7 +5120,7 @@ UART1Handler:
     2ac8:	4a23      	ldr	r2, [pc, #140]	; (0x2b58)
     2aca:	5d11      	ldrb	r1, [r2, r4]
     2acc:	1c60      	adds	r0, r4, #1
-    2ace:	f000 fa57 	bl	0x2f80
+    2ace:	f000 fa57 	bl	0x2f80				; Wiznet_Write_Address
     2ad2:	1c60      	adds	r0, r4, #1
     2ad4:	b2c4      	uxtb	r4, r0
     2ad6:	2c04      	cmp	r4, #4
@@ -5123,7 +5130,7 @@ UART1Handler:
     2ade:	4a1f      	ldr	r2, [pc, #124]	; (0x2b5c)
     2ae0:	5d11      	ldrb	r1, [r2, r4]
     2ae2:	1d60      	adds	r0, r4, #5
-    2ae4:	f000 fa4c 	bl	0x2f80
+    2ae4:	f000 fa4c 	bl	0x2f80				; Wiznet_Write_Address
     2ae8:	1c60      	adds	r0, r4, #1
     2aea:	b2c4      	uxtb	r4, r0
     2aec:	2c04      	cmp	r4, #4
@@ -5134,7 +5141,7 @@ UART1Handler:
     2af6:	5d11      	ldrb	r1, [r2, r4]
     2af8:	4620      	mov	r0, r4
     2afa:	3009      	adds	r0, #9
-    2afc:	f000 fa40 	bl	0x2f80
+    2afc:	f000 fa40 	bl	0x2f80				; Wiznet_Write_Address
     2b00:	1c60      	adds	r0, r4, #1
     2b02:	b2c4      	uxtb	r4, r0
     2b04:	2c06      	cmp	r4, #6
@@ -5145,31 +5152,31 @@ UART1Handler:
     2b0e:	5d11      	ldrb	r1, [r2, r4]
     2b10:	4620      	mov	r0, r4
     2b12:	300f      	adds	r0, #15
-    2b14:	f000 fa34 	bl	0x2f80
+    2b14:	f000 fa34 	bl	0x2f80				; Wiznet_Write_Address
     2b18:	1c60      	adds	r0, r4, #1
     2b1a:	b2c4      	uxtb	r4, r0
     2b1c:	2c04      	cmp	r4, #4
     2b1e:	dbf5      	blt.n	0x2b0c
     2b20:	2155      	movs	r1, #85	; 0x55
     2b22:	201a      	movs	r0, #26
-    2b24:	f000 fa2c 	bl	0x2f80
+    2b24:	f000 fa2c 	bl	0x2f80				; Wiznet_Write_Address
     2b28:	2155      	movs	r1, #85	; 0x55
     2b2a:	201b      	movs	r0, #27
-    2b2c:	f000 fa28 	bl	0x2f80
+    2b2c:	f000 fa28 	bl	0x2f80				; Wiznet_Write_Address
     2b30:	a00d      	add	r0, pc, #52	; (adr r0, 0x2b68)
     2b32:	f7fd fb4f 	bl	0x1d4
     2b36:	2107      	movs	r1, #7
     2b38:	2017      	movs	r0, #23
-    2b3a:	f000 fa21 	bl	0x2f80
+    2b3a:	f000 fa21 	bl	0x2f80				; Wiznet_Write_Address
     2b3e:	21d0      	movs	r1, #208	; 0xd0
     2b40:	2018      	movs	r0, #24
-    2b42:	f000 fa1d 	bl	0x2f80
+    2b42:	f000 fa1d 	bl	0x2f80				; Wiznet_Write_Address
     2b46:	2108      	movs	r1, #8
     2b48:	2019      	movs	r0, #25
-    2b4a:	f000 fa19 	bl	0x2f80
+    2b4a:	f000 fa19 	bl	0x2f80				; Wiznet_Write_Address
     2b4e:	21cf      	movs	r1, #207	; 0xcf
     2b50:	2016      	movs	r0, #22
-    2b52:	f000 fa15 	bl	0x2f80
+    2b52:	f000 fa15 	bl	0x2f80				; Wiznet_Write_Address
     2b56:	bd10      	pop	{r4, pc}
 
     2b58:	20000052      	;
@@ -5209,14 +5216,14 @@ UART1Handler:
     2ba8:	494b      	ldr	r1, [pc, #300]	; (0x2cd8)
     2baa:	7008      	strb	r0, [r1, #0]
     2bac:	2015      	movs	r0, #21
-    2bae:	f7fe fff7 	bl	0x1ba0
+    2bae:	f7fe fff7 	bl	0x1ba0				; Wiznet_Read_Address
 
     2bb2:	4605      	mov	r5, r0
     2bb4:	20f0      	movs	r0, #240	; 0xf0
     2bb6:	4028      	ands	r0, r5
     2bb8:	4601      	mov	r1, r0
     2bba:	2015      	movs	r0, #21
-    2bbc:	f000 f9e0 	bl	0x2f80
+    2bbc:	f000 f9e0 	bl	0x2f80				; Wiznet_Write_Address
     2bc0:	2080      	movs	r0, #128	; 0x80
     2bc2:	4028      	ands	r0, r5
     2bc4:	2880      	cmp	r0, #128	; 0x80
@@ -5233,11 +5240,11 @@ UART1Handler:
     2bde:	0fc0      	lsrs	r0, r0, #31
     2be0:	d03b      	beq.n	0x2c5a
     2be2:	4847      	ldr	r0, [pc, #284]	; (0x2d00)
-    2be4:	f7fe ffdc 	bl	0x1ba0
+    2be4:	f7fe ffdc 	bl	0x1ba0				; Wiznet_Read_Address
     2be8:	4604      	mov	r4, r0
     2bea:	4621      	mov	r1, r4
     2bec:	4844      	ldr	r0, [pc, #272]	; (0x2d00)
-    2bee:	f000 f9c7 	bl	0x2f80
+    2bee:	f000 f9c7 	bl	0x2f80				; Wiznet_Write_Address
     2bf2:	07e0      	lsls	r0, r4, #31
     2bf4:	0fc0      	lsrs	r0, r0, #31
     2bf6:	d008      	beq.n	0x2c0a
@@ -5255,7 +5262,7 @@ UART1Handler:
     2c10:	2110      	movs	r1, #16
     2c12:	483b      	ldr	r0, [pc, #236]	; (0x2d00)
     2c14:	1e40      	subs	r0, r0, #1
-    2c16:	f000 f9b3 	bl	0x2f80
+    2c16:	f000 f9b3 	bl	0x2f80				; Wiznet_Write_Address
     2c1a:	2000      	movs	r0, #0
     2c1c:	4939      	ldr	r1, [pc, #228]	; (0x2d04)
     2c1e:	7008      	strb	r0, [r1, #0]
@@ -5283,7 +5290,7 @@ UART1Handler:
     2c4a:	2110      	movs	r1, #16
     2c4c:	482c      	ldr	r0, [pc, #176]	; (0x2d00)
     2c4e:	1e40      	subs	r0, r0, #1
-    2c50:	f000 f996 	bl	0x2f80
+    2c50:	f000 f996 	bl	0x2f80				; Wiznet_Write_Address
     2c54:	2000      	movs	r0, #0
     2c56:	492b      	ldr	r1, [pc, #172]	; (0x2d04)
     2c58:	7008      	strb	r0, [r1, #0]
@@ -5292,11 +5299,11 @@ UART1Handler:
     2c5e:	2802      	cmp	r0, #2
     2c60:	d138      	bne.n	0x2cd4
     2c62:	4831      	ldr	r0, [pc, #196]	; (0x2d28)
-    2c64:	f7fe ff9c 	bl	0x1ba0
+    2c64:	f7fe ff9c 	bl	0x1ba0				; Wiznet_Read_Address
     2c68:	4604      	mov	r4, r0
     2c6a:	4621      	mov	r1, r4
     2c6c:	482e      	ldr	r0, [pc, #184]	; (0x2d28)
-    2c6e:	f000 f987 	bl	0x2f80
+    2c6e:	f000 f987 	bl	0x2f80				; Wiznet_Write_Address
     2c72:	07e0      	lsls	r0, r4, #31
     2c74:	0fc0      	lsrs	r0, r0, #31
     2c76:	d005      	beq.n	0x2c84
@@ -5312,7 +5319,7 @@ UART1Handler:
     2c8a:	2110      	movs	r1, #16
     2c8c:	4826      	ldr	r0, [pc, #152]	; (0x2d28)
     2c8e:	1e40      	subs	r0, r0, #1
-    2c90:	f000 f976 	bl	0x2f80
+    2c90:	f000 f976 	bl	0x2f80				; Wiznet_Write_Address
     2c94:	2000      	movs	r0, #0
     2c96:	4925      	ldr	r1, [pc, #148]	; (0x2d2c)
     2c98:	7008      	strb	r0, [r1, #0]
@@ -5340,7 +5347,7 @@ UART1Handler:
     2cc4:	2110      	movs	r1, #16
     2cc6:	4818      	ldr	r0, [pc, #96]	; (0x2d28)
     2cc8:	1e40      	subs	r0, r0, #1
-    2cca:	f000 f959 	bl	0x2f80
+    2cca:	f000 f959 	bl	0x2f80				; Wiznet_Write_Address
     2cce:	2000      	movs	r0, #0
     2cd0:	4916      	ldr	r1, [pc, #88]	; (0x2d2c)
     2cd2:	7008      	strb	r0, [r1, #0]
@@ -5679,40 +5686,39 @@ UART1Handler:
 
     2f7c:	40020000      	;	I2C 0 registers
 
-UART1 error handler?
+Wiznet_Write_Address(address, data):
     2f80:	b570      	push	{r4, r5, r6, lr}
-    2f82:	4605      	mov	r5, r0
-    2f84:	460e      	mov	r6, r1
+    2f82:	4605      	mov	r5, r0				; r5 = parameter1	ADDRESS
+    2f84:	460e      	mov	r6, r1				; r6 = parameter2	DATA
     2f86:	2400      	movs	r4, #0
     2f88:	2000      	movs	r0, #0
-    2f8a:	490c      	ldr	r1, [pc, #48]	; (0x2fbc)
+    2f8a:	490c      	ldr	r1, [pc, #48]	; (0x2fbc)	; ???
     2f8c:	6308      	str	r0, [r1, #48]	; 0x30
-    2f8e:	24f0      	movs	r4, #240	; 0xf0
+    2f8e:	24f0      	movs	r4, #240	; 0xf0		; or-in MARKER for WRITE operation (0xf0)
     2f90:	0424      	lsls	r4, r4, #16
     2f92:	4620      	mov	r0, r4
-    2f94:	4328      	orrs	r0, r5
+    2f94:	4328      	orrs	r0, r5				; or-in ADDRESS field
     2f96:	4604      	mov	r4, r0
     2f98:	0224      	lsls	r4, r4, #8
     2f9a:	4620      	mov	r0, r4
-    2f9c:	4330      	orrs	r0, r6
+    2f9c:	4330      	orrs	r0, r6				; or-in DATA field
     2f9e:	4604      	mov	r4, r0
     2fa0:	2120      	movs	r1, #32
     2fa2:	4620      	mov	r0, r4
-    2fa4:	f7fe ff06 	bl	0x1db4
-
-SPI0_Wiznet?
+    2fa4:	f7fe ff06 	bl	0x1db4				; SPI0_Wiznet_StartTX(payload, #32)
     2fa8:	bf00      	nop
+WaitForWriteTxCompletion:
     2faa:	4805      	ldr	r0, [pc, #20]	; (0x2fc0)
     2fac:	6800      	ldr	r0, [r0, #0]
     2fae:	07c0      	lsls	r0, r0, #31
     2fb0:	0fc0      	lsrs	r0, r0, #31
-    2fb2:	d1fa      	bne.n	0x2faa
+    2fb2:	d1fa      	bne.n	0x2faa				; WaitForWriteTxCompletion
     2fb4:	2001      	movs	r0, #1
-    2fb6:	4901      	ldr	r1, [pc, #4]	; (0x2fbc)
+    2fb6:	4901      	ldr	r1, [pc, #4]	; (0x2fbc)	; ???
     2fb8:	6308      	str	r0, [r1, #48]	; 0x30
     2fba:	bd70      	pop	{r4, r5, r6, pc}
 
-    2fbc:	50004200      	;	GPIO Control registers
+    2fbc:	50004200      	;	GPIO registers for PORT0
     2fc0:	40030000      	;	SPI 0 registers
 
     2fc4:	b430      	push	{r4, r5}
