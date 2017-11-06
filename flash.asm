@@ -54,6 +54,7 @@ Disassembly of section .data:
       b8:	000001a3      	;	NVIC 46: BadIRQHandler       (reserved, terminal)
       bc:	000001a3      	;	NVIC 47: BadIRQHandler       (reserved, terminal)
 
+StartUpCode
       c0:	f000 f802 	bl	0xc8
       c4:	f000 f848 	bl	0x158
       c8:	a00c      	add	r0, pc, #48	; (adr r0, 0xfc)
@@ -135,11 +136,11 @@ Disassembly of section .data:
      16c:	f7ff fff2 	bl	0x154
      170:	bc03      	pop	{r0, r1}
      172:	f000 f9a1 	bl	0x4b8
-     176:	0000      	movs	r0, r0
+     176:	0000      	;	padding
 
 ResetHandler:
-     178:	480d      	ldr	r0, [pc, #52]	; (0x1b0)
-     17a:	6901      	ldr	r1, [r0, #16]
+     178:	480d      	ldr	r0, [pc, #52]	; (0x1b0)	; load base offset of Global Control registers (GCR)
+     17a:	6901      	ldr	r1, [r0, #16]			; load GCR+0x10 ? reserved register ?
      17c:	293f      	cmp	r1, #63	; 0x3f
      17e:	d109      	bne.n	0x194
      180:	490c      	ldr	r1, [pc, #48]	; (0x1b4)
@@ -179,7 +180,7 @@ BadIRQHandler:
      1b8:	00000016      	;
      1bc:	00000088      	;
      1c0:	00000020      	;
-     1c4:	000000c1      	;
+     1c4:	000000c1      	;	PTR to StartUpCode
      1c8:	20000730      	;
      1cc:	20000b30      	;
      1d0:	20000730      	;
@@ -251,7 +252,7 @@ BadIRQHandler:
      254:	68e1      	ldr	r1, [r4, #12]
      256:	4788      	blx	r1
      258:	2800      	cmp	r0, #0
-     25a:	d07a      	beq.n	0x352
+     25a:	d07a      	beq.n	0x352				<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
      25c:	2825      	cmp	r0, #37	; 0x25
      25e:	d002      	beq.n	0x266
      260:	6862      	ldr	r2, [r4, #4]
@@ -2946,6 +2947,7 @@ EINT1Handler:
     1944:	7088      	strb	r0, [r1, #2]
     1946:	e000      	b.n	0x194a
     1948:	bf00      	nop
+
     194a:	bf00      	nop
     194c:	2104      	movs	r1, #4
     194e:	2000      	movs	r0, #0
@@ -3261,6 +3263,8 @@ EINT1Handler:
     1bbc:	2120      	movs	r1, #32
     1bbe:	4620      	mov	r0, r4
     1bc0:	f000 f8f8 	bl	0x1db4
+
+SPI0_Wiznet?
     1bc4:	bf00      	nop
     1bc6:	4807      	ldr	r0, [pc, #28]	; (0x1be4)
     1bc8:	6800      	ldr	r0, [r0, #0]
@@ -5695,6 +5699,8 @@ UART1 error handler?
     2fa0:	2120      	movs	r1, #32
     2fa2:	4620      	mov	r0, r4
     2fa4:	f7fe ff06 	bl	0x1db4
+
+SPI0_Wiznet?
     2fa8:	bf00      	nop
     2faa:	4805      	ldr	r0, [pc, #20]	; (0x2fc0)
     2fac:	6800      	ldr	r0, [r0, #0]

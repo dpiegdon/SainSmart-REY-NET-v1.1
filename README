@@ -40,14 +40,11 @@ The flash dump can be disassembled using:
 An annotated output is in flash.asm
 
 
-The Wiznet W5100 ethernet controller is probably connected
-to the "EBI" external memory interface of the Cortex M0.
-It probably uses a 15-bit address and 8-bit data interface
-with some additional control lines. (probably 4-6, to be verified)
-the EBI is mapped at 6000.0000 in the Cortex M0.
-
-NOTE: Its also possible that SPI is used...
-
+The Wiznet W5100 ethernet controller is connected via SPI0,
+MOSI is pin 1 on the Cortex M0,
+MISO pin 2,
+CLK pin 3,
+CS pin 47.
 Wiznet /INT signal is connected to Pin 8 (P3.2, EINT0)
 
 The Wiznet can be used to listen on a specified TCP port,
@@ -55,5 +52,5 @@ which seems to be done here. So all lowlevel ethernet/IP/TCP
 protocol is done in the Wiznet, which explains that the
 firmware of the ARM is so small.
 
-Also connected is an Ateml AT24C256C 32KByte EEPROM via i2c.
+Also connected is an Atmel AT24C256C 32KByte EEPROM via i2c.
 
