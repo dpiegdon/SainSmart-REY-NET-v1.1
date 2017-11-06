@@ -15,6 +15,8 @@ The board contains
 
 * U5: Wiznet W9100 Ethernet Controller (via SPI)
 
+	Datasheet can be loaded from: `http://www.wiznet.io/wp-content/uploads/wiznethome/Chip/W5100/Document/W5100_Datasheet_v1.2.7.pdf`
+
 	The Wiznet W5100 ethernet controller is connected via SPI0,
 	MOSI is pin 1 on the Cortex M0,
 	MISO pin 2,
@@ -30,6 +32,7 @@ The board contains
 
 * U6: Atmel AT24C256C 32KByte EEPROM (via i2c)
 
+	Datasheet can be loaded from: `http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8568-SEEPROM-AT24C256C-Datasheet.pdf`
 
 
 Connectors:
