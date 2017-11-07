@@ -627,37 +627,38 @@ WiznetSocketSetup_Failed1:
      522:	f7ff fe57 	bl	0x1d4				; UART0_printf
      526:	2000      	movs	r0, #0
 WiznetSocketSetup_Done:
-     528:	bd10      	pop	{r4, pc}
+     528:	bd10      	pop	{r4, pc}			; Return
+
 WiznetSocketInitOk:
-     52a:	2400      	movs	r4, #0
+     52a:	2400      	movs	r4, #0				; for r4 in 0..4
      52c:	e00a      	b.n	0x544
-WiznetSocket...?
+WiznetSocketSetDstIPAddr:
      52e:	4a1a      	ldr	r2, [pc, #104]	; (0x598)
      530:	5d12      	ldrb	r2, [r2, r4]
      532:	1c52      	adds	r2, r2, #1
      534:	b2d1      	uxtb	r1, r2
      536:	4a11      	ldr	r2, [pc, #68]	; (0x57c)
      538:	320b      	adds	r2, #11
-     53a:	18a0      	adds	r0, r4, r2
-     53c:	f002 fd20 	bl	0x2f80				; Wiznet_Write_Address(???, ???)
-     540:	1c60      	adds	r0, r4, #1
+     53a:	18a0      	adds	r0, r4, r2			; r0 is 0x401+(#11..#14)
+     53c:	f002 fd20 	bl	0x2f80				; Wiznet_Write_Address(0x40c..0x40f, SrcIPAddr[0..4])
+     540:	1c60      	adds	r0, r4, #1			; => set DstIPAddress for Socket 0
      542:	b2c4      	uxtb	r4, r0
-WiznetSocket...?
      544:	2c04      	cmp	r4, #4
-     546:	dbf2      	blt.n	0x52e
+     546:	dbf2      	blt.n	0x52e				; WiznetSocketSetDstIPAddr
+
      548:	2104      	movs	r1, #4				; 0x04 == CONNECT
      54a:	480c      	ldr	r0, [pc, #48]	; (0x57c)	; Wiznet_Write_Address(0x401, 0x4)
-     54c:	f002 fd18 	bl	0x2f80				; => try to connect to ???
+     54c:	f002 fd18 	bl	0x2f80				; => try to connect
      550:	2064      	movs	r0, #100	; 0x64
      552:	f7ff ffc1 	bl	0x4d8				; Delay(#100)
      556:	4809      	ldr	r0, [pc, #36]	; (0x57c)
      558:	1d40      	adds	r0, r0, #5
-     55a:	f001 fb21 	bl	0x1ba0				; Wiznet_Read_Address
-     55e:	4604      	mov	r4, r0
+     55a:	f001 fb21 	bl	0x1ba0				; Wiznet_Read_Address(0x406)
+     55e:	4604      	mov	r4, r0				; => r4 := Socket 0 DstHardwareAddr[0]
      560:	2110      	movs	r1, #16
-     562:	4806      	ldr	r0, [pc, #24]	; (0x57c)
-     564:	f002 fd0c 	bl	0x2f80				; Wiznet_Write_Address
-     568:	2cff      	cmp	r4, #255	; 0xff
+     562:	4806      	ldr	r0, [pc, #24]	; (0x57c)	; Wiznet_Write_Address(0x401, 0x10)
+     564:	f002 fd0c 	bl	0x2f80				; => CLOSE socket
+     568:	2cff      	cmp	r4, #255	; 0xff		; CHECK FOR BROADCAST MAC ADDRESS
      56a:	d104      	bne.n	0x576
      56c:	a00b      	add	r0, pc, #44	; (adr r0, 0x59c)
      56e:	f7ff fe31 	bl	0x1d4				; UART0_printf
