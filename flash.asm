@@ -69,7 +69,7 @@ StartUpCode
       da:	465d      	mov	r5, fp
       dc:	42ac      	cmp	r4, r5
       de:	d101      	bne.n	0xe4
-      e0:	f000 f83a 	bl	0x158
+      e0:	f000 f83a 	bl	0x158				; StartMain
       e4:	467e      	mov	r6, pc
       e6:	3e0f      	subs	r6, #15
       e8:	cc0f      	ldmia	r4!, {r0, r1, r2, r3}
@@ -123,20 +123,23 @@ StartUpCode
      148:	2000      	movs	r0, #0
      14a:	bd10      	pop	{r4, pc}
 
+InitNothing:
      14c:	b51f      	push	{r0, r1, r2, r3, r4, lr}
      14e:	46c0      	nop			; (mov r8, r8)
      150:	46c0      	nop			; (mov r8, r8)
      152:	bd1f      	pop	{r0, r1, r2, r3, r4, pc}
-
+ExitNothing:
      154:	b510      	push	{r4, lr}
      156:	bd10      	pop	{r4, pc}
+StartMain:
      158:	f000 f984 	bl	0x464
      15c:	4611      	mov	r1, r2
-     15e:	f7ff fff5 	bl	0x14c
-     162:	f002 ffbf 	bl	0x30e4
-     166:	f000 f99c 	bl	0x4a2
+     15e:	f7ff fff5 	bl	0x14c				; InitNothing
+     162:	f002 ffbf 	bl	0x30e4				; Main
+     166:	f000 f99c 	bl	0x4a2				; Exit
+ExitAfterMain:
      16a:	b403      	push	{r0, r1}
-     16c:	f7ff fff2 	bl	0x154
+     16c:	f7ff fff2 	bl	0x154				; ExitNothing
 FirmwareFallThrough:
      170:	bc03      	pop	{r0, r1}
      172:	f000 f9a1 	bl	0x4b8		;		; TrapIntoDebugMode
@@ -190,13 +193,13 @@ BadIRQHandler:
      1cc:	20000b30      	;
      1d0:	20000730      	;
 
-printf(format, ...)
+UART0_printf(format, ...) ???
      1d4:	b40f      	push	{r0, r1, r2, r3}
      1d6:	4905      	ldr	r1, [pc, #20]	; (0x1ec)	; r1 := scratchpad
      1d8:	b510      	push	{r4, lr}
      1da:	aa03      	add	r2, sp, #12
      1dc:	9802      	ldr	r0, [sp, #8]
-     1de:	f000 f915 	bl	0x40c				; vprintf(format, scratchpad, ap)
+     1de:	f000 f915 	bl	0x40c				; UART0_vprintf(format, scratchpad, ap)
      1e2:	bc10      	pop	{r4}
      1e4:	bc08      	pop	{r3}
      1e6:	b004      	add	sp, #16
@@ -475,7 +478,7 @@ printf_??? ?
      408:	2001      	movs	r0, #1
      40a:	e7fb      	b.n	0x404
 
-vprintf(format, scratchpad, ap):
+UART0_vprintf(format, scratchpad, ap):	???
      40c:	4b08      	ldr	r3, [pc, #32]	; (0x430)
      40e:	b570      	push	{r4, r5, r6, lr}
      410:	460d      	mov	r5, r1				; r5 := ap
@@ -484,11 +487,12 @@ vprintf(format, scratchpad, ap):
      418:	4604      	mov	r4, r0				; r4 := scratchpad
      41a:	4628      	mov	r0, r5
      41c:	f002 fe56 	bl	0x30cc
-     420:	2800      	cmp	r0, #0				; ? ap empty?
-     422:	d002      	beq.n	0x42a
+     420:	2800      	cmp	r0, #0
+     422:	d002      	beq.n	0x42a				; UART0_vprintf_EndOfLine
      424:	2000      	movs	r0, #0
      426:	43c0      	mvns	r0, r0
      428:	bd70      	pop	{r4, r5, r6, pc}
+UART0_vprintf_EndOfLine: ???
      42a:	4620      	mov	r0, r4
      42c:	bd70      	pop	{r4, r5, r6, pc}
 
@@ -521,6 +525,7 @@ vprintf_???:
      45e:	0000      	;	padding
      460:	ffffffe5	;
 
+Init???
      464:	4675      	mov	r5, lr
      466:	f000 f823 	bl	0x4b0
      46a:	46ae      	mov	lr, r5
@@ -551,11 +556,12 @@ vprintf_???:
      49e:	468d      	mov	sp, r1
      4a0:	4770      	bx	lr
 
+Exit:
      4a2:	4604      	mov	r4, r0
      4a4:	46c0      	nop			; (mov r8, r8)
      4a6:	46c0      	nop			; (mov r8, r8)
      4a8:	4620      	mov	r0, r4
-     4aa:	f7ff fe5e 	bl	0x16a
+     4aa:	f7ff fe5e 	bl	0x16a				; ExitAfterMain:
      4ae:	0000      	movs	r0, r0
      4b0:	4800      	ldr	r0, [pc, #0]	; (0x4b4)
      4b2:	4770      	bx	lr
@@ -618,7 +624,7 @@ WiznetSocketSetup_Failed1:
      51a:	4818      	ldr	r0, [pc, #96]	; (0x57c)	; Wiznet_Write_Address(0x401, 0x10)
      51c:	f002 fd30 	bl	0x2f80				; => Close socket
      520:	a017      	add	r0, pc, #92	; (adr r0, 0x580)
-     522:	f7ff fe57 	bl	0x1d4				; printf
+     522:	f7ff fe57 	bl	0x1d4				; UART0_printf
      526:	2000      	movs	r0, #0
 WiznetSocketSetup_Done:
      528:	bd10      	pop	{r4, pc}
@@ -654,7 +660,7 @@ WiznetSocket...?
      568:	2cff      	cmp	r4, #255	; 0xff
      56a:	d104      	bne.n	0x576
      56c:	a00b      	add	r0, pc, #44	; (adr r0, 0x59c)
-     56e:	f7ff fe31 	bl	0x1d4				; printf
+     56e:	f7ff fe31 	bl	0x1d4				; UART0_printf
 WiznetSocketSetup_Failed2:
      572:	2000      	movs	r0, #0
      574:	e7d8      	b.n	0x528				; WiznetSocketSetup_Done
@@ -981,7 +987,7 @@ EINT0_WiznetHandler:
      7ea:	6008      	str	r0, [r1, #0]	; P3 IO Mode Control Reg
      7ec:	f002 f9da 	bl	0x2ba4
      7f0:	a005      	add	r0, pc, #20	; (adr r0, 0x808)
-     7f2:	f7ff fcef 	bl	0x1d4				; printf
+     7f2:	f7ff fcef 	bl	0x1d4				; UART0_printf
      7f6:	2004      	movs	r0, #4
      7f8:	4902      	ldr	r1, [pc, #8]	; (0x804)
      7fa:	3980      	subs	r1, #128	; 0x80 => P0 IO Mode Control Reg
@@ -1004,7 +1010,7 @@ EINT1Handler:
      818:	4903      	ldr	r1, [pc, #12]	; (0x828)
      81a:	6008      	str	r0, [r1, #0]
      81c:	a003      	add	r0, pc, #12	; (adr r0, 0x82c)
-     81e:	f7ff fcd9 	bl	0x1d4				; printf
+     81e:	f7ff fcd9 	bl	0x1d4				; UART0_printf
      822:	bd10      	pop	{r4, pc}
 
      824:	500040c0      	;	GPIO registers for PORT3
@@ -1221,6 +1227,9 @@ EINT1Handler:
      a12:	5000      	str	r0, [r0, r0]
      a14:	0110      	lsls	r0, r2, #4
      a16:	2000      	movs	r0, #0
+
+
+??? EEPROM?
      a18:	b510      	push	{r4, lr}
      a1a:	4818      	ldr	r0, [pc, #96]	; (0xa7c)
      a1c:	6940      	ldr	r0, [r0, #20]
@@ -1323,13 +1332,13 @@ EINT1Handler:
      af4:	50000200 	;	Clock Control registers
      af8:	40020000      	;	I2C 0 registers
 
-ReadWiznetConfigFromEEPROM ???
+???
      afc:	b570      	push	{r4, r5, r6, lr}
      afe:	4604      	mov	r4, r0
      b00:	4625      	mov	r5, r4
      b02:	7829      	ldrb	r1, [r5, #0]
      b04:	a042      	add	r0, pc, #264	; (adr r0, 0xc10)
-     b06:	f7ff fb65 	bl	0x1d4				; printf
+     b06:	f7ff fb65 	bl	0x1d4				; UART0_printf
      b0a:	2300      	movs	r3, #0
      b0c:	2208      	movs	r2, #8
      b0e:	4945      	ldr	r1, [pc, #276]	; (0xc24)
@@ -1471,6 +1480,7 @@ ReadWiznetConfigFromEEPROM ???
      c48:	50004280      	;	GPIO registers for PORT4
      c4c:	20000008      	;
 
+???
      c50:	b510      	push	{r4, lr}
      c52:	20c0      	movs	r0, #192	; 0xc0
      c54:	4923      	ldr	r1, [pc, #140]	; (0xce4)
@@ -1685,7 +1695,7 @@ ReadWiznetConfigFromEEPROM ???
      e0e:	2c06      	cmp	r4, #6
      e10:	d3cb      	bcc.n	0xdaa
      e12:	a005      	add	r0, pc, #20	; (adr r0, 0xe28)
-     e14:	f7ff f9de 	bl	0x1d4				; printf
+     e14:	f7ff f9de 	bl	0x1d4				; UART0_printf
      e18:	20ff      	movs	r0, #255	; 0xff
      e1a:	e7f5      	b.n	0xe08
 
@@ -1713,9 +1723,9 @@ ReadWiznetConfigFromEEPROM ???
      e48:	7968      	ldrb	r0, [r5, #5]
      e4a:	4306      	orrs	r6, r0
      e4c:	4638      	mov	r0, r7
-     e4e:	f002 fb08 	bl	0x3462
+     e4e:	f002 fb08 	bl	0x3462				; CallX2020
      e52:	4620      	mov	r0, r4
-     e54:	f002 fb05 	bl	0x3462
+     e54:	f002 fb05 	bl	0x3462				; CallX2020
      e58:	2f10      	cmp	r7, #16
      e5a:	d006      	beq.n	0xe6a
      e5c:	2f11      	cmp	r7, #17
@@ -2432,7 +2442,7 @@ ReadWiznetConfigFromEEPROM ???
     1478:	8008      	strh	r0, [r1, #0]
     147a:	4621      	mov	r1, r4
     147c:	a007      	add	r0, pc, #28	; (adr r0, 0x149c)
-    147e:	f7fe fea9 	bl	0x1d4				; printf
+    147e:	f7fe fea9 	bl	0x1d4				; UART0_printf
     1482:	4620      	mov	r0, r4
     1484:	f001 ff3a 	bl	0x32fc
     1488:	bd10      	pop	{r4, pc}
@@ -3690,7 +3700,7 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     1ec6:	4668      	mov	r0, sp
     1ec8:	7901      	ldrb	r1, [r0, #4]
     1eca:	a01e      	add	r0, pc, #120	; (adr r0, 0x1f44)
-    1ecc:	f7fe f982 	bl	0x1d4				; printf
+    1ecc:	f7fe f982 	bl	0x1d4				; UART0_printf
     1ed0:	9802      	ldr	r0, [sp, #8]
     1ed2:	1c40      	adds	r0, r0, #1
     1ed4:	b280      	uxth	r0, r0
@@ -3848,49 +3858,57 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     201a:	0000      	movs	r0, r0
     201c:	02d0      	lsls	r0, r2, #11
     201e:	2000      	movs	r0, #0
+
+UART1PutChar(c): ????
     2020:	bf00      	nop
+UART1WhileTxFifoFullBody1:
     2022:	4908      	ldr	r1, [pc, #32]	; (0x2044)
-    2024:	6989      	ldr	r1, [r1, #24]
+    2024:	6989      	ldr	r1, [r1, #24]			; r1 := UART1 FIFO Status register
     2026:	2201      	movs	r2, #1
-    2028:	05d2      	lsls	r2, r2, #23
+    2028:	05d2      	lsls	r2, r2, #23			; 1 << 23 in FIFO Status register is TX_FULL: TX fifo is full
     202a:	4211      	tst	r1, r2
-    202c:	d1f9      	bne.n	0x2022
+    202c:	d1f9      	bne.n	0x2022				; UART1WhileTxFifoFullBody
     202e:	4905      	ldr	r1, [pc, #20]	; (0x2044)
-    2030:	6008      	str	r0, [r1, #0]
+    2030:	6008      	str	r0, [r1, #0]			; put c into UART1 ***RECEIVE*** Buffer Register (BUG?!)
     2032:	bf00      	nop
+UART1WhileTxFifoFullBody2:
     2034:	4903      	ldr	r1, [pc, #12]	; (0x2044)
     2036:	6989      	ldr	r1, [r1, #24]
     2038:	2201      	movs	r2, #1
     203a:	0592      	lsls	r2, r2, #22
     203c:	4211      	tst	r1, r2
-    203e:	d1f9      	bne.n	0x2034
-
+    203e:	d1f9      	bne.n	0x2034				; UART1WhileTxFifoFullBody2
     2040:	4770      	bx	lr
-    2042:	0000      	movs	r0, r0
 
+    2042:	0000      	;	padding
     2044:	40150000      	;	base address of UART1
 
+UART0PutChar(c): ????
     2048:	bf00      	nop
+UART0WhileTxFifoNotEmptyBody1:
     204a:	490a      	ldr	r1, [pc, #40]	; (0x2074)
-    204c:	6989      	ldr	r1, [r1, #24]
+    204c:	6989      	ldr	r1, [r1, #24]			; r1 := UART0 FIFO Status register
     204e:	2201      	movs	r2, #1
-    2050:	0592      	lsls	r2, r2, #22
+    2050:	0592      	lsls	r2, r2, #22			; 1 << 22 in FIFO Status register is TX_EMPTY: TX fifo is empty
     2052:	4211      	tst	r1, r2
-    2054:	d0f9      	beq.n	0x204a
+    2054:	d0f9      	beq.n	0x204a				; UART0WhileTxFifoNotEmptyBody1
     2056:	4907      	ldr	r1, [pc, #28]	; (0x2074)
-    2058:	6008      	str	r0, [r1, #0]
+    2058:	6008      	str	r0, [r1, #0]			; put c into UART0 ***RECEIVE*** Buffer Register (BUG?!)
     205a:	280a      	cmp	r0, #10
-    205c:	d109      	bne.n	0x2072
+    205c:	d109      	bne.n	0x2072				; UART0PutCharExit
+UART0FlushOnNewline:
     205e:	bf00      	nop
+UART0WhileTxFifoNotEmptyBody2:
     2060:	4904      	ldr	r1, [pc, #16]	; (0x2074)
     2062:	6989      	ldr	r1, [r1, #24]
     2064:	2201      	movs	r2, #1
     2066:	0592      	lsls	r2, r2, #22
     2068:	4211      	tst	r1, r2
-    206a:	d0f9      	beq.n	0x2060
+    206a:	d0f9      	beq.n	0x2060				; UART0WhileTxFifoNotEmptyBody2
     206c:	210d      	movs	r1, #13
     206e:	4a01      	ldr	r2, [pc, #4]	; (0x2074)
     2070:	6011      	str	r1, [r2, #0]
+UART0PutCharExit:
     2072:	4770      	bx	lr
 
     2074:	40050000      	;	base address of UART0
@@ -3955,7 +3973,7 @@ Wiznet???(?)
     20f2:	f000 ff45 	bl	0x2f80				; Wiznet_Write_Address(?, 0xb4)
     20f6:	4629      	mov	r1, r5
     20f8:	a053      	add	r0, pc, #332	; (adr r0, 0x2248)
-    20fa:	f7fe f86b 	bl	0x1d4				; printf
+    20fa:	f7fe f86b 	bl	0x1d4				; UART0_printf
     20fe:	2d00      	cmp	r5, #0
     2100:	d006      	beq.n	0x2110
     2102:	2d01      	cmp	r5, #1
@@ -5209,7 +5227,7 @@ WhileCopySrcIPCheck:
     2b2a:	201b      	movs	r0, #27				; Wiznet_Write_Address(0x1b, 0x55)
     2b2c:	f000 fa28 	bl	0x2f80				; => Set TX Memory Size to 0x55 bytes
     2b30:	a00d      	add	r0, pc, #52	; (adr r0, 0x2b68)
-    2b32:	f7fd fb4f 	bl	0x1d4				; printf
+    2b32:	f7fd fb4f 	bl	0x1d4				; UART0_printf
     2b36:	2107      	movs	r1, #7
     2b38:	2017      	movs	r0, #23
     2b3a:	f000 fa21 	bl	0x2f80				; Wiznet_Write_Address(0x17, 0x7)
@@ -5276,13 +5294,13 @@ WhileCopySrcIPCheck:
     2bc4:	2880      	cmp	r0, #128	; 0x80
     2bc6:	d102      	bne.n	0x2bce
     2bc8:	a044      	add	r0, pc, #272	; (adr r0, 0x2cdc)
-    2bca:	f7fd fb03 	bl	0x1d4				; printf
+    2bca:	f7fd fb03 	bl	0x1d4				; UART0_printf
     2bce:	2040      	movs	r0, #64	; 0x40
     2bd0:	4028      	ands	r0, r5
     2bd2:	2840      	cmp	r0, #64	; 0x40
     2bd4:	d102      	bne.n	0x2bdc
     2bd6:	a046      	add	r0, pc, #280	; (adr r0, 0x2cf0)
-    2bd8:	f7fd fafc 	bl	0x1d4				; printf
+    2bd8:	f7fd fafc 	bl	0x1d4				; UART0_printf
     2bdc:	07e8      	lsls	r0, r5, #31
     2bde:	0fc0      	lsrs	r0, r0, #31
     2be0:	d03b      	beq.n	0x2c5a
@@ -5302,7 +5320,7 @@ WhileCopySrcIPCheck:
     2c00:	4940      	ldr	r1, [pc, #256]	; (0x2d04)
     2c02:	7008      	strb	r0, [r1, #0]
     2c04:	a040      	add	r0, pc, #256	; (adr r0, 0x2d08)
-    2c06:	f7fd fae5 	bl	0x1d4				; printf
+    2c06:	f7fd fae5 	bl	0x1d4				; UART0_printf
     2c0a:	2002      	movs	r0, #2
     2c0c:	4204      	tst	r4, r0
     2c0e:	d007      	beq.n	0x2c20
@@ -5899,10 +5917,11 @@ WaitForWriteTxCompletion:
     30d6:	4603      	mov	r3, r0
     30d8:	460c      	mov	r4, r1
     30da:	4618      	mov	r0, r3
-    30dc:	f7fe ffb4 	bl	0x2048
+    30dc:	f7fe ffb4 	bl	0x2048				; UART0PutChar
     30e0:	2000      	movs	r0, #0
     30e2:	bd10      	pop	{r4, pc}
 
+Main:
     30e4:	b086      	sub	sp, #24
     30e6:	200a      	movs	r0, #10
     30e8:	f7fd f9f6 	bl	0x4d8				; Delay(#10)
@@ -5911,25 +5930,26 @@ WaitForWriteTxCompletion:
     30f4:	200a      	movs	r0, #10
     30f6:	f7fd f9ef 	bl	0x4d8				; Delay(#10)
     30fa:	a02d      	add	r0, pc, #180	; (adr r0, 0x31b0)
-    30fc:	f7fd f86a 	bl	0x1d4				; printf
+    30fc:	f7fd f86a 	bl	0x1d4				; UART0_printf
     3100:	2000      	movs	r0, #0
     3102:	4931      	ldr	r1, [pc, #196]	; (0x31c8)
     3104:	7008      	strb	r0, [r1, #0]
     3106:	4668      	mov	r0, sp
     3108:	f7fd fcf8 	bl	0xafc
     310c:	2055      	movs	r0, #85	; 0x55
-    310e:	f000 f9a8 	bl	0x3462
+    310e:	f000 f9a8 	bl	0x3462				; CallX2020
     3112:	2055      	movs	r0, #85	; 0x55
-    3114:	f000 f9a5 	bl	0x3462
+    3114:	f000 f9a5 	bl	0x3462				; CallX2020
     3118:	2055      	movs	r0, #85	; 0x55
-    311a:	f000 f9a2 	bl	0x3462
+    311a:	f000 f9a2 	bl	0x3462				; CallX2020
     311e:	2055      	movs	r0, #85	; 0x55
-    3120:	f000 f99f 	bl	0x3462
+    3120:	f000 f99f 	bl	0x3462				; CallX2020
     3124:	2055      	movs	r0, #85	; 0x55
-    3126:	f000 f99c 	bl	0x3462
+    3126:	f000 f99c 	bl	0x3462				; CallX2020
     312a:	2055      	movs	r0, #85	; 0x55
-    312c:	f000 f999 	bl	0x3462
+    312c:	f000 f999 	bl	0x3462				; CallX2020
     3130:	e03d      	b.n	0x31ae
+MainWhileBody:
     3132:	f7ff fdff 	bl	0x2d34
     3136:	f7ff fd35 	bl	0x2ba4
     313a:	4824      	ldr	r0, [pc, #144]	; (0x31cc)
@@ -5973,7 +5993,6 @@ WaitForWriteTxCompletion:
     3194:	e00a      	b.n	0x31ac
     3196:	bf00      	nop
     3198:	f7fd fbe4 	bl	0x964
-
     319c:	480c      	ldr	r0, [pc, #48]	; (0x31d0)
     319e:	6800      	ldr	r0, [r0, #0]
     31a0:	0500      	lsls	r0, r0, #20
@@ -5982,7 +6001,7 @@ WaitForWriteTxCompletion:
     31a6:	f7ff fc4b 	bl	0x2a40
     31aa:	bf00      	nop
     31ac:	bf00      	nop
-    31ae:	e7c0      	b.n	0x3132
+    31ae:	e7c0      	b.n	0x3132				; MainWhileBody
 
     31b0:	200a      	;	String '\nall is Successfull\r\n\0\0'
     31b2:	6c61      	;
@@ -6058,7 +6077,7 @@ WaitForWriteTxCompletion:
     3240:	2814      	cmp	r0, #20
     3242:	d303      	bcc.n	0x324c
     3244:	a00e      	add	r0, pc, #56	; (adr r0, 0x3280)
-    3246:	f7fc ffc5 	bl	0x1d4				; printf
+    3246:	f7fc ffc5 	bl	0x1d4				; UART0_printf
     324a:	bd10      	pop	{r4, pc}
     324c:	4815      	ldr	r0, [pc, #84]	; (0x32a4)
     324e:	6800      	ldr	r0, [r0, #0]
@@ -6323,16 +6342,17 @@ WaitForWriteTxCompletion:
     3458:	2000002d      	;
     345c:	20000034      	;
 
-AbortDueToError?
+JustReturn:
     3460:	4770      	bx	lr
 
+CallX2020:
     3462:	b510      	push	{r4, lr}
     3464:	4604      	mov	r4, r0
     3466:	4620      	mov	r0, r4
     3468:	f7fe fdda 	bl	0x2020
     346c:	bd10      	pop	{r4, pc}
 
-    346e:	0000      	movs	r0, r0	; padding?
+    346e:	0000      	;	padding
 
     3470:	b57c      	push	{r2, r3, r4, r5, r6, lr}
     3472:	4605      	mov	r5, r0
@@ -6344,7 +6364,7 @@ AbortDueToError?
     347e:	e005      	b.n	0x348c
     3480:	4669      	mov	r1, sp
     3482:	5d08      	ldrb	r0, [r1, r4]
-    3484:	f7ff ffed 	bl	0x3462
+    3484:	f7ff ffed 	bl	0x3462				; CallX2020
     3488:	1c60      	adds	r0, r4, #1
     348a:	b2c4      	uxtb	r4, r0
     348c:	2c05      	cmp	r4, #5

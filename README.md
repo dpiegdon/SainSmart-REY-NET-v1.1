@@ -37,13 +37,15 @@ The board contains
 
 Connectors:
 
+* J1 (marked on bottom layer) contains the Ethernet lines as well as a 3.3V UART (connected to pins 46 and 47 of the ARM Cortex, thus UART1)
+
 * J2 is a SWD connector. pinout:
 
 ```
 	CON	SIGNAL		LQFP48 pin
 	1	NC ?
-	2	SWD		31
-	3	SCL		30
+	2	SWDIO		31
+	3	SWCLK		30
 	4	RST		4
 	5	GND
 
@@ -53,21 +55,23 @@ Connectors:
 	5001.0000	5001.03ff	EBI: control registers
 ```
 
-
-standard SWDIO tools like the BlackMagicProbe work.
-FLASH and RAM are not protected and can be dumped via gdb:
+	Standard SWD tools like the BlackMagicProbe work.
+	FLASH and RAM are not protected and can be dumped via gdb:
 
 ```
 	(gdb) dump binary memory flash.bin 0 0x10000
 	(gdb) dump binary memory ram.bin 0x20000000 0x20001000
 ```
 
-The flash dump can be disassembled using:
+	The flash dump can be disassembled using:
 
 ```
 	arm-none-eabi-objdump -D -z -b binary -marm -Mforce-thumb flash.bin
 ```
 
-An annotated output is in flash.asm
+	An annotated output is in flash.asm
+
+
+* J3 has GPIOs to control the connected relays
 
 
