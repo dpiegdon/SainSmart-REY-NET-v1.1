@@ -34,14 +34,18 @@ The board contains
 
 	Datasheet can be loaded from: `http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8568-SEEPROM-AT24C256C-Datasheet.pdf`
 
-
-Connectors:
+Connectors
+==========
 
 * J1 (marked on bottom layer) contains the Ethernet lines as well as a 3.3V UART (connected to pins 46 and 47 of the ARM Cortex, thus UART1)
 
-* J2 is a SWD connector. pinout:
+* J2 is a SWD connector
+
+	Standard SWD tools like the BlackMagicProbe work.
+	An annotated output of the dumped flash is in flash.asm
 
 ```
+	Pinout:
 	CON	SIGNAL		LQFP48 pin
 	1	NC ?
 	2	SWDIO		31
@@ -49,28 +53,13 @@ Connectors:
 	4	RST		4
 	5	GND
 
-	0000.0000	0000.ffff	FLASH
-	2000.0000	2000.0fff	RAM
-	6000.0000	6001.ffff	EBI: external memory space (access to Wiznet W5100)
-	5001.0000	5001.03ff	EBI: control registers
-```
-
-	Standard SWD tools like the BlackMagicProbe work.
-	FLASH and RAM are not protected and can be dumped via gdb:
-
-```
+	# FLASH and RAM are not protected and can be dumped via gdb:
 	(gdb) dump binary memory flash.bin 0 0x10000
 	(gdb) dump binary memory ram.bin 0x20000000 0x20001000
-```
 
-	The flash dump can be disassembled using:
-
-```
+	# The flash dump can be disassembled using:
 	arm-none-eabi-objdump -D -z -b binary -marm -Mforce-thumb flash.bin
 ```
-
-	An annotated output is in flash.asm
-
 
 * J3 has GPIOs to control the connected relays
 
