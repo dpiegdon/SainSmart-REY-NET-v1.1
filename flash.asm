@@ -5,11 +5,11 @@ flash.bin:     file format binary
 Disassembly of section .data:
 
 00000000 <.data>:
-       0:	20000b30      	;	RESET value for SP
-       4:	00000179      	;	NVIC  1: ResetHandler
-       8:	00000199      	;	NVIC  2: BadNMIHandler       (terminal)
-       c:	0000019b      	;	NVIC  3: BadHardFaultHandler (terminal)
-      10:	00000000      	;	NVIC  4:                     (reserved)
+       0:	20000b30      	;#IRQ	RESET value for SP
+       4:	00000179      	;NUM	NVIC  1: ResetHandler
+       8:	00000199      	;in	NVIC  2: BadNMIHandler       (terminal)
+       c:	0000019b      	;Int	NVIC  3: BadHardFaultHandler (terminal)
+      10:	00000000      	;Reg.	NVIC  4:                     (reserved)
       14:	00000000      	;	NVIC  5:                     (reserved)
       18:	00000000      	;	NVIC  6:                     (reserved)
       1c:	00000000      	;	NVIC  7:                     (reserved)
@@ -21,38 +21,38 @@ Disassembly of section .data:
       34:	00000000      	;	NVIC 13:                     (reserved)
       38:	0000019f      	;	NVIC 14: BadPendSVHandler    (terminal)
       3c:	000001a1      	;	NVIC 15: BadSysTickHandler   (terminal)
-      40:	000001a3      	;	NVIC 16: BadIRQHandler       (BOD_INT, BrownOut, terminal)
-      44:	000001a3      	;	NVIC 17: BadIRQHandler       (WDT_INT, Watchdog, terminal)
-      48:	000007e1      	;	NVIC 18: EINT0_WiznetHandler (EINT0, External signal interrupt from P3.2 pin) [pin 8 for LQFP48, connected to /INT or WIZNET]
-      4c:	00000811      	;	NVIC 19: EINT1Handler        (EINT1, External signal interrupt from P3.3 pin) [pin 9 for LQFP48]
-      50:	000001a3      	;	NVIC 20: BadIRQHandler       (GP01_INT, External signal interrupt from P0/P1, terminal)
-      54:	000001a3      	;	NVIC 21: BadIRQHandler       (GP234_INT, External signal interrupt from P2/P3/P4, terminal)
-      58:	000001a3      	;	NVIC 22: BadIRQHandler       (PWMA_INT, PWM interrupt, terminal)
-      5c:	000001a3      	;	NVIC 23: BadIRQHandler       (PWMB_INT, PWM interrupt, terminal)
-      60:	0000235d      	;	NVIC 24: TIM0Handler         (TIM0_INT, Timer 0 interrupt)
-      64:	00002421      	;	NVIC 25: TIM1Handler         (TIM1_INT, Timer 1 interrupt)
-      68:	000024dd      	;	NVIC 26: TIM2Handler         (TIM2_INT, Timer 2 interrupt)
-      6c:	000025cd      	;	NVIC 27: TIM3Handler         (TIM3_INT, Timer 3 interrupt)
-      70:	000001a3      	;	NVIC 28: BadIRQHandler       (UART0_INT, UART0 interrupt, terminal)
-      74:	00002735      	;	NVIC 29: UART1Handler        (UART1_INT, UART1 interrupt)
-      78:	000001a3      	;	NVIC 30: BadIRQHandler       (SPI0_INT terminal)
-      7c:	000001a3      	;	NVIC 31: BadIRQHandler       (SPI1_INT, terminal)
-      80:	000001a3      	;	NVIC 32: BadIRQHandler       (reserved, terminal)
-      84:	000001a3      	;	NVIC 33: BadIRQHandler       (reserved, terminal)
-      88:	000001a3      	;	NVIC 34: BadIRQHandler       (I2C0_INT, terminal)
-      8c:	000001a3      	;	NVIC 35: BadIRQHandler       (I2C1_INT, terminal)
-      90:	000001a3      	;	NVIC 36: BadIRQHandler       (reserved, terminal)
-      94:	000001a3      	;	NVIC 37: BadIRQHandler       (reserved, terminal)
-      98:	000001a3      	;	NVIC 38: BadIRQHandler       (reserved, terminal)
-      9c:	000001a3      	;	NVIC 39: BadIRQHandler       (reserved, terminal)
-      a0:	000001a3      	;	NVIC 40: BadIRQHandler       (reserved, terminal)
-      a4:	000001a3      	;	NVIC 41: BadIRQHandler       (ACMP01_INT, terminal)
-      a8:	000001a3      	;	NVIC 42: BadIRQHandler       (ACMP23_INT, terminal)
-      ac:	000001a3      	;	NVIC 43: BadIRQHandler       (reserved, terminal)
-      b0:	000001a3      	;	NVIC 44: BadIRQHandler       (PWRWU_INT, Clock controller interrupt for chip wakeup from PDown state, terminal)
-      b4:	000001a3      	;	NVIC 45: BadIRQHandler       (ADC_INT, terminal)
-      b8:	000001a3      	;	NVIC 46: BadIRQHandler       (reserved, terminal)
-      bc:	000001a3      	;	NVIC 47: BadIRQHandler       (reserved, terminal)
+      40:	000001a3      	;#0	NVIC 16: BadIRQHandler       (BOD_INT, BrownOut, terminal)
+      44:	000001a3      	;#1	NVIC 17: BadIRQHandler       (WDT_INT, Watchdog, terminal)
+      48:	000007e1      	;#2	NVIC 18: EINT0_WiznetHandler (EINT0, External signal interrupt from P3.2 pin) [pin 8 for LQFP48, connected to /INT or WIZNET]
+      4c:	00000811      	;#3	NVIC 19: EINT1Handler        (EINT1, External signal interrupt from P3.3 pin) [pin 9 for LQFP48]
+      50:	000001a3      	;#4	NVIC 20: BadIRQHandler       (GP01_INT, External signal interrupt from P0/P1, terminal)
+      54:	000001a3      	;#5	NVIC 21: BadIRQHandler       (GP234_INT, External signal interrupt from P2/P3/P4, terminal)
+      58:	000001a3      	;#6	NVIC 22: BadIRQHandler       (PWMA_INT, PWM interrupt, terminal)
+      5c:	000001a3      	;#7	NVIC 23: BadIRQHandler       (PWMB_INT, PWM interrupt, terminal)
+      60:	0000235d      	;#8	NVIC 24: TIM0Handler         (TIM0_INT, Timer 0 interrupt)
+      64:	00002421      	;#9	NVIC 25: TIM1Handler         (TIM1_INT, Timer 1 interrupt)
+      68:	000024dd      	;#10	NVIC 26: TIM2Handler         (TIM2_INT, Timer 2 interrupt)
+      6c:	000025cd      	;#11	NVIC 27: TIM3Handler         (TIM3_INT, Timer 3 interrupt)
+      70:	000001a3      	;#12	NVIC 28: BadIRQHandler       (UART0_INT, UART0 interrupt, terminal)
+      74:	00002735      	;#13	NVIC 29: UART1Handler        (UART1_INT, UART1 interrupt)
+      78:	000001a3      	;#14	NVIC 30: BadIRQHandler       (SPI0_INT terminal)
+      7c:	000001a3      	;#15	NVIC 31: BadIRQHandler       (SPI1_INT, terminal)
+      80:	000001a3      	;#16	NVIC 32: BadIRQHandler       (reserved, terminal)
+      84:	000001a3      	;#17	NVIC 33: BadIRQHandler       (reserved, terminal)
+      88:	000001a3      	;#18	NVIC 34: BadIRQHandler       (I2C0_INT, terminal)
+      8c:	000001a3      	;#19	NVIC 35: BadIRQHandler       (I2C1_INT, terminal)
+      90:	000001a3      	;#20	NVIC 36: BadIRQHandler       (reserved, terminal)
+      94:	000001a3      	;#21	NVIC 37: BadIRQHandler       (reserved, terminal)
+      98:	000001a3      	;#22	NVIC 38: BadIRQHandler       (reserved, terminal)
+      9c:	000001a3      	;#23	NVIC 39: BadIRQHandler       (reserved, terminal)
+      a0:	000001a3      	;#24	NVIC 40: BadIRQHandler       (reserved, terminal)
+      a4:	000001a3      	;#25	NVIC 41: BadIRQHandler       (ACMP01_INT, terminal)
+      a8:	000001a3      	;#26	NVIC 42: BadIRQHandler       (ACMP23_INT, terminal)
+      ac:	000001a3      	;#27	NVIC 43: BadIRQHandler       (reserved, terminal)
+      b0:	000001a3      	;#28	NVIC 44: BadIRQHandler       (PWRWU_INT, Clock controller interrupt for chip wakeup from PDown state, terminal)
+      b4:	000001a3      	;#29	NVIC 45: BadIRQHandler       (ADC_INT, terminal)
+      b8:	000001a3      	;#30	NVIC 46: BadIRQHandler       (reserved, terminal)
+      bc:	000001a3      	;#31	NVIC 47: BadIRQHandler       (reserved, terminal)
 
 StartUpCode
       c0:	f000 f802 	bl	0xc8
@@ -983,15 +983,15 @@ EINT0_WiznetHandler:
      7e0:	b510      	push	{r4, lr}
      7e2:	2004      	movs	r0, #4
      7e4:	4906      	ldr	r1, [pc, #24]	; (0x800)
-     7e6:	6208      	str	r0, [r1, #32]
+     7e6:	6208      	str	r0, [r1, #32]			; clear pending interrupt flag for P3.2 by writing #4 to interrupt source flag for GPIO P3
      7e8:	4906      	ldr	r1, [pc, #24]	; (0x804)
-     7ea:	6008      	str	r0, [r1, #0]	; P3 IO Mode Control Reg
-     7ec:	f002 f9da 	bl	0x2ba4
+     7ea:	6008      	str	r0, [r1, #0]			; disable interrupt IRQ#2 (EINT0, Wiznet IRQ)
+     7ec:	f002 f9da 	bl	0x2ba4				; WiznetHandleIncoming
      7f0:	a005      	add	r0, pc, #20	; (adr r0, 0x808)
      7f2:	f7ff fcef 	bl	0x1d4				; UART0_printf
      7f6:	2004      	movs	r0, #4
      7f8:	4902      	ldr	r1, [pc, #8]	; (0x804)
-     7fa:	3980      	subs	r1, #128	; 0x80 => P0 IO Mode Control Reg
+     7fa:	3980      	subs	r1, #128			; re-enable interrupt IRQ#2 (EINT0, Wiznet IRQ)
      7fc:	6008      	str	r0, [r1, #0]
      7fe:	bd10      	pop	{r4, pc}
 
@@ -1195,21 +1195,21 @@ EINT1Handler:
      9c0:	4288      	cmp	r0, r1
      9c2:	d008      	beq.n	0x9d6
      9c4:	20fb      	movs	r0, #251	; 0xfb
-     9c6:	f001 fb2b 	bl	0x2020
+     9c6:	f001 fb2b 	bl	0x2020				; UART1PutChar(0xfb)
      9ca:	2000      	movs	r0, #0
-     9cc:	f001 fb28 	bl	0x2020
+     9cc:	f001 fb28 	bl	0x2020				; UART1PutChar(0x00)
      9d0:	205b      	movs	r0, #91	; 0x5b
-     9d2:	f001 fb25 	bl	0x2020
+     9d2:	f001 fb25 	bl	0x2020				; UART1PutChar(0x5b)
      9d6:	1c60      	adds	r0, r4, #1
      9d8:	b2c4      	uxtb	r4, r0
      9da:	42ac      	cmp	r4, r5
      9dc:	dbea      	blt.n	0x9b4
      9de:	20fb      	movs	r0, #251	; 0xfb
-     9e0:	f001 fb1e 	bl	0x2020
+     9e0:	f001 fb1e 	bl	0x2020				; UART1PutChar(0xfb)
      9e4:	20ff      	movs	r0, #255	; 0xff
-     9e6:	f001 fb1b 	bl	0x2020
+     9e6:	f001 fb1b 	bl	0x2020				; UART1PutChar(0xff)
      9ea:	205b      	movs	r0, #91	; 0x5b
-     9ec:	f001 fb18 	bl	0x2020
+     9ec:	f001 fb18 	bl	0x2020				; UART1PutChar(0x5b)
      9f0:	e00d      	b.n	0xa0e
      9f2:	2001      	movs	r0, #1
      9f4:	4906      	ldr	r1, [pc, #24]	; (0xa10)
@@ -1333,10 +1333,10 @@ EINT1Handler:
      af4:	50000200 	;	Clock Control registers
      af8:	40020000      	;	I2C 0 registers
 
-???
+InitIPStack???
      afc:	b570      	push	{r4, r5, r6, lr}
      afe:	4604      	mov	r4, r0
-     b00:	4625      	mov	r5, r4
+     b00:	4625      	mov	r5, r4				; r5 := parameter1
      b02:	7829      	ldrb	r1, [r5, #0]
      b04:	a042      	add	r0, pc, #264	; (adr r0, 0xc10)
      b06:	f7ff fb65 	bl	0x1d4				; UART0_printf
@@ -1346,30 +1346,30 @@ EINT1Handler:
      b10:	4618      	mov	r0, r3
      b12:	f000 ff2d 	bl	0x1970
      b16:	20fd      	movs	r0, #253	; 0xfd
-     b18:	f001 fa82 	bl	0x2020
+     b18:	f001 fa82 	bl	0x2020				; UART1PutChar(0xfd)
      b1c:	4941      	ldr	r1, [pc, #260]	; (0xc24)
      b1e:	7808      	ldrb	r0, [r1, #0]
-     b20:	f001 fa7e 	bl	0x2020
+     b20:	f001 fa7e 	bl	0x2020				; UART1PutChar(MessageBuffer[0])
      b24:	493f      	ldr	r1, [pc, #252]	; (0xc24)
      b26:	7888      	ldrb	r0, [r1, #2]
-     b28:	f001 fa7a 	bl	0x2020
+     b28:	f001 fa7a 	bl	0x2020				; UART1PutChar(MessageBuffer[2])
      b2c:	493d      	ldr	r1, [pc, #244]	; (0xc24)
      b2e:	7908      	ldrb	r0, [r1, #4]
-     b30:	f001 fa76 	bl	0x2020
+     b30:	f001 fa76 	bl	0x2020				; UART1PutChar(MessageBuffer[4])
      b34:	493b      	ldr	r1, [pc, #236]	; (0xc24)
      b36:	7988      	ldrb	r0, [r1, #6]
-     b38:	f001 fa72 	bl	0x2020
+     b38:	f001 fa72 	bl	0x2020				; UART1PutChar(MessageBuffer[6])
      b3c:	4939      	ldr	r1, [pc, #228]	; (0xc24)
      b3e:	7a08      	ldrb	r0, [r1, #8]
-     b40:	f001 fa6e 	bl	0x2020
+     b40:	f001 fa6e 	bl	0x2020				; UART1PutChar(MessageBuffer[8])
      b44:	4937      	ldr	r1, [pc, #220]	; (0xc24)
      b46:	7a88      	ldrb	r0, [r1, #10]
-     b48:	f001 fa6a 	bl	0x2020
+     b48:	f001 fa6a 	bl	0x2020				; UART1PutChar(MessageBuffer[10])
      b4c:	4935      	ldr	r1, [pc, #212]	; (0xc24)
      b4e:	7b08      	ldrb	r0, [r1, #12]
-     b50:	f001 fa66 	bl	0x2020
+     b50:	f001 fa66 	bl	0x2020				; UART1PutChar(MessageBuffer[12])
      b54:	205d      	movs	r0, #93	; 0x5d
-     b56:	f001 fa63 	bl	0x2020
+     b56:	f001 fa63 	bl	0x2020				; UART1PutChar(0x5d)
      b5a:	20c0      	movs	r0, #192	; 0xc0
      b5c:	4932      	ldr	r1, [pc, #200]	; (0xc28)
      b5e:	7008      	strb	r0, [r1, #0]
@@ -1446,7 +1446,7 @@ EINT1Handler:
      bee:	6048      	str	r0, [r1, #4]
      bf0:	2064      	movs	r0, #100	; 0x64
      bf2:	f7ff fc71 	bl	0x4d8				; Delay(#100)
-     bf6:	f001 ffcb 	bl	0x2b90
+     bf6:	f001 ffcb 	bl	0x2b90				; WiznetInit
      bfa:	f001 f8bd 	bl	0x1d78
      bfe:	4813      	ldr	r0, [pc, #76]	; (0xc4c)
      c00:	6800      	ldr	r0, [r0, #0]
@@ -1469,7 +1469,7 @@ EINT1Handler:
      c20:	000a      	;
      c22:	0000      	;
 
-     c24:	20000110      	;
+     c24:	20000110      	;	MessageBuffer
      c28:	20000052      	;	u8 Gateway[4]
      c2c:	20000056      	;	u8 Subnet[4]
      c30:	2000005a      	;	u8 MAC[6]
@@ -1551,7 +1551,7 @@ EINT1Handler:
      cd6:	6048      	str	r0, [r1, #4]
      cd8:	2064      	movs	r0, #100	; 0x64
      cda:	f7ff fbfd 	bl	0x4d8				; Delay(#100)
-     cde:	f001 ff57 	bl	0x2b90
+     cde:	f001 ff57 	bl	0x2b90				; WiznetInit
      ce2:	bd10      	pop	{r4, pc}
 
      ce4:	20000052      	;	u8 Gateway[4]
@@ -1570,6 +1570,7 @@ EINT1Handler:
      d0e:	4770      	bx	lr
      d10:	0100      	lsls	r0, r0, #4
      d12:	5000      	str	r0, [r0, r0]
+
      d14:	b570      	push	{r4, r5, r6, lr}
      d16:	2400      	movs	r4, #0
      d18:	481d      	ldr	r0, [pc, #116]	; (0xd90)
@@ -1724,9 +1725,9 @@ EINT1Handler:
      e48:	7968      	ldrb	r0, [r5, #5]
      e4a:	4306      	orrs	r6, r0
      e4c:	4638      	mov	r0, r7
-     e4e:	f002 fb08 	bl	0x3462				; CallX2020
+     e4e:	f002 fb08 	bl	0x3462				; UART1SendChar(?)
      e52:	4620      	mov	r0, r4
-     e54:	f002 fb05 	bl	0x3462				; CallX2020
+     e54:	f002 fb05 	bl	0x3462				; UART1SendChar(?)
      e58:	2f10      	cmp	r7, #16
      e5a:	d006      	beq.n	0xe6a
      e5c:	2f11      	cmp	r7, #17
@@ -3860,7 +3861,7 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     201c:	02d0      	lsls	r0, r2, #11
     201e:	2000      	movs	r0, #0
 
-UART1PutChar(c): ????
+UART1PutChar(c):
     2020:	bf00      	nop
 UART1WhileTxFifoFullBody1:
     2022:	4908      	ldr	r1, [pc, #32]	; (0x2044)
@@ -3871,7 +3872,7 @@ UART1WhileTxFifoFullBody1:
     202c:	d1f9      	bne.n	0x2022				; UART1WhileTxFifoFullBody
     202e:	4905      	ldr	r1, [pc, #20]	; (0x2044)
     2030:	6008      	str	r0, [r1, #0]			; put c into UART1 ***RECEIVE*** Buffer Register (BUG?!)
-    2032:	bf00      	nop
+    2032:	bf00      	nop					; this *seems* to be a bug, but sending WORKS for UART1!
 UART1WhileTxFifoFullBody2:
     2034:	4903      	ldr	r1, [pc, #12]	; (0x2044)
     2036:	6989      	ldr	r1, [r1, #24]
@@ -5107,7 +5108,7 @@ UART1Handler:
     2a30:	20000022      	;
     2a34:	20000023      	;
     2a38:	20000024      	;
-    2a3c:	20000110      	;
+    2a3c:	20000110      	;	MessageBuffer
 
     2a40:	b510      	push	{r4, lr}
     2a42:	4812      	ldr	r0, [pc, #72]	; (0x2a8c)
@@ -5269,101 +5270,108 @@ WhileCopySrcIPCheck:
     2b8c:	0a0d      	;
     2b8e:	0000      	;
 
+WiznetInit?
     2b90:	b510      	push	{r4, lr}
     2b92:	f7ff ff8f 	bl	0x2ab4				; WiznetConfigureIPStack
     2b96:	f7fd fcaf 	bl	0x4f8				; WiznetSocketSetup
     2b9a:	2000      	movs	r0, #0
     2b9c:	f7ff fa9a 	bl	0x20d4
     2ba0:	bd10      	pop	{r4, pc}
-    2ba2:	0000      	movs	r0, r0
 
+    2ba2:	0000      	;	padding
+
+WiznetHandleIncoming: ???
     2ba4:	b570      	push	{r4, r5, r6, lr}
     2ba6:	2000      	movs	r0, #0
     2ba8:	494b      	ldr	r1, [pc, #300]	; (0x2cd8)
     2baa:	7008      	strb	r0, [r1, #0]
     2bac:	2015      	movs	r0, #21
-    2bae:	f7fe fff7 	bl	0x1ba0				; Wiznet_Read_Address
-
-    2bb2:	4605      	mov	r5, r0
+    2bae:	f7fe fff7 	bl	0x1ba0				; Wiznet_Read_Address(0x15) (IR register)
+    2bb2:	4605      	mov	r5, r0				; r5 := IR register contents
     2bb4:	20f0      	movs	r0, #240	; 0xf0
     2bb6:	4028      	ands	r0, r5
     2bb8:	4601      	mov	r1, r0
-    2bba:	2015      	movs	r0, #21
-    2bbc:	f000 f9e0 	bl	0x2f80				; Wiznet_Write_Address
+    2bba:	2015      	movs	r0, #21				; Wiznet_Write_Address(0x15, ...)
+    2bbc:	f000 f9e0 	bl	0x2f80				; => clear all generic interrupt flags from wiznet
     2bc0:	2080      	movs	r0, #128	; 0x80
-    2bc2:	4028      	ands	r0, r5
+    2bc2:	4028      	ands	r0, r5				; IP CONFLICT flag set?
     2bc4:	2880      	cmp	r0, #128	; 0x80
     2bc6:	d102      	bne.n	0x2bce
     2bc8:	a044      	add	r0, pc, #272	; (adr r0, 0x2cdc)
     2bca:	f7fd fb03 	bl	0x1d4				; UART0_printf
     2bce:	2040      	movs	r0, #64	; 0x40
-    2bd0:	4028      	ands	r0, r5
+    2bd0:	4028      	ands	r0, r5				; UNREACHable flag set?
     2bd2:	2840      	cmp	r0, #64	; 0x40
     2bd4:	d102      	bne.n	0x2bdc
     2bd6:	a046      	add	r0, pc, #280	; (adr r0, 0x2cf0)
     2bd8:	f7fd fafc 	bl	0x1d4				; UART0_printf
     2bdc:	07e8      	lsls	r0, r5, #31
-    2bde:	0fc0      	lsrs	r0, r0, #31
-    2be0:	d03b      	beq.n	0x2c5a
+    2bde:	0fc0      	lsrs	r0, r0, #31			; check lowest bit
+    2be0:	d03b      	beq.n	0x2c5a				; NoSocket0Interrupts
     2be2:	4847      	ldr	r0, [pc, #284]	; (0x2d00)
-    2be4:	f7fe ffdc 	bl	0x1ba0				; Wiznet_Read_Address
+    2be4:	f7fe ffdc 	bl	0x1ba0				; Wiznet_Read_Address(0x402) : Socket0 IR register
     2be8:	4604      	mov	r4, r0
     2bea:	4621      	mov	r1, r4
-    2bec:	4844      	ldr	r0, [pc, #272]	; (0x2d00)
-    2bee:	f000 f9c7 	bl	0x2f80				; Wiznet_Write_Address
-    2bf2:	07e0      	lsls	r0, r4, #31
-    2bf4:	0fc0      	lsrs	r0, r0, #31
-    2bf6:	d008      	beq.n	0x2c0a
+    2bec:	4844      	ldr	r0, [pc, #272]	; (0x2d00)	; clear all marked Socket0 interrupts
+    2bee:	f000 f9c7 	bl	0x2f80				; Wiznet_Write_Address : Socket0 IR register
+    2bf2:	07e0      	lsls	r0, r4, #31			; check lowest bit?
+    2bf4:	0fc0      	lsrs	r0, r0, #31			; Socket0 CON interrupt?
+    2bf6:	d008      	beq.n	0x2c0a				; Socket0NoConnect
     2bf8:	4842      	ldr	r0, [pc, #264]	; (0x2d04)
     2bfa:	7800      	ldrb	r0, [r0, #0]
     2bfc:	2102      	movs	r1, #2
     2bfe:	4308      	orrs	r0, r1
     2c00:	4940      	ldr	r1, [pc, #256]	; (0x2d04)
-    2c02:	7008      	strb	r0, [r1, #0]
+    2c02:	7008      	strb	r0, [r1, #0]			; set "connected" flag in Socket0ConnectionStatusFlags
     2c04:	a040      	add	r0, pc, #256	; (adr r0, 0x2d08)
     2c06:	f7fd fae5 	bl	0x1d4				; UART0_printf
+Socket0NoConnect:
     2c0a:	2002      	movs	r0, #2
-    2c0c:	4204      	tst	r4, r0
-    2c0e:	d007      	beq.n	0x2c20
+    2c0c:	4204      	tst	r4, r0				; DISCON flag set?
+    2c0e:	d007      	beq.n	0x2c20				; Socket0NoDisconnect
     2c10:	2110      	movs	r1, #16
     2c12:	483b      	ldr	r0, [pc, #236]	; (0x2d00)
     2c14:	1e40      	subs	r0, r0, #1
     2c16:	f000 f9b3 	bl	0x2f80				; Wiznet_Write_Address
-    2c1a:	2000      	movs	r0, #0
+    2c1a:	2000      	movs	r0, #0				; clear Socket0ConnectionStatusFlags
     2c1c:	4939      	ldr	r1, [pc, #228]	; (0x2d04)
     2c1e:	7008      	strb	r0, [r1, #0]
+Socket0NoDisconnect:
     2c20:	2010      	movs	r0, #16
-    2c22:	4204      	tst	r4, r0
-    2c24:	d005      	beq.n	0x2c32
+    2c22:	4204      	tst	r4, r0				; SEND_OK flag?
+    2c24:	d005      	beq.n	0x2c32				; Socket0StillSending
     2c26:	483f      	ldr	r0, [pc, #252]	; (0x2d24)
     2c28:	7800      	ldrb	r0, [r0, #0]
     2c2a:	2102      	movs	r1, #2
     2c2c:	4308      	orrs	r0, r1
-    2c2e:	493d      	ldr	r1, [pc, #244]	; (0x2d24)
+    2c2e:	493d      	ldr	r1, [pc, #244]	; (0x2d24)	; set ReadyToSend flag (#2) in Socket0 Status Flags ???
     2c30:	7008      	strb	r0, [r1, #0]
-    2c32:	2004      	movs	r0, #4
+Socket0StillSending:
+    2c32:	2004      	movs	r0, #4				; RECV flag?
     2c34:	4204      	tst	r4, r0
-    2c36:	d005      	beq.n	0x2c44
+    2c36:	d005      	beq.n	0x2c44				; Socket0NoDataReceived
     2c38:	483a      	ldr	r0, [pc, #232]	; (0x2d24)
     2c3a:	7800      	ldrb	r0, [r0, #0]
     2c3c:	2101      	movs	r1, #1
     2c3e:	4308      	orrs	r0, r1
-    2c40:	4938      	ldr	r1, [pc, #224]	; (0x2d24)
+    2c40:	4938      	ldr	r1, [pc, #224]	; (0x2d24)	; set DataAvailable flag (#1) in Socket0 Status Flags ???
     2c42:	7008      	strb	r0, [r1, #0]
-    2c44:	2008      	movs	r0, #8
+Socket0NoDataReceived:
+    2c44:	2008      	movs	r0, #8				; TIMEOUT flag?
     2c46:	4204      	tst	r4, r0
-    2c48:	d007      	beq.n	0x2c5a
+    2c48:	d007      	beq.n	0x2c5a				; NoSocket0Interrupts
     2c4a:	2110      	movs	r1, #16
     2c4c:	482c      	ldr	r0, [pc, #176]	; (0x2d00)
-    2c4e:	1e40      	subs	r0, r0, #1
-    2c50:	f000 f996 	bl	0x2f80				; Wiznet_Write_Address
+    2c4e:	1e40      	subs	r0, r0, #1			; Wiznet_Write_Address(0x401, 0x10)
+    2c50:	f000 f996 	bl	0x2f80				; => CLOSE socket (due to timeout above)
     2c54:	2000      	movs	r0, #0
     2c56:	492b      	ldr	r1, [pc, #172]	; (0x2d04)
     2c58:	7008      	strb	r0, [r1, #0]
+NoSocket0Interrupts:
     2c5a:	2002      	movs	r0, #2
     2c5c:	4028      	ands	r0, r5
     2c5e:	2802      	cmp	r0, #2
-    2c60:	d138      	bne.n	0x2cd4
+    2c60:	d138      	bne.n	0x2cd4				; NoSocket1Interrupts
     2c62:	4831      	ldr	r0, [pc, #196]	; (0x2d28)
     2c64:	f7fe ff9c 	bl	0x1ba0				; Wiznet_Read_Address
     2c68:	4604      	mov	r4, r0
@@ -5409,7 +5417,7 @@ WhileCopySrcIPCheck:
     2cbc:	7008      	strb	r0, [r1, #0]
     2cbe:	2008      	movs	r0, #8
     2cc0:	4204      	tst	r4, r0
-    2cc2:	d007      	beq.n	0x2cd4
+    2cc2:	d007      	beq.n	0x2cd4				; NoSocket1Interrupts
     2cc4:	2110      	movs	r1, #16
     2cc6:	4818      	ldr	r0, [pc, #96]	; (0x2d28)
     2cc8:	1e40      	subs	r0, r0, #1
@@ -5417,9 +5425,10 @@ WhileCopySrcIPCheck:
     2cce:	2000      	movs	r0, #0
     2cd0:	4916      	ldr	r1, [pc, #88]	; (0x2d2c)
     2cd2:	7008      	strb	r0, [r1, #0]
+NoSocket1Interrupts:
     2cd4:	bd70      	pop	{r4, r5, r6, pc}
-    2cd6:	0000      	movs	r0, r0
 
+    2cd6:	0000      	;	padding
     2cd8:	20000090      	;
 
     2cdc:	7069      	;	String 'ip address congtu\r\n\0'
@@ -5443,7 +5452,7 @@ WhileCopySrcIPCheck:
     2cfe:	0000      	;
 
     2d00:	00000402      	;
-    2d04:	20000084      	;
+    2d04:	20000084      	;	Socket0ConnectionStatusFlags
 
     2d08:	6f73      	;	String 'socket sucessfull conect\0\0\0\0'
     2d0a:	6b63      	;
@@ -5460,7 +5469,7 @@ WhileCopySrcIPCheck:
     2d20:	0000      	;
     2d22:	0000      	;
 
-    2d24:	2000008c      	;
+    2d24:	2000008c      	;	Socket0 More Status Flags ???
     2d28:	00000502      	;
     2d2c:	20000085      	;
     2d30:	2000008d      	;
@@ -5513,7 +5522,7 @@ WhileCopySrcIPCheck:
     2d94:	bd10      	pop	{r4, pc}
     2d96:	0000      	movs	r0, r0
 
-    2d98:	20000084      	;
+    2d98:	20000084      	;	Socket0ConnectionStatusFlags
     2d9c:	20000088      	;
 
     2da0:	b510      	push	{r4, lr}
@@ -5936,23 +5945,25 @@ Main:
     3102:	4931      	ldr	r1, [pc, #196]	; (0x31c8)
     3104:	7008      	strb	r0, [r1, #0]
     3106:	4668      	mov	r0, sp
-    3108:	f7fd fcf8 	bl	0xafc
+    3108:	f7fd fcf8 	bl	0xafc				; InitIPStack
+UART1_Send_0x55_0x55_0x55_0x55_0x55_0x55:
     310c:	2055      	movs	r0, #85	; 0x55
-    310e:	f000 f9a8 	bl	0x3462				; CallX2020
+    310e:	f000 f9a8 	bl	0x3462				; UART1SendChar(0x55)
     3112:	2055      	movs	r0, #85	; 0x55
-    3114:	f000 f9a5 	bl	0x3462				; CallX2020
+    3114:	f000 f9a5 	bl	0x3462				; UART1SendChar(0x55)
     3118:	2055      	movs	r0, #85	; 0x55
-    311a:	f000 f9a2 	bl	0x3462				; CallX2020
+    311a:	f000 f9a2 	bl	0x3462				; UART1SendChar(0x55)
     311e:	2055      	movs	r0, #85	; 0x55
-    3120:	f000 f99f 	bl	0x3462				; CallX2020
+    3120:	f000 f99f 	bl	0x3462				; UART1SendChar(0x55)
     3124:	2055      	movs	r0, #85	; 0x55
-    3126:	f000 f99c 	bl	0x3462				; CallX2020
+    3126:	f000 f99c 	bl	0x3462				; UART1SendChar(0x55)
     312a:	2055      	movs	r0, #85	; 0x55
-    312c:	f000 f999 	bl	0x3462				; CallX2020
+    312c:	f000 f999 	bl	0x3462				; UART1SendChar(0x55)
+
     3130:	e03d      	b.n	0x31ae
 MainWhileBody:
     3132:	f7ff fdff 	bl	0x2d34
-    3136:	f7ff fd35 	bl	0x2ba4
+    3136:	f7ff fd35 	bl	0x2ba4				; WiznetHandleIncoming
     313a:	4824      	ldr	r0, [pc, #144]	; (0x31cc)
     313c:	7800      	ldrb	r0, [r0, #0]
     313e:	07c0      	lsls	r0, r0, #31
@@ -6017,9 +6028,9 @@ MainWhileBody:
     31c4:	0a0d      	;
     31c6:	0000      	;
 
-    31c8:	20000088      	lsls	r0, r1, #2
-    31cc:	2000008c      	lsls	r4, r1, #2
-    31d0:	20000008      	movs	r0, r1
+    31c8:	20000088      	;
+    31cc:	2000008c      	;
+    31d0:	20000008      	;
 
     31d4:	4905      	ldr	r1, [pc, #20]	; (0x31ec)
     31d6:	6b89      	ldr	r1, [r1, #56]	; 0x38
@@ -6346,26 +6357,28 @@ MainWhileBody:
 JustReturn:
     3460:	4770      	bx	lr
 
-CallX2020:
+UART1SendChar(c):
     3462:	b510      	push	{r4, lr}
     3464:	4604      	mov	r4, r0
     3466:	4620      	mov	r0, r4
-    3468:	f7fe fdda 	bl	0x2020
+    3468:	f7fe fdda 	bl	0x2020				; UART1PutChar(c)
     346c:	bd10      	pop	{r4, pc}
 
     346e:	0000      	;	padding
 
+UART1_print_195502fd?
     3470:	b57c      	push	{r2, r3, r4, r5, r6, lr}
     3472:	4605      	mov	r5, r0
     3474:	a107      	add	r1, pc, #28	; (adr r1, 0x3494)
-    3476:	c903      	ldmia	r1, {r0, r1}
+    3476:	c903      	ldmia	r1, {r0, r1}			; r0 := 195502fd, r1 := 0 ?
     3478:	9101      	str	r1, [sp, #4]
     347a:	9000      	str	r0, [sp, #0]
+for (r4=0; r4<5; ++r4)
     347c:	2400      	movs	r4, #0
     347e:	e005      	b.n	0x348c
     3480:	4669      	mov	r1, sp
     3482:	5d08      	ldrb	r0, [r1, r4]
-    3484:	f7ff ffed 	bl	0x3462				; CallX2020
+    3484:	f7ff ffed 	bl	0x3462				; UART1SendChar(?)
     3488:	1c60      	adds	r0, r4, #1
     348a:	b2c4      	uxtb	r4, r0
     348c:	2c05      	cmp	r4, #5
