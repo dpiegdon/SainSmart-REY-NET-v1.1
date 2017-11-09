@@ -1230,7 +1230,7 @@ EINT1Handler:
      a16:	2000      	movs	r0, #0
 
 
-??? EEPROM?
+ConfigureSystemClocks?
      a18:	b510      	push	{r4, lr}
      a1a:	4818      	ldr	r0, [pc, #96]	; (0xa7c)
      a1c:	6940      	ldr	r0, [r0, #20]
@@ -1318,14 +1318,14 @@ EINT1Handler:
      ad4:	4907      	ldr	r1, [pc, #28]	; (0xaf4)
      ad6:	6088      	str	r0, [r1, #8]
      ad8:	200f      	movs	r0, #15
-     ada:	4907      	ldr	r1, [pc, #28]	; (0xaf8)
-     adc:	6108      	str	r0, [r1, #16]
+     ada:	4907      	ldr	r1, [pc, #28]	; (0xaf8)	; I2C CLK divider register := 0
+     adc:	6108      	str	r0, [r1, #16]			; => I2C clock := PCLK/4
      ade:	4608      	mov	r0, r1
      ae0:	6800      	ldr	r0, [r0, #0]
      ae2:	2140      	movs	r1, #64	; 0x40
      ae4:	4308      	orrs	r0, r1
-     ae6:	4904      	ldr	r1, [pc, #16]	; (0xaf8)
-     ae8:	6008      	str	r0, [r1, #0]
+     ae6:	4904      	ldr	r1, [pc, #16]	; (0xaf8)	; set ENS1 flag in I2C Control register
+     ae8:	6008      	str	r0, [r1, #0]			; => enable I2C controller
      aea:	4770      	bx	lr
 
      aec:	500040c0      	;	GPIO registers for PORT3
@@ -2177,12 +2177,12 @@ InitIPStack???
     1242:	60c8      	str	r0, [r1, #12]
     1244:	f002 f90c 	bl	0x3460
     1248:	e0c5      	b.n	0x13d6
-    124a:	0000      	movs	r0, r0
-    124c:	0028      	movs	r0, r5
-    124e:	2000      	movs	r0, #0
-    1250:	ffff 0000 	vaddl.u<illegal width 64>	q8, d15, d0
-    1254:	4200      	tst	r0, r0
-    1256:	5000      	str	r0, [r0, r0]
+
+    124a:	0000      	;	padding
+    124c:	20000028      	;
+    1250:	0000ffff	;
+    1254:	50004200      	;	GPIO registers for PORT0
+
     1258:	1e61      	subs	r1, r4, #1
     125a:	2001      	movs	r0, #1
     125c:	4088      	lsls	r0, r1
@@ -2407,12 +2407,11 @@ InitIPStack???
     142c:	2000      	movs	r0, #0
     142e:	f000 fd8f 	bl	0x1f50
     1432:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
-    1434:	0028      	movs	r0, r5
-    1436:	2000      	movs	r0, #0
-    1438:	4200      	tst	r0, r0
-    143a:	5000      	str	r0, [r0, r0]
-    143c:	02d0      	lsls	r0, r2, #11
-    143e:	2000      	movs	r0, #0
+
+    1434:	20000028      	;
+    1438:	50004200      	;	GPIO registers for PORT0
+    143c:	200002d0      	;
+
     1440:	b510      	push	{r4, lr}
     1442:	4812      	ldr	r0, [pc, #72]	; (0x148c)
     1444:	8800      	ldrh	r0, [r0, #0]
@@ -2449,14 +2448,11 @@ InitIPStack???
     1484:	f001 ff3a 	bl	0x32fc
     1488:	bd10      	pop	{r4, pc}
     148a:	0000      	movs	r0, r0
-    148c:	004e      	lsls	r6, r1, #1
-    148e:	2000      	movs	r0, #0
-    1490:	0050      	lsls	r0, r2, #1
-    1492:	2000      	movs	r0, #0
-    1494:	04d0      	lsls	r0, r2, #19
-    1496:	2000      	movs	r0, #0
-    1498:	004c      	lsls	r4, r1, #1
-    149a:	2000      	movs	r0, #0
+
+    148c:	2000004e      	;
+    1490:	20000050      	;
+    1494:	200004d0      	;
+    1498:	2000004c      	;
 
     149c:	200a      	;	String '\n NET0-%X\0\0\0'
     149e:	454e      	;
@@ -2928,10 +2924,10 @@ InitIPStack???
     18a8:	f001 fdda 	bl	0x3460
     18ac:	2001      	movs	r0, #1
     18ae:	e003      	b.n	0x18b8
-    18b0:	02d0      	lsls	r0, r2, #11
-    18b2:	2000      	movs	r0, #0
-    18b4:	4200      	tst	r0, r0
-    18b6:	5000      	str	r0, [r0, r0]
+
+    18b0:	200002d0      	;
+    18b4:	50004200      	;	GPIO registers for PORT0
+
     18b8:	4927      	ldr	r1, [pc, #156]	; (0x1958)
     18ba:	6148      	str	r0, [r1, #20]
     18bc:	f001 fdd0 	bl	0x3460
@@ -3000,10 +2996,11 @@ InitIPStack???
     1950:	f000 fafe 	bl	0x1f50
     1954:	bd70      	pop	{r4, r5, r6, pc}
     1956:	0000      	movs	r0, r0
-    1958:	4200      	tst	r0, r0
-    195a:	5000      	str	r0, [r0, r0]
-    195c:	02d0      	lsls	r0, r2, #11
-    195e:	2000      	movs	r0, #0
+
+    1958:	50004200      	;	GPIO registers for PORT0
+    195c:	200002d0      	;
+
+EEPROM?
     1960:	b570      	push	{r4, r5, r6, lr}
     1962:	4604      	mov	r4, r0
     1964:	4620      	mov	r0, r4
@@ -4635,7 +4632,7 @@ TIM3Handler:
 
 BigJumpTable?
     267c:	b500      	push	{lr}
-    267e:	4602      	mov	r2, r0
+    267e:	4602      	mov	r2, r0				; r2 := parameter1 (which timer? 1,2,3 or 4)
     2680:	2a01      	cmp	r2, #1
     2682:	d006      	beq.n	0x2692
     2684:	2a02      	cmp	r2, #2
@@ -5935,7 +5932,7 @@ Main:
     30e4:	b086      	sub	sp, #24
     30e6:	200a      	movs	r0, #10
     30e8:	f7fd f9f6 	bl	0x4d8				; Delay(#10)
-    30ec:	f7fd fc94 	bl	0xa18
+    30ec:	f7fd fc94 	bl	0xa18				; ConfigureSystemClocks
     30f0:	f7fd fdae 	bl	0xc50
     30f4:	200a      	movs	r0, #10
     30f6:	f7fd f9ef 	bl	0x4d8				; Delay(#10)
