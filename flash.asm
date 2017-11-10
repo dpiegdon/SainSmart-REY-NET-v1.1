@@ -1336,8 +1336,8 @@ ConfigureSystemClocks?
 InitIPStack???
      afc:	b570      	push	{r4, r5, r6, lr}
      afe:	4604      	mov	r4, r0
-     b00:	4625      	mov	r5, r4				; r5 := parameter1
-     b02:	7829      	ldrb	r1, [r5, #0]
+     b00:	4625      	mov	r5, r4
+     b02:	7829      	ldrb	r1, [r5, #0]			; r1 := parameter1[0]
      b04:	a042      	add	r0, pc, #264	; (adr r0, 0xc10)
      b06:	f7ff fb65 	bl	0x1d4				; UART0_printf
      b0a:	2300      	movs	r3, #0
@@ -3000,71 +3000,78 @@ InitIPStack???
     1958:	50004200      	;	GPIO registers for PORT0
     195c:	200002d0      	;
 
-EEPROM?
+???
     1960:	b570      	push	{r4, r5, r6, lr}
     1962:	4604      	mov	r4, r0
     1964:	4620      	mov	r0, r4
     1966:	f000 fa3d 	bl	0x1de4
     196a:	4605      	mov	r5, r0
     196c:	bd70      	pop	{r4, r5, r6, pc}
-    196e:	0000      	movs	r0, r0
+
+    196e:	0000      	;	padding
+
+EEPROM?
     1970:	b570      	push	{r4, r5, r6, lr}
     1972:	4604      	mov	r4, r0
     1974:	4d89      	ldr	r5, [pc, #548]	; (0x1b9c)
     1976:	682d      	ldr	r5, [r5, #0]
     1978:	2620      	movs	r6, #32
     197a:	4335      	orrs	r5, r6
-    197c:	4e87      	ldr	r6, [pc, #540]	; (0x1b9c)
-    197e:	6035      	str	r5, [r6, #0]
+    197c:	4e87      	ldr	r6, [pc, #540]	; (0x1b9c)	; set STA in I2C control register
+    197e:	6035      	str	r5, [r6, #0]			; => enter MASTER mode, send I2C START condition
     1980:	4635      	mov	r5, r6
     1982:	682d      	ldr	r5, [r5, #0]
     1984:	2608      	movs	r6, #8
     1986:	4335      	orrs	r5, r6
-    1988:	4e84      	ldr	r6, [pc, #528]	; (0x1b9c)
-    198a:	6035      	str	r5, [r6, #0]
+    1988:	4e84      	ldr	r6, [pc, #528]	; (0x1b9c)	; set SI in I2C control register
+    198a:	6035      	str	r5, [r6, #0]			; => clears interrupt flag
     198c:	bf00      	nop
+I2CWaitForInterruptFlag1:
     198e:	4d83      	ldr	r5, [pc, #524]	; (0x1b9c)
     1990:	682d      	ldr	r5, [r5, #0]
     1992:	2608      	movs	r6, #8
-    1994:	4035      	ands	r5, r6
+    1994:	4035      	ands	r5, r6				; => wait until start condition was put on bus
     1996:	2d08      	cmp	r5, #8
-    1998:	d1f9      	bne.n	0x198e
+    1998:	d1f9      	bne.n	0x198e				; I2CWaitForInterruptFlag1
     199a:	4d80      	ldr	r5, [pc, #512]	; (0x1b9c)
     199c:	682d      	ldr	r5, [r5, #0]
     199e:	2628      	movs	r6, #40	; 0x28
     19a0:	43b5      	bics	r5, r6
-    19a2:	4e7e      	ldr	r6, [pc, #504]	; (0x1b9c)
-    19a4:	6035      	str	r5, [r6, #0]
+    19a2:	4e7e      	ldr	r6, [pc, #504]	; (0x1b9c)	; clear SI and STA
+    19a4:	6035      	str	r5, [r6, #0]			; => clear interrupt flag and leave master mode
     19a6:	bf00      	nop
+I2CWaitForInterruptFlag2:
     19a8:	4d7c      	ldr	r5, [pc, #496]	; (0x1b9c)
     19aa:	68ed      	ldr	r5, [r5, #12]
-    19ac:	2d08      	cmp	r5, #8
-    19ae:	d1fb      	bne.n	0x19a8
+    19ac:	2d08      	cmp	r5, #8				; => wait until i2c block changed state
+    19ae:	d1fb      	bne.n	0x19a8				; I2CWaitForInterruptFlag2				
     19b0:	25a0      	movs	r5, #160	; 0xa0
     19b2:	4e7a      	ldr	r6, [pc, #488]	; (0x1b9c)
-    19b4:	60b5      	str	r5, [r6, #8]
+    19b4:	60b5      	str	r5, [r6, #8]			; write 0xa0 to i2c DATA register
     19b6:	4635      	mov	r5, r6
     19b8:	682d      	ldr	r5, [r5, #0]
     19ba:	2608      	movs	r6, #8
     19bc:	4335      	orrs	r5, r6
     19be:	4e77      	ldr	r6, [pc, #476]	; (0x1b9c)
-    19c0:	6035      	str	r5, [r6, #0]
+    19c0:	6035      	str	r5, [r6, #0]			; clear SI
     19c2:	bf00      	nop
+I2CWaitForInterruptFlag3:
     19c4:	4d75      	ldr	r5, [pc, #468]	; (0x1b9c)
     19c6:	682d      	ldr	r5, [r5, #0]
     19c8:	2608      	movs	r6, #8
     19ca:	4035      	ands	r5, r6
     19cc:	2d08      	cmp	r5, #8
-    19ce:	d1f9      	bne.n	0x19c4
+    19ce:	d1f9      	bne.n	0x19c4				; I2CWaitForInterruptFlag3
     19d0:	bf00      	nop
+I2CWaitForMasterTransmitAddressACK:
     19d2:	4d72      	ldr	r5, [pc, #456]	; (0x1b9c)
     19d4:	68ed      	ldr	r5, [r5, #12]
     19d6:	2d18      	cmp	r5, #24
-    19d8:	d1fb      	bne.n	0x19d2
+    19d8:	d1fb      	bne.n	0x19d2				; I2CWaitForMasterTransmitAddressACK
     19da:	0425      	lsls	r5, r4, #16
     19dc:	0e2d      	lsrs	r5, r5, #24
     19de:	4e6f      	ldr	r6, [pc, #444]	; (0x1b9c)
-    19e0:	60b5      	str	r5, [r6, #8]
+    19e0:	60b5      	str	r5, [r6, #8]			; write 0x00 to i2c DATA register ???
     19e2:	4635      	mov	r5, r6
     19e4:	682d      	ldr	r5, [r5, #0]
     19e6:	2608      	movs	r6, #8
@@ -3588,6 +3595,7 @@ SPI0_Wiznet_StartTX(TxPayload, TransferLength):
     1dde:	0000      	;	padding
     1de0:	40030000      	;	SPI 0 registers
 
+???
     1de4:	b5f0      	push	{r4, r5, r6, r7, lr}
     1de6:	b085      	sub	sp, #20
     1de8:	4604      	mov	r4, r0
@@ -5909,11 +5917,10 @@ WaitForWriteTxCompletion:
     30bc:	60c8      	str	r0, [r1, #12]
     30be:	b007      	add	sp, #28
     30c0:	bd00      	pop	{pc}
-    30c2:	0000      	movs	r0, r0
-    30c4:	34b0      	adds	r4, #176	; 0xb0
-    30c6:	0000      	movs	r0, r0
-    30c8:	4240      	negs	r0, r0
-    30ca:	5000      	str	r0, [r0, r0]
+
+    30c2:	0000      	;	padding
+    30c4:	000034b0      	;
+    30c8:	50004240      	;	GPIO registers for PORT2
 
 ????
     30cc:	4601      	mov	r1, r0
@@ -6394,8 +6401,8 @@ for (r4=0; r4<5; ++r4)
     34a6:	f7fd fc35 	bl	0xd14
     34aa:	bd10      	pop	{r4, pc}
 
-    34ac:	0038      	;
-    34ae:	2000      	;
+    34ac:	20000038      	;
+
     34b0:	0085      	;
     34b2:	00c0      	;
     34b4:	00a8      	;
@@ -6403,7 +6410,8 @@ for (r4=0; r4<5; ++r4)
     34b8:	0004      	;
     34ba:	000b      	;
     34bc:	00b8      	;
-    34be:	3130      	;
+
+    34be:	3130      	;	String '0123456789ABCDEF@0X\00'
     34c0:	3332      	;
     34c2:	3534      	;
     34c4:	3736      	;
@@ -6413,7 +6421,8 @@ for (r4=0; r4<5; ++r4)
     34cc:	4645      	;
     34ce:	3040      	;
     34d0:	0058      	;
-    34d2:	3130      	;
+
+    34d2:	3130      	;	String '0123456789abcdef@0x\0'
     34d4:	3332      	;
     34d6:	3534      	;
     34d8:	3736      	;
@@ -6423,6 +6432,7 @@ for (r4=0; r4<5; ++r4)
     34e0:	6665      	;
     34e2:	3040      	;
     34e4:	0078      	;
+
     34e6:	0000      	;
     34e8:	3508      	;
     34ea:	0000      	;
