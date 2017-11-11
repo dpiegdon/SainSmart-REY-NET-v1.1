@@ -54,7 +54,7 @@ Disassembly of section .data:
       b8:	000001a3      	;#30	NVIC 46: BadIRQHandler       (reserved, terminal)
       bc:	000001a3      	;#31	NVIC 47: BadIRQHandler       (reserved, terminal)
 
-StartUpCode
+SystemInit:
       c0:	f000 f802 	bl	0xc8
       c4:	f000 f848 	bl	0x158
       c8:	a00c      	add	r0, pc, #48	; (adr r0, 0xfc)
@@ -147,22 +147,22 @@ FirmwareFallThrough:
      176:	0000      	;	padding
 
 ResetHandler:
-     178:	480d      	ldr	r0, [pc, #52]	; (0x1b0)	; load base offset of Global Control registers (GCR)
-     17a:	6901      	ldr	r1, [r0, #16]			; load GCR+0x10 ? reserved register ?
+     178:	480d      	ldr	r0, [pc, #52]	; (0x1b0)	; load address of Global Control register: REGWRPROT
+     17a:	6901      	ldr	r1, [r0, #16]			; load GCR+0x110 ?!
      17c:	293f      	cmp	r1, #63	; 0x3f
      17e:	d109      	bne.n	0x194
-     180:	490c      	ldr	r1, [pc, #48]	; (0x1b4)
-     182:	6001      	str	r1, [r0, #0]
+     180:	490c      	ldr	r1, [pc, #48]	; (0x1b4)	; Send UnlockSequence to GCR
+     182:	6001      	str	r1, [r0, #0]			; => unlock all system registers
      184:	490c      	ldr	r1, [pc, #48]	; (0x1b8)
      186:	6001      	str	r1, [r0, #0]
      188:	490c      	ldr	r1, [pc, #48]	; (0x1bc)
      18a:	6001      	str	r1, [r0, #0]
-     18c:	490c      	ldr	r1, [pc, #48]	; (0x1c0)
-     18e:	6101      	str	r1, [r0, #16]
+     18c:	490c      	ldr	r1, [pc, #48]	; (0x1c0)	; write 0x20 to GCR:0x110
+     18e:	6101      	str	r1, [r0, #16]			; => reserved register?!
      190:	2100      	movs	r1, #0
-     192:	6001      	str	r1, [r0, #0]
+     192:	6001      	str	r1, [r0, #0]			; lock all system registers again.
      194:	480b      	ldr	r0, [pc, #44]	; (0x1c4)
-     196:	4700      	bx	r0				; Jump to StartUpCode
+     196:	4700      	bx	r0				; Jump to SystemInit
 
 BadNMIHandler:
      198:	e7fe      	b.n	0x198
@@ -184,11 +184,11 @@ BadIRQHandler:
      1ac:	4770      	bx	lr
      1ae:	0000      	;	padding
      1b0:	50000100      	;	System Global Control Registers
-     1b4:	00000059      	;
-     1b8:	00000016      	;
-     1bc:	00000088      	;
+     1b4:	00000059      	;	Unlock Sequence Part #1: 0x59
+     1b8:	00000016      	;	Unlock Sequence Part #2: 0x16
+     1bc:	00000088      	;	Unlock Sequence Part #3: 0x88
      1c0:	00000020      	;
-     1c4:	000000c1      	;	PTR to StartUpCode
+     1c4:	000000c1      	;	PTR to SystemInit
      1c8:	20000730      	;
      1cc:	20000b30      	;
      1d0:	20000730      	;

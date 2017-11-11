@@ -12,6 +12,7 @@ The board contains
 
 	Datasheet can be loaded from: `http://www.nuvoton.com/resource-files/DS_M051%28DN_DE%29_Series_EN_Rev1.03.pdf`
 	Technical Reference Guide: `https://www.nuvoton.com/resource-files/TRM_M051(BN_DN_DE)_Series_EN_Rev1.00.pdf`
+	CMSIS SDK: `http://www.nuvoton.com/hq/resource-download.jsp?tp_GUID=SW0120140225231434`
 
 * U5: Wiznet W9100 Ethernet Controller (via SPI)
 
