@@ -1386,19 +1386,19 @@ InitIPStack???
      b74:	7048      	strb	r0, [r1, #1]
      b76:	7088      	strb	r0, [r1, #2]
      b78:	2000      	movs	r0, #0
-     b7a:	70c8      	strb	r0, [r1, #3]
-     b7c:	200c      	movs	r0, #12
+     b7a:	70c8      	strb	r0, [r1, #3]			; save default MAC address:
+     b7c:	200c      	movs	r0, #12				; 0x0c
      b7e:	492c      	ldr	r1, [pc, #176]	; (0xc30)
      b80:	7008      	strb	r0, [r1, #0]
-     b82:	2029      	movs	r0, #41	; 0x29
+     b82:	2029      	movs	r0, #41	; 0x29			; 0x29
      b84:	7048      	strb	r0, [r1, #1]
-     b86:	20ab      	movs	r0, #171	; 0xab
+     b86:	20ab      	movs	r0, #171	; 0xab		; 0xab
      b88:	7088      	strb	r0, [r1, #2]
-     b8a:	207c      	movs	r0, #124	; 0x7c
+     b8a:	207c      	movs	r0, #124	; 0x7c		; 0x7c
      b8c:	70c8      	strb	r0, [r1, #3]
-     b8e:	2000      	movs	r0, #0
+     b8e:	2000      	movs	r0, #0				; 0x00
      b90:	7108      	strb	r0, [r1, #4]
-     b92:	2001      	movs	r0, #1
+     b92:	2001      	movs	r0, #1				; 0x01
      b94:	7148      	strb	r0, [r1, #5]
      b96:	4823      	ldr	r0, [pc, #140]	; (0xc24)
      b98:	7880      	ldrb	r0, [r0, #2]
@@ -1481,66 +1481,66 @@ InitIPStack???
      c48:	50004280      	;	GPIO registers for PORT4
      c4c:	20000008      	;
 
-???
-     c50:	b510      	push	{r4, lr}
-     c52:	20c0      	movs	r0, #192	; 0xc0
+InitNetworkStack:
+     c50:	b510      	push	{r4, lr}			; SET default Gateway: 192.168.1.1
+     c52:	20c0      	movs	r0, #192	; 0xc0		; 192
      c54:	4923      	ldr	r1, [pc, #140]	; (0xce4)
      c56:	7008      	strb	r0, [r1, #0]
-     c58:	20a8      	movs	r0, #168	; 0xa8
+     c58:	20a8      	movs	r0, #168	; 0xa8		; 168
      c5a:	7048      	strb	r0, [r1, #1]
-     c5c:	2001      	movs	r0, #1
-     c5e:	7088      	strb	r0, [r1, #2]
-     c60:	70c8      	strb	r0, [r1, #3]
-     c62:	20ff      	movs	r0, #255	; 0xff
+     c5c:	2001      	movs	r0, #1				; 1
+     c5e:	7088      	strb	r0, [r1, #2]			; 1
+     c60:	70c8      	strb	r0, [r1, #3]			; SET default Netmask: 255.255.255.0
+     c62:	20ff      	movs	r0, #255	; 0xff		; 255
      c64:	4920      	ldr	r1, [pc, #128]	; (0xce8)
-     c66:	7008      	strb	r0, [r1, #0]
-     c68:	7048      	strb	r0, [r1, #1]
+     c66:	7008      	strb	r0, [r1, #0]			; 255
+     c68:	7048      	strb	r0, [r1, #1]			; 255
      c6a:	7088      	strb	r0, [r1, #2]
-     c6c:	2000      	movs	r0, #0
+     c6c:	2000      	movs	r0, #0				; 0
      c6e:	70c8      	strb	r0, [r1, #3]
-     c70:	200c      	movs	r0, #12
-     c72:	491e      	ldr	r1, [pc, #120]	; (0xcec)
+     c70:	200c      	movs	r0, #12				; SET default MAC: 0c:29:ab:7c:00:01
+     c72:	491e      	ldr	r1, [pc, #120]	; (0xcec)	; 0x0c
      c74:	7008      	strb	r0, [r1, #0]
-     c76:	2029      	movs	r0, #41	; 0x29
+     c76:	2029      	movs	r0, #41	; 0x29			; 0x29
      c78:	7048      	strb	r0, [r1, #1]
-     c7a:	20ab      	movs	r0, #171	; 0xab
+     c7a:	20ab      	movs	r0, #171	; 0xab		; 0xab
      c7c:	7088      	strb	r0, [r1, #2]
-     c7e:	207c      	movs	r0, #124	; 0x7c
+     c7e:	207c      	movs	r0, #124	; 0x7c		; 0x7c
      c80:	70c8      	strb	r0, [r1, #3]
-     c82:	2000      	movs	r0, #0
+     c82:	2000      	movs	r0, #0				; 0x00
      c84:	7108      	strb	r0, [r1, #4]
-     c86:	2001      	movs	r0, #1
+     c86:	2001      	movs	r0, #1				; 0x01
      c88:	7148      	strb	r0, [r1, #5]
-     c8a:	20c0      	movs	r0, #192	; 0xc0
+     c8a:	20c0      	movs	r0, #192	; 0xc0		; SET default SrcIPAddr: 192.168.1.4
      c8c:	4918      	ldr	r1, [pc, #96]	; (0xcf0)
-     c8e:	7008      	strb	r0, [r1, #0]
-     c90:	20a8      	movs	r0, #168	; 0xa8
+     c8e:	7008      	strb	r0, [r1, #0]			; 192
+     c90:	20a8      	movs	r0, #168	; 0xa8		; 168
      c92:	7048      	strb	r0, [r1, #1]
-     c94:	2001      	movs	r0, #1
+     c94:	2001      	movs	r0, #1				; 1
      c96:	7088      	strb	r0, [r1, #2]
-     c98:	2004      	movs	r0, #4
+     c98:	2004      	movs	r0, #4				; 4
      c9a:	70c8      	strb	r0, [r1, #3]
      c9c:	200b      	movs	r0, #11
-     c9e:	4915      	ldr	r1, [pc, #84]	; (0xcf4)
-     ca0:	7008      	strb	r0, [r1, #0]
-     ca2:	20b8      	movs	r0, #184	; 0xb8
+     c9e:	4915      	ldr	r1, [pc, #84]	; (0xcf4)	; SET default Source Port: 3000
+     ca0:	7008      	strb	r0, [r1, #0]			; 0x0b
+     ca2:	20b8      	movs	r0, #184	; 0xb8		; 0xb8
      ca4:	7048      	strb	r0, [r1, #1]
-     ca6:	20c0      	movs	r0, #192	; 0xc0
-     ca8:	4913      	ldr	r1, [pc, #76]	; (0xcf8)
+     ca6:	20c0      	movs	r0, #192	; 0xc0		; SET default DstIpAddr: 192.168.1.205
+     ca8:	4913      	ldr	r1, [pc, #76]	; (0xcf8)	; 192
      caa:	7008      	strb	r0, [r1, #0]
-     cac:	20a8      	movs	r0, #168	; 0xa8
+     cac:	20a8      	movs	r0, #168	; 0xa8		; 168
      cae:	7048      	strb	r0, [r1, #1]
-     cb0:	2001      	movs	r0, #1
+     cb0:	2001      	movs	r0, #1				; 1
      cb2:	7088      	strb	r0, [r1, #2]
-     cb4:	20cd      	movs	r0, #205	; 0xcd
+     cb4:	20cd      	movs	r0, #205	; 0xcd		; 205
      cb6:	70c8      	strb	r0, [r1, #3]
      cb8:	200b      	movs	r0, #11
-     cba:	4910      	ldr	r1, [pc, #64]	; (0xcfc)
-     cbc:	7008      	strb	r0, [r1, #0]
-     cbe:	20b8      	movs	r0, #184	; 0xb8
+     cba:	4910      	ldr	r1, [pc, #64]	; (0xcfc)	; SET default Destination Port: 3000
+     cbc:	7008      	strb	r0, [r1, #0]			; 0x0b
+     cbe:	20b8      	movs	r0, #184	; 0xb8		; 0xb8
      cc0:	7048      	strb	r0, [r1, #1]
      cc2:	2000      	movs	r0, #0
-     cc4:	490e      	ldr	r1, [pc, #56]	; (0xd00)
+     cc4:	490e      	ldr	r1, [pc, #56]	; (0xd00)	; SET default ???: 0x00 0x04 ?
      cc6:	7008      	strb	r0, [r1, #0]
      cc8:	490e      	ldr	r1, [pc, #56]	; (0xd04)
      cca:	6048      	str	r0, [r1, #4]
@@ -4997,17 +4997,18 @@ UART1Handler:
     2944:	50000200      	;	Clock Control registers
     2948:	40150000      	;	UART1 registers
 
+???
     294c:	b510      	push	{r4, lr}
-    294e:	4604      	mov	r4, r0
+    294e:	4604      	mov	r4, r0				; r4 := parameter1
     2950:	4837      	ldr	r0, [pc, #220]	; (0x2a30)
     2952:	7800      	ldrb	r0, [r0, #0]
-    2954:	0003      	movs	r3, r0
+    2954:	0003      	movs	r3, r0				; r3 := byte0 from buffer?
     2956:	f000 fb35 	bl	0x2fc4
     295a:	0406      	lsls	r6, r0, #16
     295c:	180e      	adds	r6, r1, r0
     295e:	2f22      	cmp	r7, #34	; 0x22
     2960:	643e      	str	r6, [r7, #64]	; 0x40
-    2962:	2cfb      	cmp	r4, #251	; 0xfb
+    2962:	2cfb      	cmp	r4, #251	; 0xfb		; start of command?
     2964:	d103      	bne.n	0x296e
     2966:	2001      	movs	r0, #1
     2968:	4931      	ldr	r1, [pc, #196]	; (0x2a30)
@@ -5027,7 +5028,7 @@ UART1Handler:
     2984:	492a      	ldr	r1, [pc, #168]	; (0x2a30)
     2986:	7008      	strb	r0, [r1, #0]
     2988:	e04f      	b.n	0x2a2a
-    298a:	2c55      	cmp	r4, #85	; 0x55
+    298a:	2c55      	cmp	r4, #85	; 0x55				;;;;;?????
     298c:	d103      	bne.n	0x2996
     298e:	2003      	movs	r0, #3
     2990:	4927      	ldr	r1, [pc, #156]	; (0x2a30)
@@ -5106,6 +5107,7 @@ UART1Handler:
     2a24:	4902      	ldr	r1, [pc, #8]	; (0x2a30)
     2a26:	7008      	strb	r0, [r1, #0]
     2a28:	bf00      	nop
+AbortCommand?
     2a2a:	bf00      	nop
     2a2c:	bd10      	pop	{r4, pc}
     2a2e:	0000      	movs	r0, r0
@@ -5940,7 +5942,7 @@ Main:
     30e6:	200a      	movs	r0, #10
     30e8:	f7fd f9f6 	bl	0x4d8				; Delay(#10)
     30ec:	f7fd fc94 	bl	0xa18				; ConfigureSystemClocks
-    30f0:	f7fd fdae 	bl	0xc50
+    30f0:	f7fd fdae 	bl	0xc50				; InitNetworkStack
     30f4:	200a      	movs	r0, #10
     30f6:	f7fd f9ef 	bl	0x4d8				; Delay(#10)
     30fa:	a02d      	add	r0, pc, #180	; (adr r0, 0x31b0)

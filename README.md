@@ -34,6 +34,32 @@ The board contains
 
 	Datasheet can be loaded from: `http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8568-SEEPROM-AT24C256C-Datasheet.pdf`
 
+	The EEPROM is connected to I2C 0, with Address 0b101000.
+	During startup, the EEPROM is read twice:
+
+	First at offset 0x0000, two bytes are read:
+
+	W:50: 00 00  ;  R:50: 85 C0
+
+	Then, shortly afterwards, again from offset 0x0000:
+
+	W:50: 00 00  ;  R:50: 85 C0 A8 01 04 0B B8 30 FF
+	
+	Obviously, the EEPROM contains the IP/TCP-Port configuration:
+	85 c0 a8 01 04 0b b8 30 ff
+	   |---------| |---| ||
+	   IP Addr     Port  Checksum over previous 6 bytes?
+
+	Everything else in the EEPROM seems to be ignored.
+
+	I am unsure why there are two transfers.
+	The EEPROM does not seem to signal any errors:
+	No clockstretching and no ACKs are seen for the responses.
+
+	Sadly, the MAC address does not seem to be fetched from the
+	EEPROM. Thus, to use multiple cards on one ethernet,
+	the firmware might need to be patched...
+
 Connectors
 ==========
 
@@ -63,4 +89,30 @@ Connectors
 
 * J3 has GPIOs to control the connected relays
 
+```
+	Pinout:
+	All relay pins are ACTIVE LOW.
 
+				/---\---|
+		VCC 5V		| 1 | 2 |	VCC 5V
+				\---/---|
+		Relay1		| 3 | 4 |	Relay2
+				|---|---|
+		Relay3		| 5 | 6 |	Relay4
+				|---|---|
+		...		| 7 | 8 |	...
+				|---|---|
+				| 9 |10 |
+				|---|---|
+				|11 |12 |
+				|---|---|
+				|13 |14 |
+				|---|---|
+				|15 |16 |
+				|---|---|
+		Relay15		|17 |18 |	Relay16
+				|---|---|
+		GND		|19 |20 |	GND
+				|---|---|
+
+```
