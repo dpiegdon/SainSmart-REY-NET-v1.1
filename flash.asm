@@ -1183,7 +1183,7 @@ EINT1Handler:
      9a6:	462a      	mov	r2, r5
      9a8:	a901      	add	r1, sp, #4
      9aa:	2001      	movs	r0, #1
-     9ac:	f000 ffe0 	bl	0x1970
+     9ac:	f000 ffe0 	bl	0x1970				; ReadEEPROM(?) -- never hit?
      9b0:	2400      	movs	r4, #0
      9b2:	e012      	b.n	0x9da
      9b4:	0060      	lsls	r0, r4, #1
@@ -1344,7 +1344,7 @@ InitIPStack???
      b0c:	2208      	movs	r2, #8
      b0e:	4945      	ldr	r1, [pc, #276]	; (0xc24)
      b10:	4618      	mov	r0, r3
-     b12:	f000 ff2d 	bl	0x1970
+     b12:	f000 ff2d 	bl	0x1970				; ReadEEPROM(?) -- long query
      b16:	20fd      	movs	r0, #253	; 0xfd
      b18:	f001 fa82 	bl	0x2020				; UART1PutChar(0xfd)
      b1c:	4941      	ldr	r1, [pc, #260]	; (0xc24)
@@ -3010,9 +3010,9 @@ InitNetworkStack:
 
     196e:	0000      	;	padding
 
-EEPROM?
+ReadEEPROM(start_address):
     1970:	b570      	push	{r4, r5, r6, lr}
-    1972:	4604      	mov	r4, r0
+    1972:	4604      	mov	r4, r0				; r4 := parameter1
     1974:	4d89      	ldr	r5, [pc, #548]	; (0x1b9c)
     1976:	682d      	ldr	r5, [r5, #0]
     1978:	2620      	movs	r6, #32
@@ -3047,8 +3047,8 @@ I2CWaitForInterruptFlag2:
     19ae:	d1fb      	bne.n	0x19a8				; I2CWaitForInterruptFlag2				
     19b0:	25a0      	movs	r5, #160	; 0xa0
     19b2:	4e7a      	ldr	r6, [pc, #488]	; (0x1b9c)
-    19b4:	60b5      	str	r5, [r6, #8]			; write 0xa0 to i2c DATA register
-    19b6:	4635      	mov	r5, r6
+    19b4:	60b5      	str	r5, [r6, #8]			; write 0xa0 to i2c data register
+    19b6:	4635      	mov	r5, r6				; => send i2c ADDRESS of transfer
     19b8:	682d      	ldr	r5, [r5, #0]
     19ba:	2608      	movs	r6, #8
     19bc:	4335      	orrs	r5, r6
@@ -3068,56 +3068,60 @@ I2CWaitForMasterTransmitAddressACK:
     19d4:	68ed      	ldr	r5, [r5, #12]
     19d6:	2d18      	cmp	r5, #24
     19d8:	d1fb      	bne.n	0x19d2				; I2CWaitForMasterTransmitAddressACK
-    19da:	0425      	lsls	r5, r4, #16
-    19dc:	0e2d      	lsrs	r5, r5, #24
+    19da:	0425      	lsls	r5, r4, #16			; from parameter1:
+    19dc:	0e2d      	lsrs	r5, r5, #24			; select high byte of low halfword (2 of [0123])
     19de:	4e6f      	ldr	r6, [pc, #444]	; (0x1b9c)
-    19e0:	60b5      	str	r5, [r6, #8]			; write 0x00 to i2c DATA register ???
-    19e2:	4635      	mov	r5, r6
+    19e0:	60b5      	str	r5, [r6, #8]			; write that to i2c data register
+    19e2:	4635      	mov	r5, r6				; => send high-bits of memory-address into eeprom
     19e4:	682d      	ldr	r5, [r5, #0]
     19e6:	2608      	movs	r6, #8
     19e8:	4335      	orrs	r5, r6
     19ea:	4e6c      	ldr	r6, [pc, #432]	; (0x1b9c)
-    19ec:	6035      	str	r5, [r6, #0]
-    19ee:	bf00      	nop
+    19ec:	6035      	str	r5, [r6, #0]			; set bit 4 in i2c control register
+    19ee:	bf00      	nop					; => clear interrupt flag
+I2CWaitForInterruptFlag4:
     19f0:	4d6a      	ldr	r5, [pc, #424]	; (0x1b9c)
     19f2:	682d      	ldr	r5, [r5, #0]
     19f4:	2608      	movs	r6, #8
     19f6:	4035      	ands	r5, r6
     19f8:	2d08      	cmp	r5, #8
-    19fa:	d1f9      	bne.n	0x19f0
+    19fa:	d1f9      	bne.n	0x19f0				; I2CWaitForInterruptFlag4
+I2CWaitForMasterTransmitDataAck1:
     19fc:	bf00      	nop
     19fe:	4d67      	ldr	r5, [pc, #412]	; (0x1b9c)
-    1a00:	68ed      	ldr	r5, [r5, #12]
-    1a02:	2d28      	cmp	r5, #40	; 0x28
-    1a04:	d1fb      	bne.n	0x19fe
+    1a00:	68ed      	ldr	r5, [r5, #12]			; i2c status register == 0x28
+    1a02:	2d28      	cmp	r5, #40	; 0x28			; => wait until Master Transmit Data ACK
+    1a04:	d1fb      	bne.n	0x19fe				; I2CWaitForMasterTransmitDataAck1
     1a06:	b2e5      	uxtb	r5, r4
     1a08:	4e64      	ldr	r6, [pc, #400]	; (0x1b9c)
-    1a0a:	60b5      	str	r5, [r6, #8]
-    1a0c:	4635      	mov	r5, r6
-    1a0e:	682d      	ldr	r5, [r5, #0]
+    1a0a:	60b5      	str	r5, [r6, #8]			; store lower 8 bits of parameter1
+    1a0c:	4635      	mov	r5, r6				; into i2c data register
+    1a0e:	682d      	ldr	r5, [r5, #0]			; => send low-bits of memory-address into eeprom
     1a10:	2608      	movs	r6, #8
     1a12:	4335      	orrs	r5, r6
-    1a14:	4e61      	ldr	r6, [pc, #388]	; (0x1b9c)
-    1a16:	6035      	str	r5, [r6, #0]
+    1a14:	4e61      	ldr	r6, [pc, #388]	; (0x1b9c)	; set bit 4 in i2c control register
+    1a16:	6035      	str	r5, [r6, #0]			; => clear interrupt flag
     1a18:	bf00      	nop
+I2CWaitForInterruptFlag5:
     1a1a:	4d60      	ldr	r5, [pc, #384]	; (0x1b9c)
     1a1c:	682d      	ldr	r5, [r5, #0]
     1a1e:	2608      	movs	r6, #8
     1a20:	4035      	ands	r5, r6
     1a22:	2d08      	cmp	r5, #8
-    1a24:	d1f9      	bne.n	0x1a1a
+    1a24:	d1f9      	bne.n	0x1a1a				; I2CWaitForInterruptFlag5
     1a26:	bf00      	nop
+I2CWaitForMasterTransmitDataAck2
     1a28:	4d5c      	ldr	r5, [pc, #368]	; (0x1b9c)
     1a2a:	68ed      	ldr	r5, [r5, #12]
-    1a2c:	2d28      	cmp	r5, #40	; 0x28
-    1a2e:	d1fb      	bne.n	0x1a28
+    1a2c:	2d28      	cmp	r5, #40	; 0x28			; Wait for Data transmit ACK
+    1a2e:	d1fb      	bne.n	0x1a28				; I2CWaitForMasterTransmitDataAck2
     1a30:	4d5a      	ldr	r5, [pc, #360]	; (0x1b9c)
     1a32:	682d      	ldr	r5, [r5, #0]
     1a34:	2620      	movs	r6, #32
     1a36:	4335      	orrs	r5, r6
     1a38:	4e58      	ldr	r6, [pc, #352]	; (0x1b9c)
-    1a3a:	6035      	str	r5, [r6, #0]
-    1a3c:	4635      	mov	r5, r6
+    1a3a:	6035      	str	r5, [r6, #0]			; set bit 5 in i2c control register
+    1a3c:	4635      	mov	r5, r6				; => send (second) start condition
     1a3e:	682d      	ldr	r5, [r5, #0]
     1a40:	2608      	movs	r6, #8
     1a42:	4335      	orrs	r5, r6
@@ -3211,10 +3215,11 @@ I2CWaitForMasterTransmitAddressACK:
     1af2:	2d08      	cmp	r5, #8
     1af4:	d1f9      	bne.n	0x1aea
     1af6:	bf00      	nop
+I2CWaitForMasterReceiveDataACK1:
     1af8:	4d28      	ldr	r5, [pc, #160]	; (0x1b9c)
     1afa:	68ed      	ldr	r5, [r5, #12]
     1afc:	2d50      	cmp	r5, #80	; 0x50
-    1afe:	d1fb      	bne.n	0x1af8
+    1afe:	d1fb      	bne.n	0x1af8				; I2CWaitForMasterReceiveDataACK1
     1b00:	880d      	ldrh	r5, [r1, #0]
     1b02:	4e26      	ldr	r6, [pc, #152]	; (0x1b9c)
     1b04:	68b6      	ldr	r6, [r6, #8]
@@ -3228,33 +3233,35 @@ I2CWaitForMasterTransmitAddressACK:
     1b14:	e01b      	b.n	0x1b4e
     1b16:	2000      	movs	r0, #0
     1b18:	e017      	b.n	0x1b4a
-Retry:
-    1b1a:	4d20      	ldr	r5, [pc, #128]	; (0x1b9c)
+RetrieveNextCharacter:
+    1b1a:	4d20      	ldr	r5, [pc, #128]	; (0x1b9c)	; Control Register
     1b1c:	682d      	ldr	r5, [r5, #0]
     1b1e:	2608      	movs	r6, #8
     1b20:	4335      	orrs	r5, r6
     1b22:	4e1e      	ldr	r6, [pc, #120]	; (0x1b9c)
-    1b24:	6035      	str	r5, [r6, #0]
-    1b26:	bf00      	nop
+    1b24:	6035      	str	r5, [r6, #0]			; set bit 4 in i2c control register
+    1b26:	bf00      	nop					; => clear interrupt flag
+I2CWaitForInterruptFlag99:
     1b28:	4d1c      	ldr	r5, [pc, #112]	; (0x1b9c)
     1b2a:	682d      	ldr	r5, [r5, #0]
     1b2c:	2608      	movs	r6, #8
     1b2e:	4035      	ands	r5, r6
     1b30:	2d08      	cmp	r5, #8
-    1b32:	d1f9      	bne.n	0x1b28
+    1b32:	d1f9      	bne.n	0x1b28				; I2CWaitForInterruptFlag99
     1b34:	bf00      	nop
+I2CWaitForMasterReceiveDataACK2:
     1b36:	4d19      	ldr	r5, [pc, #100]	; (0x1b9c)
     1b38:	68ed      	ldr	r5, [r5, #12]
     1b3a:	2d50      	cmp	r5, #80	; 0x50
-    1b3c:	d1fb      	bne.n	0x1b36
+    1b3c:	d1fb      	bne.n	0x1b36				; I2CWaitForMasterReceiveDataACK2
     1b3e:	4d17      	ldr	r5, [pc, #92]	; (0x1b9c)
     1b40:	68ad      	ldr	r5, [r5, #8]
-    1b42:	800d      	strh	r5, [r1, #0]			; <<<<<<<<<<<<<	store eeprom-contents
+    1b42:	800d      	strh	r5, [r1, #0]			; store eeprom-contents
     1b44:	1c89      	adds	r1, r1, #2
     1b46:	1c45      	adds	r5, r0, #1
     1b48:	b2a8      	uxth	r0, r5
-    1b4a:	4290      	cmp	r0, r2
-    1b4c:	dbe5      	blt.n	0x1b1a
+    1b4a:	4290      	cmp	r0, r2				; finished?
+    1b4c:	dbe5      	blt.n	0x1b1a				; RetrieveNextCharacter
     1b4e:	4d13      	ldr	r5, [pc, #76]	; (0x1b9c)
     1b50:	682d      	ldr	r5, [r5, #0]
     1b52:	2604      	movs	r6, #4
@@ -3287,11 +3294,12 @@ Retry:
     1b88:	4e04      	ldr	r6, [pc, #16]	; (0x1b9c)
     1b8a:	6035      	str	r5, [r6, #0]
     1b8c:	bf00      	nop
+I2CWaitForMasterRepeatStart:
     1b8e:	4d03      	ldr	r5, [pc, #12]	; (0x1b9c)
     1b90:	682d      	ldr	r5, [r5, #0]
     1b92:	2610      	movs	r6, #16
     1b94:	4235      	tst	r5, r6
-    1b96:	d1fa      	bne.n	0x1b8e
+    1b96:	d1fa      	bne.n	0x1b8e				; I2CWaitForMasterRepeatStart
     1b98:	bd70      	pop	{r4, r5, r6, pc}
 
     1b9a:	0000      	;	padding
@@ -4744,7 +4752,7 @@ UART1Handler:
     2738:	69c0      	ldr	r0, [r0, #28]
     273a:	21ff      	movs	r1, #255	; 0xff
     273c:	3101      	adds	r1, #1
-    273e:	4208      	tst	r0, r1
+    273e:	4208      	tst	r0, r1				; bit 9 in UART1 interrupt status register set?
     2740:	d058      	beq.n	0x27f4
     2742:	e052      	b.n	0x27ea
     2744:	bf00      	nop
@@ -4752,12 +4760,12 @@ UART1Handler:
     2748:	6980      	ldr	r0, [r0, #24]
     274a:	2101      	movs	r1, #1
     274c:	0389      	lsls	r1, r1, #14
-    274e:	4208      	tst	r0, r1
+    274e:	4208      	tst	r0, r1				; bit 14 in UART1 FIFO status register set?
     2750:	d1f9      	bne.n	0x2746
     2752:	4829      	ldr	r0, [pc, #164]	; (0x27f8)
     2754:	6800      	ldr	r0, [r0, #0]
-    2756:	b2c0      	uxtb	r0, r0
-    2758:	9000      	str	r0, [sp, #0]
+    2756:	b2c0      	uxtb	r0, r0				; lower 8 bit of receive buffer register
+    2758:	9000      	str	r0, [sp, #0]			; => actually received character
     275a:	4828      	ldr	r0, [pc, #160]	; (0x27fc)
     275c:	8800      	ldrh	r0, [r0, #0]
     275e:	28ff      	cmp	r0, #255	; 0xff
@@ -4833,7 +4841,7 @@ UART1Handler:
     27ea:	4803      	ldr	r0, [pc, #12]	; (0x27f8)
     27ec:	69c0      	ldr	r0, [r0, #28]
     27ee:	07c0      	lsls	r0, r0, #31
-    27f0:	0fc0      	lsrs	r0, r0, #31
+    27f0:	0fc0      	lsrs	r0, r0, #31			; bit 31 in UART1 interrupt status register set?
     27f2:	d1a7      	bne.n	0x2744
     27f4:	bd08      	pop	{r3, pc}
     27f6:	0000      	movs	r0, r0
@@ -5849,7 +5857,7 @@ WaitForWriteTxCompletion:
     3008:	2201      	movs	r2, #1
     300a:	a904      	add	r1, sp, #16
     300c:	4618      	mov	r0, r3
-    300e:	f7fe fcaf 	bl	0x1970
+    300e:	f7fe fcaf 	bl	0x1970				; ReadEEPROM(?) -- short query
     3012:	4668      	mov	r0, sp
     3014:	8a00      	ldrh	r0, [r0, #16]
     3016:	2885      	cmp	r0, #133	; 0x85

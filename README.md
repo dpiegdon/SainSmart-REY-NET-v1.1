@@ -35,7 +35,7 @@ The board contains
 
 	Datasheet can be loaded from: `http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8568-SEEPROM-AT24C256C-Datasheet.pdf`
 
-	The EEPROM is connected to I2C 0, with Address 0b101000.
+	The EEPROM is connected to I2C 0, with Address 0b101000 (0x50 without, 0xa0 with r/w flag)
 	During startup, the EEPROM is read twice:
 
 	First at offset 0x0000, two bytes are read:
