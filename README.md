@@ -47,9 +47,12 @@ The board contains
 	W:50: 00 00  ;  R:50: 85 C0 A8 01 04 0B B8 30 FF
 	
 	Obviously, the EEPROM contains the IP/TCP-Port configuration:
+
+```
 	85 c0 a8 01 04 0b b8 30 ff
-	   |---------| |---| ||
+	   |---------| |---| ||	\\_End-Of-Command marker?
 	   IP Addr     Port  Checksum over previous 6 bytes?
+```
 
 	Everything else in the EEPROM seems to be ignored.
 
