@@ -1370,17 +1370,17 @@ InitIPStack???
      b50:	f001 fa66 	bl	0x2020				; UART1PutChar(MessageBuffer[12])
      b54:	205d      	movs	r0, #93	; 0x5d
      b56:	f001 fa63 	bl	0x2020				; UART1PutChar(0x5d)
-     b5a:	20c0      	movs	r0, #192	; 0xc0
+     b5a:	20c0      	movs	r0, #192	; 0xc0		; 192
      b5c:	4932      	ldr	r1, [pc, #200]	; (0xc28)
      b5e:	7008      	strb	r0, [r1, #0]
-     b60:	20a8      	movs	r0, #168	; 0xa8
+     b60:	20a8      	movs	r0, #168	; 0xa8		; 168
      b62:	7048      	strb	r0, [r1, #1]
      b64:	482f      	ldr	r0, [pc, #188]	; (0xc24)
      b66:	7980      	ldrb	r0, [r0, #6]
      b68:	7088      	strb	r0, [r1, #2]
-     b6a:	2001      	movs	r0, #1
+     b6a:	2001      	movs	r0, #1				; 1
      b6c:	70c8      	strb	r0, [r1, #3]
-     b6e:	20ff      	movs	r0, #255	; 0xff
+     b6e:	20ff      	movs	r0, #255	; 0xff		; 255
      b70:	492e      	ldr	r1, [pc, #184]	; (0xc2c)
      b72:	7008      	strb	r0, [r1, #0]
      b74:	7048      	strb	r0, [r1, #1]
@@ -1402,7 +1402,7 @@ InitIPStack???
      b94:	7148      	strb	r0, [r1, #5]
      b96:	4823      	ldr	r0, [pc, #140]	; (0xc24)
      b98:	7880      	ldrb	r0, [r0, #2]
-     b9a:	4926      	ldr	r1, [pc, #152]	; (0xc34)
+     b9a:	4926      	ldr	r1, [pc, #152]	; (0xc34)	; IP Address?
      b9c:	7008      	strb	r0, [r1, #0]
      b9e:	4821      	ldr	r0, [pc, #132]	; (0xc24)
      ba0:	7900      	ldrb	r0, [r0, #4]
@@ -1420,14 +1420,14 @@ InitIPStack???
      bb8:	481a      	ldr	r0, [pc, #104]	; (0xc24)
      bba:	7b00      	ldrb	r0, [r0, #12]
      bbc:	7048      	strb	r0, [r1, #1]
-     bbe:	20c0      	movs	r0, #192	; 0xc0
+     bbe:	20c0      	movs	r0, #192	; 0xc0		; 192
      bc0:	491e      	ldr	r1, [pc, #120]	; (0xc3c)
      bc2:	7008      	strb	r0, [r1, #0]
-     bc4:	20a8      	movs	r0, #168	; 0xa8
+     bc4:	20a8      	movs	r0, #168	; 0xa8		; 168
      bc6:	7048      	strb	r0, [r1, #1]
-     bc8:	2001      	movs	r0, #1
+     bc8:	2001      	movs	r0, #1				; 1
      bca:	7088      	strb	r0, [r1, #2]
-     bcc:	20cd      	movs	r0, #205	; 0xcd
+     bcc:	20cd      	movs	r0, #205	; 0xcd		; 205
      bce:	70c8      	strb	r0, [r1, #3]
      bd0:	2017      	movs	r0, #23
      bd2:	491b      	ldr	r1, [pc, #108]	; (0xc40)
@@ -1454,7 +1454,7 @@ InitIPStack???
      c04:	0349      	lsls	r1, r1, #13
      c06:	4388      	bics	r0, r1
      c08:	1840      	adds	r0, r0, r1
-     c0a:	4910      	ldr	r1, [pc, #64]	; (0xc4c)
+     c0a:	4910      	ldr	r1, [pc, #64]	; (0xc4c)	; clear bit 13 in status_flags
      c0c:	6008      	str	r0, [r1, #0]
      c0e:	bd70      	pop	{r4, r5, r6, pc}
 
@@ -1469,7 +1469,7 @@ InitIPStack???
      c20:	000a      	;
      c22:	0000      	;
 
-     c24:	20000110      	;	MessageBuffer
+     c24:	20000110      	;	u16 EEPROMContents[8]
      c28:	20000052      	;	u8 Gateway[4]
      c2c:	20000056      	;	u8 Subnet[4]
      c30:	2000005a      	;	u8 MAC[6]
@@ -1479,7 +1479,7 @@ InitIPStack???
      c40:	2000006a      	;	u8 TCPDstPort[2]
      c44:	20000088      	;
      c48:	50004280      	;	GPIO registers for PORT4
-     c4c:	20000008      	;
+     c4c:	20000008      	;	u32 status_flags
 
 InitNetworkStack:
      c50:	b510      	push	{r4, lr}			; SET default Gateway: 192.168.1.1
@@ -3228,6 +3228,7 @@ I2CWaitForMasterTransmitAddressACK:
     1b14:	e01b      	b.n	0x1b4e
     1b16:	2000      	movs	r0, #0
     1b18:	e017      	b.n	0x1b4a
+Retry:
     1b1a:	4d20      	ldr	r5, [pc, #128]	; (0x1b9c)
     1b1c:	682d      	ldr	r5, [r5, #0]
     1b1e:	2608      	movs	r6, #8
@@ -3248,7 +3249,7 @@ I2CWaitForMasterTransmitAddressACK:
     1b3c:	d1fb      	bne.n	0x1b36
     1b3e:	4d17      	ldr	r5, [pc, #92]	; (0x1b9c)
     1b40:	68ad      	ldr	r5, [r5, #8]
-    1b42:	800d      	strh	r5, [r1, #0]
+    1b42:	800d      	strh	r5, [r1, #0]			; <<<<<<<<<<<<<	store eeprom-contents
     1b44:	1c89      	adds	r1, r1, #2
     1b46:	1c45      	adds	r5, r0, #1
     1b48:	b2a8      	uxth	r0, r5
@@ -3544,7 +3545,8 @@ CheckFifthBit:
     1d7c:	0c00      	lsrs	r0, r0, #16
     1d7e:	0400      	lsls	r0, r0, #16
     1d80:	490b      	ldr	r1, [pc, #44]	; (0x1db0)
-    1d82:	6048      	str	r0, [r1, #4]
+    1d82:	6048      	str	r0, [r1, #4]			; clear all lower 16 bits of SPI0 Clock Divider Register
+
     1d84:	4608      	mov	r0, r1
     1d86:	6840      	ldr	r0, [r0, #4]
     1d88:	6048      	str	r0, [r1, #4]
@@ -3553,7 +3555,8 @@ CheckFifthBit:
     1d8e:	2104      	movs	r1, #4
     1d90:	4388      	bics	r0, r1
     1d92:	4907      	ldr	r1, [pc, #28]	; (0x1db0)
-    1d94:	6088      	str	r0, [r1, #8]
+    1d94:	6088      	str	r0, [r1, #8]			; mask out #4 in SPI0 Slave Select Register
+
     1d96:	4608      	mov	r0, r1
     1d98:	6880      	ldr	r0, [r0, #8]
     1d9a:	2108      	movs	r1, #8
@@ -4445,7 +4448,7 @@ TIM2Handler:
     24ea:	480c      	ldr	r0, [pc, #48]	; (0x251c)
     24ec:	6800      	ldr	r0, [r0, #0]
     24ee:	0480      	lsls	r0, r0, #18
-    24f0:	0fc0      	lsrs	r0, r0, #31
+    24f0:	0fc0      	lsrs	r0, r0, #31			; check bit 13 of status_flags
     24f2:	d10f      	bne.n	0x2514
     24f4:	480a      	ldr	r0, [pc, #40]	; (0x2520)
     24f6:	7800      	ldrb	r0, [r0, #0]
@@ -4466,7 +4469,7 @@ TIM2Handler:
     2516:	0000      	movs	r0, r0
 
     2518:	40110000      	;	TIM2/TIM3 Control registers
-    251c:	20000008      	;
+    251c:	20000008      	;	u32 status_flags
     2520:	20000010      	;
     2524:	00003471      	;
 
@@ -4788,7 +4791,7 @@ UART1Handler:
     2796:	4388      	bics	r0, r1
     2798:	1840      	adds	r0, r0, r1
     279a:	491b      	ldr	r1, [pc, #108]	; (0x2808)
-    279c:	6008      	str	r0, [r1, #0]
+    279c:	6008      	str	r0, [r1, #0]			; set bit 11 in status_flags
     279e:	e024      	b.n	0x27ea
     27a0:	2000      	movs	r0, #0
     27a2:	4918      	ldr	r1, [pc, #96]	; (0x2804)
@@ -4826,7 +4829,7 @@ UART1Handler:
     27e2:	4388      	bics	r0, r1
     27e4:	1840      	adds	r0, r0, r1
     27e6:	4908      	ldr	r1, [pc, #32]	; (0x2808)
-    27e8:	6008      	str	r0, [r1, #0]
+    27e8:	6008      	str	r0, [r1, #0]			; set bit 11 in status_flags
     27ea:	4803      	ldr	r0, [pc, #12]	; (0x27f8)
     27ec:	69c0      	ldr	r0, [r0, #28]
     27ee:	07c0      	lsls	r0, r0, #31
@@ -4839,7 +4842,7 @@ UART1Handler:
     27fc:	2000001c      	;
     2800:	20000138      	;
     2804:	20000020      	;
-    2808:	20000008      	;
+    2808:	20000008      	;	u32 status_flags
     280c:	2000001e      	;
 
     2810:	2800      	cmp	r0, #0
@@ -4997,7 +5000,7 @@ UART1Handler:
     2944:	50000200      	;	Clock Control registers
     2948:	40150000      	;	UART1 registers
 
-???
+EvalCommand(char)
     294c:	b510      	push	{r4, lr}
     294e:	4604      	mov	r4, r0				; r4 := parameter1
     2950:	4837      	ldr	r0, [pc, #220]	; (0x2a30)
@@ -5008,7 +5011,7 @@ UART1Handler:
     295c:	180e      	adds	r6, r1, r0
     295e:	2f22      	cmp	r7, #34	; 0x22
     2960:	643e      	str	r6, [r7, #64]	; 0x40
-    2962:	2cfb      	cmp	r4, #251	; 0xfb		; start of command?
+    2962:	2cfb      	cmp	r4, #251	; 0xfb		; CMD = 0xFB ?
     2964:	d103      	bne.n	0x296e
     2966:	2001      	movs	r0, #1
     2968:	4931      	ldr	r1, [pc, #196]	; (0x2a30)
@@ -5018,7 +5021,7 @@ UART1Handler:
     2970:	492f      	ldr	r1, [pc, #188]	; (0x2a30)
     2972:	7008      	strb	r0, [r1, #0]
     2974:	e059      	b.n	0x2a2a
-    2976:	2c21      	cmp	r4, #33	; 0x21
+    2976:	2c21      	cmp	r4, #33	; 0x21			; CMD = 0x21 ?
     2978:	d103      	bne.n	0x2982
     297a:	2002      	movs	r0, #2
     297c:	492c      	ldr	r1, [pc, #176]	; (0x2a30)
@@ -5028,7 +5031,7 @@ UART1Handler:
     2984:	492a      	ldr	r1, [pc, #168]	; (0x2a30)
     2986:	7008      	strb	r0, [r1, #0]
     2988:	e04f      	b.n	0x2a2a
-    298a:	2c55      	cmp	r4, #85	; 0x55				;;;;;?????
+    298a:	2c55      	cmp	r4, #85	; 0x55			; CMD = 0x55 ?
     298c:	d103      	bne.n	0x2996
     298e:	2003      	movs	r0, #3
     2990:	4927      	ldr	r1, [pc, #156]	; (0x2a30)
@@ -5038,7 +5041,7 @@ UART1Handler:
     2998:	4925      	ldr	r1, [pc, #148]	; (0x2a30)
     299a:	7008      	strb	r0, [r1, #0]
     299c:	e045      	b.n	0x2a2a
-    299e:	2c18      	cmp	r4, #24
+    299e:	2c18      	cmp	r4, #24				; CMD = 0x18 ?
     29a0:	d106      	bne.n	0x29b0
     29a2:	2004      	movs	r0, #4
     29a4:	4922      	ldr	r1, [pc, #136]	; (0x2a30)
@@ -5051,7 +5054,7 @@ UART1Handler:
     29b2:	491f      	ldr	r1, [pc, #124]	; (0x2a30)
     29b4:	7008      	strb	r0, [r1, #0]
     29b6:	e038      	b.n	0x2a2a
-    29b8:	2c06      	cmp	r4, #6
+    29b8:	2c06      	cmp	r4, #6				; CMD = 0x06 ?
     29ba:	d108      	bne.n	0x29ce
     29bc:	2005      	movs	r0, #5
     29be:	491c      	ldr	r1, [pc, #112]	; (0x2a30)
@@ -5079,7 +5082,7 @@ UART1Handler:
     29ea:	7800      	ldrb	r0, [r0, #0]
     29ec:	0040      	lsls	r0, r0, #1
     29ee:	4913      	ldr	r1, [pc, #76]	; (0x2a3c)
-    29f0:	520c      	strh	r4, [r1, r0]
+    29f0:	520c      	strh	r4, [r1, r0]			; save CMD ?
     29f2:	4811      	ldr	r0, [pc, #68]	; (0x2a38)
     29f4:	7800      	ldrb	r0, [r0, #0]
     29f6:	1c40      	adds	r0, r0, #1
@@ -5093,7 +5096,7 @@ UART1Handler:
     2a06:	7800      	ldrb	r0, [r0, #0]
     2a08:	0040      	lsls	r0, r0, #1
     2a0a:	490c      	ldr	r1, [pc, #48]	; (0x2a3c)
-    2a0c:	520c      	strh	r4, [r1, r0]
+    2a0c:	520c      	strh	r4, [r1, r0]			; save CMD ?
     2a0e:	480a      	ldr	r0, [pc, #40]	; (0x2a38)
     2a10:	7800      	ldrb	r0, [r0, #0]
     2a12:	1c40      	adds	r0, r0, #1
@@ -5115,51 +5118,55 @@ AbortCommand?
     2a30:	20000022      	;
     2a34:	20000023      	;
     2a38:	20000024      	;
-    2a3c:	20000110      	;	MessageBuffer
+    2a3c:	20000110      	;	u16 EEPROMContents[8]
 
+???:
     2a40:	b510      	push	{r4, lr}
     2a42:	4812      	ldr	r0, [pc, #72]	; (0x2a8c)
-    2a44:	8800      	ldrh	r0, [r0, #0]
+    2a44:	8800      	ldrh	r0, [r0, #0]			; load workingindex
     2a46:	4912      	ldr	r1, [pc, #72]	; (0x2a90)
-    2a48:	8809      	ldrh	r1, [r1, #0]
+    2a48:	8809      	ldrh	r1, [r1, #0]			; load index2
     2a4a:	4288      	cmp	r0, r1
-    2a4c:	d017      	beq.n	0x2a7e
+    2a4c:	d017      	beq.n	0x2a7e				; EndOfArray
     2a4e:	4811      	ldr	r0, [pc, #68]	; (0x2a94)
     2a50:	490e      	ldr	r1, [pc, #56]	; (0x2a8c)
     2a52:	8809      	ldrh	r1, [r1, #0]
-    2a54:	5c44      	ldrb	r4, [r0, r1]
+    2a54:	5c44      	ldrb	r4, [r0, r1]			; load array[workingindex]
     2a56:	480d      	ldr	r0, [pc, #52]	; (0x2a8c)
     2a58:	8800      	ldrh	r0, [r0, #0]
-    2a5a:	28ff      	cmp	r0, #255	; 0xff
+    2a5a:	28ff      	cmp	r0, #255	; 0xff		; workingindex == 0xff?
     2a5c:	d101      	bne.n	0x2a62
     2a5e:	2000      	movs	r0, #0
-    2a60:	e002      	b.n	0x2a68
+    2a60:	e002      	b.n	0x2a68				; DontIncrementIndex
     2a62:	480a      	ldr	r0, [pc, #40]	; (0x2a8c)
     2a64:	8800      	ldrh	r0, [r0, #0]
-    2a66:	1c40      	adds	r0, r0, #1
+    2a66:	1c40      	adds	r0, r0, #1			; workingindex += 1
+DontIncrementIndex:
     2a68:	4908      	ldr	r1, [pc, #32]	; (0x2a8c)
     2a6a:	8008      	strh	r0, [r1, #0]
     2a6c:	480a      	ldr	r0, [pc, #40]	; (0x2a98)
     2a6e:	8800      	ldrh	r0, [r0, #0]
     2a70:	1e40      	subs	r0, r0, #1
     2a72:	4909      	ldr	r1, [pc, #36]	; (0x2a98)
-    2a74:	8008      	strh	r0, [r1, #0]
+    2a74:	8008      	strh	r0, [r1, #0]			; todo_remaining -= 1
     2a76:	4620      	mov	r0, r4
-    2a78:	f7ff ff68 	bl	0x294c
+    2a78:	f7ff ff68 	bl	0x294c				; EvalCommand(arraybase[index])
     2a7c:	e005      	b.n	0x2a8a
+EndOfArray:
     2a7e:	4807      	ldr	r0, [pc, #28]	; (0x2a9c)
     2a80:	6800      	ldr	r0, [r0, #0]
     2a82:	0840      	lsrs	r0, r0, #1
     2a84:	0040      	lsls	r0, r0, #1
     2a86:	4905      	ldr	r1, [pc, #20]	; (0x2a9c)
-    2a88:	6008      	str	r0, [r1, #0]
+    2a88:	6008      	str	r0, [r1, #0]			; clear bit 0 in status_flags
+???
     2a8a:	bd10      	pop	{r4, pc}
 
-    2a8c:	2000001e      	;
-    2a90:	20000020      	;
-    2a94:	20000138      	;
-    2a98:	2000001c      	;
-    2a9c:	20000008      	;
+    2a8c:	2000001e      	;	u16 workingindex
+    2a90:	20000020      	;	u16 index2 ?
+    2a94:	20000138      	;	u16 arraybase[256] ? or 128?
+    2a98:	2000001c      	;	u16 todo_remaining
+    2a9c:	20000008      	;	u32 status_flags
 
     2aa0:	2059      	movs	r0, #89	; 0x59
     2aa2:	4903      	ldr	r1, [pc, #12]	; (0x2ab0)
@@ -6014,7 +6021,7 @@ MainWhileBody:
     319c:	480c      	ldr	r0, [pc, #48]	; (0x31d0)
     319e:	6800      	ldr	r0, [r0, #0]
     31a0:	0500      	lsls	r0, r0, #20
-    31a2:	0fc0      	lsrs	r0, r0, #31
+    31a2:	0fc0      	lsrs	r0, r0, #31			; test bit 11 in status_flags
     31a4:	d001      	beq.n	0x31aa
     31a6:	f7ff fc4b 	bl	0x2a40
     31aa:	bf00      	nop
@@ -6036,7 +6043,7 @@ MainWhileBody:
 
     31c8:	20000088      	;
     31cc:	2000008c      	;
-    31d0:	20000008      	;
+    31d0:	20000008      	;	u32 status_flags
 
     31d4:	4905      	ldr	r1, [pc, #20]	; (0x31ec)
     31d6:	6b89      	ldr	r1, [r1, #56]	; 0x38
@@ -6405,13 +6412,14 @@ for (r4=0; r4<5; ++r4)
 
     34ac:	20000038      	;
 
-    34b0:	0085      	;
-    34b2:	00c0      	;
-    34b4:	00a8      	;
-    34b6:	0001      	;
-    34b8:	0004      	;
-    34ba:	000b      	;
-    34bc:	00b8      	;
+DefaultEEPROMContents ?
+    34b0:	0085      	;	0x85 (command header?)
+    34b2:	00c0      	;	192
+    34b4:	00a8      	;	168
+    34b6:	0001      	;	1
+    34b8:	0004      	;	4
+    34ba:	000b      	;	:
+    34bc:	00b8      	;	3000
 
     34be:	3130      	;	String '0123456789ABCDEF@0X\00'
     34c0:	3332      	;
