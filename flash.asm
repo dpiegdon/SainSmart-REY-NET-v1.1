@@ -1265,9 +1265,9 @@ ConfigureSystemClocks?
      a60:	f001 f918 	bl	0x1c94
      a64:	f002 fac4 	bl	0x2ff0
      a68:	2001      	movs	r0, #1
-     a6a:	f001 fe07 	bl	0x267c
+     a6a:	f001 fe07 	bl	0x267c				; SetupTimer(1) => Timer0
      a6e:	2002      	movs	r0, #2
-     a70:	f001 fe04 	bl	0x267c
+     a70:	f001 fe04 	bl	0x267c				; SetupTimer(2) => Timer1
      a74:	f002 f994 	bl	0x2da0
      a78:	bd10      	pop	{r4, pc}
      a7a:	0000      	movs	r0, r0
@@ -4649,7 +4649,7 @@ TIM3Handler:
     2674:	00b71b00      	;
     2678:	e000e100      	;	NVIC / external interrupt control registers
 
-BigJumpTable?
+SetupTimer(timerId)?
     267c:	b500      	push	{lr}
     267e:	4602      	mov	r2, r0				; r2 := parameter1 (which timer? 1,2,3 or 4)
     2680:	2a01      	cmp	r2, #1
@@ -4662,21 +4662,21 @@ BigJumpTable?
     268e:	d10c      	bne.n	0x26aa
     2690:	e008      	b.n	0x26a4
 
-    2692:	f7ff fe75 	bl	0x2380
+    2692:	f7ff fe75 	bl	0x2380				; #1		Timer0?
     2696:	e009      	b.n	0x26ac
 
-    2698:	f7ff fed0 	bl	0x243c
-    269c:	e006      	b.n	0x26ac
+    2698:	f7ff fed0 	bl	0x243c				; #2		Timer1?
+    269c:	e006      	b.n	0x26ac				AfterJmpTable
 
-    269e:	f7ff ff43 	bl	0x2528
-    26a2:	e003      	b.n	0x26ac
+    269e:	f7ff ff43 	bl	0x2528				; #3		Timer2?
+    26a2:	e003      	b.n	0x26ac				AfterJmpTable
 
-    26a4:	f7ff ff9c 	bl	0x25e0
-    26a8:	e000      	b.n	0x26ac
+    26a4:	f7ff ff9c 	bl	0x25e0				; #4		Timer3?
+    26a8:	e000      	b.n	0x26ac				AfterJmpTable
 
     26aa:	bf00      	nop
 
-ElseIfError?
+AfterJmpTable:
     26ac:	bf00      	nop
     26ae:	bd00      	pop	{pc}
     26b0:	e027      	b.n	0x2702
