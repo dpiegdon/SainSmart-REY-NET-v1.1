@@ -120,3 +120,21 @@ Connectors
 				|---|---|
 
 ```
+
+Fixing IP and MAC addresses
+===========================
+
+The serial and ethernet protocol and the EEPROM have not been reverseengineered
+very deeply so far. So I am not yet sure if there is a way to change the IP
+and MAC via one of these interfaces persistently.
+
+But there is a manual option:
+patching the Firmware, specifically at 0x0b7c .. 0x0bbc, one can hardcore
+a different MAC address and IP address. That way one can have multiple devices
+on one ethernet bus.
+
+This approach has been tested and works fine. A sample firmware `192.168.1.5.bin`
+can be found in the subdirectory `variants/`. It replaces the original default MAC
+`0c:29:ab:7c:00:01` with `0c:29:ab:7c:00:02` and the original default IP
+`192.168.1.4` with `192.168.1.5`.
+

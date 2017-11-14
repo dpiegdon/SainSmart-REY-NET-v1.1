@@ -1398,30 +1398,30 @@ InitIPStack???
      b8c:	70c8      	strb	r0, [r1, #3]
      b8e:	2000      	movs	r0, #0				; 0x00
      b90:	7108      	strb	r0, [r1, #4]
-     b92:	2001      	movs	r0, #1				; 0x01
+     b92:	2001      	movs	r0, #1				; 0x01		=> MOVS r0, #2
      b94:	7148      	strb	r0, [r1, #5]
-     b96:	4823      	ldr	r0, [pc, #140]	; (0xc24)
-     b98:	7880      	ldrb	r0, [r0, #2]
-     b9a:	4926      	ldr	r1, [pc, #152]	; (0xc34)	; IP Address?
-     b9c:	7008      	strb	r0, [r1, #0]
-     b9e:	4821      	ldr	r0, [pc, #132]	; (0xc24)
-     ba0:	7900      	ldrb	r0, [r0, #4]
-     ba2:	7048      	strb	r0, [r1, #1]
-     ba4:	481f      	ldr	r0, [pc, #124]	; (0xc24)
-     ba6:	7980      	ldrb	r0, [r0, #6]
-     ba8:	7088      	strb	r0, [r1, #2]
-     baa:	481e      	ldr	r0, [pc, #120]	; (0xc24)
-     bac:	7a00      	ldrb	r0, [r0, #8]
-     bae:	70c8      	strb	r0, [r1, #3]
+     b96:	4823      	ldr	r0, [pc, #140]	; (0xc24)	;		=> NOP			00 bf
+     b98:	7880      	ldrb	r0, [r0, #2]			;		=> MOVS r0, #192	c0 20
+     b9a:	4926      	ldr	r1, [pc, #152]	; (0xc34)
+     b9c:	7008      	strb	r0, [r1, #0]			; set SrcIPAddr byte0 from EEPROMContents
+     b9e:	4821      	ldr	r0, [pc, #132]	; (0xc24)	;		=> NOP			00 bf
+     ba0:	7900      	ldrb	r0, [r0, #4]			;		=> MOVS r0, #168	a8 20
+     ba2:	7048      	strb	r0, [r1, #1]			; set SrcIPAddr byte1 from EEPROMContents
+     ba4:	481f      	ldr	r0, [pc, #124]	; (0xc24)	;		=> NOP			00 bf
+     ba6:	7980      	ldrb	r0, [r0, #6]			;		=> MOVS r0, #1		01 29
+     ba8:	7088      	strb	r0, [r1, #2]			; set SrcIPAddr byte2 from EEPROMContents
+     baa:	481e      	ldr	r0, [pc, #120]	; (0xc24)	;		=> NOP			00 bf
+     bac:	7a00      	ldrb	r0, [r0, #8]			;		=> MOVS r0, #5		05 20
+     bae:	70c8      	strb	r0, [r1, #3]			; set SrcIPAddr byte3 from EEPROMContents
      bb0:	481c      	ldr	r0, [pc, #112]	; (0xc24)
      bb2:	7a80      	ldrb	r0, [r0, #10]
-     bb4:	4920      	ldr	r1, [pc, #128]	; (0xc38)
+     bb4:	4920      	ldr	r1, [pc, #128]	; (0xc38)	; set TCPSrcPort byte0 from EEPROMContents
      bb6:	7008      	strb	r0, [r1, #0]
      bb8:	481a      	ldr	r0, [pc, #104]	; (0xc24)
      bba:	7b00      	ldrb	r0, [r0, #12]
-     bbc:	7048      	strb	r0, [r1, #1]
-     bbe:	20c0      	movs	r0, #192	; 0xc0		; 192
-     bc0:	491e      	ldr	r1, [pc, #120]	; (0xc3c)
+     bbc:	7048      	strb	r0, [r1, #1]			; set TCPSrcPort byte1 from EEPROMContents
+     bbe:	20c0      	movs	r0, #192	; 0xc0		; set DstIPAddr:
+     bc0:	491e      	ldr	r1, [pc, #120]	; (0xc3c)	; 192
      bc2:	7008      	strb	r0, [r1, #0]
      bc4:	20a8      	movs	r0, #168	; 0xa8		; 168
      bc6:	7048      	strb	r0, [r1, #1]
@@ -1429,8 +1429,8 @@ InitIPStack???
      bca:	7088      	strb	r0, [r1, #2]
      bcc:	20cd      	movs	r0, #205	; 0xcd		; 205
      bce:	70c8      	strb	r0, [r1, #3]
-     bd0:	2017      	movs	r0, #23
-     bd2:	491b      	ldr	r1, [pc, #108]	; (0xc40)
+     bd0:	2017      	movs	r0, #23				; set TCPDstPort:
+     bd2:	491b      	ldr	r1, [pc, #108]	; (0xc40)	; 0x7017 (28695) ?
      bd4:	7008      	strb	r0, [r1, #0]
      bd6:	2070      	movs	r0, #112	; 0x70
      bd8:	7048      	strb	r0, [r1, #1]
