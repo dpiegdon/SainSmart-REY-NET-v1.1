@@ -1398,7 +1398,7 @@ InitIPStack???
      b8c:	70c8      	strb	r0, [r1, #3]
      b8e:	2000      	movs	r0, #0				; 0x00
      b90:	7108      	strb	r0, [r1, #4]
-     b92:	2001      	movs	r0, #1				; 0x01		=> MOVS r0, #2
+     b92:	2001      	movs	r0, #1				; 0x01		=> MOVS r0, #2		02 20
      b94:	7148      	strb	r0, [r1, #5]
      b96:	4823      	ldr	r0, [pc, #140]	; (0xc24)	;		=> NOP			00 bf
      b98:	7880      	ldrb	r0, [r0, #2]			;		=> MOVS r0, #192	c0 20
