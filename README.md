@@ -102,7 +102,8 @@ a 3.3V UART (connected to pins 46 and 47 of the ARM Cortex, thus UART1)
 	5	GND				(Labeled "G" on PCB)
 
 	# FLASH and RAM on some devices are not protected and can be
-	dumped via gdb. Some devices are protected through.
+	# dumped via gdb. Some devices (like the FC-188 in the image)
+	# are protected though.
 	(gdb) dump binary memory flash.bin 0 0x10000
 	(gdb) dump binary memory ram.bin 0x20000000 0x20001000
 
