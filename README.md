@@ -77,6 +77,8 @@ The board contains
 	EEPROM. Thus, to use multiple cards on one ethernet,
 	the firmware might need to be patched...
 
+![front of PCB](https://github.com/dpiegdon/SainSmart-REY-NET-v1.1/blob/master/pcb_front.jpg?raw=true)
+
 Connectors
 ==========
 
