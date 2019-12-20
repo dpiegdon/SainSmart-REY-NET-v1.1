@@ -152,7 +152,9 @@ on one ethernet.
 This approach has been tested and works fine. A sample firmware `192.168.1.5.bin`
 can be found in the subdirectory `variants/`. It replaces the original default MAC
 `0c:29:ab:7c:00:01` with `0c:29:ab:7c:00:02` and the original default IP
-`192.168.1.4` with `192.168.1.5`.
+`192.168.1.4` with `192.168.1.5`. Also see the comments in 0x0b7c .. 0x0bbc of
+the `flash.asm` file. A few binary patches besides the MAC address were necessary
+and are explained there.
 
 Reflashing changed firmware
 ---------------------------
